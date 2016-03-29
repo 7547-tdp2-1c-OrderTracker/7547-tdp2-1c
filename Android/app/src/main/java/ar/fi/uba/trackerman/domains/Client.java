@@ -1,7 +1,7 @@
-package fi.uba.ar.soldme.fi.uba.ar.soldme.domain;
+package ar.fi.uba.trackerman.domains;
 
 /**
- * Created by plucadei on 24/3/16.
+ * Created by plucadei on 29/3/16.
  */
 public class Client {
     private String name;
@@ -25,5 +25,21 @@ public class Client {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getCuit() {
+        return cuit;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public String getLat() {
+        return lat;
     }
 }

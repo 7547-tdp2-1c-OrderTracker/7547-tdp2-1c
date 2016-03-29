@@ -1,4 +1,4 @@
-package fi.uba.ar.soldme;
+package ar.fi.uba.trackerman.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-import fi.uba.ar.soldme.fi.uba.ar.soldme.domain.Client;
+import ar.fi.uba.trackerman.domains.Client;
+import fi.uba.ar.soldme.R;
 
 public class MyClientsActivity extends AppCompatActivity {
 
@@ -26,20 +27,21 @@ public class MyClientsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView lista= (ListView)findViewById(R.id.listView);
-        ArrayAdapter<String> clientAdapter;
-        List<String> clientsList = new ArrayList<String>();
-        clientsList.add("Don Carlos");
-        clientsList.add("Don Tito");
+        ArrayAdapter<Client> clientAdapter;
+        List<Client> weekForecast = new ArrayList<Client>();
+        Client client = new Client("jose","perez","01-23456789-0","mail@fake.com",null,null);
+        weekForecast.add(client);
+        client = new Client("carlos","don","01-23456789-0","mail@fake.com",null,null);
+        weekForecast.add(client);
 
         // Now that we have some dummy forecast data, create an ArrayAdapter.
         // The ArrayAdapter will take data from a source (like our dummy forecast) and
         // use it to populate the ListView it's attached to.
-        clientAdapter = new ArrayAdapter<String>(
+        clientAdapter = new ArrayAdapter<Client>(
                                             this, // The current context (this activity)
                                             R.layout.list_client_item, // The name of the layout ID.
                                             R.id.textView, // The ID of the textview to populate.
-                                            clientsList);
-        lista.setAdapter(clientAdapter);
+                                            weekForecast);
 
        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
