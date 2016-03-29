@@ -2,7 +2,8 @@ package api
 
 import grails.converters.JSON
 
-class ProductsController {
+class ClientsController {
+
     def index() { 
     	def result = [
     		'results': [1,2,3,4],
@@ -10,5 +11,5 @@ class ProductsController {
     		'b':2
     	]
     	render result as JSON
-   	}
+    }
 }
