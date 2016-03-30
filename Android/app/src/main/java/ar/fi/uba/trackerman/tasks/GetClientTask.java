@@ -22,6 +22,9 @@ import ar.fi.uba.trackerman.domains.Client;
 
 
 public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
+
+    private static final String SERVER_HOST="http://10.10.33.185:8090";
+
     private WeakReference<ArrayAdapter<Client>> weekAdapterReference;
 
     public GetClientTask(ArrayAdapter<Client> adapter) {
@@ -37,7 +40,7 @@ public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
         List<Client> clientList = new ArrayList<>();
 
         try {
-            URL url = new URL("http://192.168.1.39:8090/v1/clients");
+            URL url = new URL(SERVER_HOST+"/v1/clients");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();

@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
@@ -43,6 +45,8 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
 
         holder.name.setText(client.getName());
         holder.lastName.setText(client.getLastName());
+        Picasso.with(this.getContext()).load(client.getThumbnail()).into(holder.image);
+
         return convertView;
     }
 
