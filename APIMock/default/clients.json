@@ -7,7 +7,8 @@
 		"address": "Evergreen Terrace 777",
 		"lon": 32.3,
 		"lat": 992.3,
-		"email": "darios3@gmail.com"
+		"email": "darios3@gmail.com",
+		"thumbnail":"https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_client_male_person_user_work_sport_beard_team_glasses-128.png"
 	},
 	{
 		"id": 2,
@@ -17,6 +18,18 @@
 		"address": "Fake Street 123",
 		"lon": 31.3,
 		"lat": 932.3,
-		"email": "matias@piano.org"
+		"email": "matias@piano.org",
+		"thumbnail": "https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_boss_client-128.png"
+	},
+	{
+		"id": 3,
+		"name": "Pablo",
+		"lastname": "Lucadei",
+		"cuil": "ZZZZZZZZZ",
+		"address": "Fake Street 123",
+		"lon": 31.3,
+		"lat": 932.3,
+		"email": "pablo@mail.org",
+		"thumbnail": "https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_player-128.png"
 	}
 ]

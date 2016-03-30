@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,7 +16,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.tasks.GetClientTask;
 import fi.uba.ar.soldme.R;
 
 public class MyClientsActivity extends AppCompatActivity {
@@ -24,33 +27,14 @@ public class MyClientsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_clients);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_my_clients);
         setSupportActionBar(toolbar);
         ListView lista= (ListView)findViewById(R.id.listView);
         ArrayAdapter<Client> clientAdapter;
-        List<Client> weekForecast = new ArrayList<Client>();
-        Client client = new Client("jose","perez","01-23456789-0","mail@fake.com",null,null);
-        weekForecast.add(client);
-        client = new Client("carlos","don","01-23456789-0","mail@fake.com",null,null);
-        weekForecast.add(client);
+        clientAdapter = new ClientsListAdapter( this, R.layout.list_client_item, new ArrayList<Client>());
+        lista.setAdapter(clientAdapter);
 
-        // Now that we have some dummy forecast data, create an ArrayAdapter.
-        // The ArrayAdapter will take data from a source (like our dummy forecast) and
-        // use it to populate the ListView it's attached to.
-        clientAdapter = new ArrayAdapter<Client>(
-                                            this, // The current context (this activity)
-                                            R.layout.list_client_item, // The name of the layout ID.
-                                            R.id.textView, // The ID of the textview to populate.
-                                            weekForecast);
-
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        new GetClientTask(clientAdapter).execute();
     }
 
     @Override
