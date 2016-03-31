@@ -33,7 +33,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
 
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.client_row_name);
-            holder.adress = (TextView) convertView.findViewById(R.id.client_row_address);
+            holder.address = (TextView) convertView.findViewById(R.id.client_row_address);
             holder.image = (ImageView) convertView.findViewById(R.id.client_row_picture);
             convertView.setTag(holder);
         } else {
@@ -41,7 +41,8 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
         }
 
         holder.name.setText(client.getLastName()+", "+client.getName());
-        holder.adress.setText(client.getEmail());
+        // TODO: add AddressLine attribute
+        holder.address.setText(client.getEmail());
         Picasso.with(this.getContext()).load(client.getThumbnail()).into(holder.image);
 
         return convertView;
@@ -49,7 +50,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
 
     private static class ViewHolder {
         public TextView name;
-        public TextView adress;
+        public TextView address;
         public ImageView image;
     }
 }
