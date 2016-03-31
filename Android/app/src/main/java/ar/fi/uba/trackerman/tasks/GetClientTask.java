@@ -23,7 +23,7 @@ import ar.fi.uba.trackerman.domains.Client;
 
 public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
 
-    private static final String SERVER_HOST="http://10.10.33.185:8090";
+    private static final String SERVER_HOST="http://192.168.1.41:8090";
 
     private WeakReference<ArrayAdapter<Client>> weekAdapterReference;
 

@@ -15,9 +15,6 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Client;
 import fi.uba.ar.soldme.R;
 
-/**
- * Created by plucadei on 30/3/16.
- */
 public class ClientsListAdapter extends ArrayAdapter<Client> {
 
     public ClientsListAdapter(Context context, int resource,
@@ -36,15 +33,15 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
 
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.client_row_name);
-            holder.lastName = (TextView) convertView.findViewById(R.id.client_row_lastname);
+            holder.adress = (TextView) convertView.findViewById(R.id.client_row_address);
             holder.image = (ImageView) convertView.findViewById(R.id.client_row_picture);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(client.getName());
-        holder.lastName.setText(client.getLastName());
+        holder.name.setText(client.getLastName()+", "+client.getName());
+        holder.adress.setText(client.getEmail());
         Picasso.with(this.getContext()).load(client.getThumbnail()).into(holder.image);
 
         return convertView;
@@ -52,7 +49,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
 
     private static class ViewHolder {
         public TextView name;
-        public TextView lastName;
+        public TextView adress;
         public ImageView image;
     }
 }

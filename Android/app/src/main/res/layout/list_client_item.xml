@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="wrap_content">
     <ImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:id="@+id/client_row_picture"
         android:src="@drawable/male"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/client_row_lastname" />
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LastName, Name"
+            android:id="@+id/client_row_name"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/client_row_name" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adress Line"
+            android:id="@+id/client_row_address" />
+    </LinearLayout>
 </LinearLayout>
