@@ -1,10 +1,9 @@
 package ar.fi.uba.trackerman.tasks;
 
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,32 +14,32 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.fragments.ClientDetailFragment;
 
+/**
+ * Created by plucadei on 31/3/16.
+ */
+public class GetClientTask extends AsyncTask<String,Void,Client> {
+    private static final String SERVER_HOST="http://192.168.1.34:8090";
+    private WeakReference<Fragment> weekFragmentReference;
 
-public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
-
-    private static final String SERVER_HOST="http://192.168.1.41:8090";
-
-    private WeakReference<ArrayAdapter<Client>> weekAdapterReference;
-
-    public GetClientTask(ArrayAdapter<Client> adapter) {
-        weekAdapterReference = new WeakReference<ArrayAdapter<Client>>(adapter);
+    public GetClientTask(Fragment fragment) {
+        weekFragmentReference = new WeakReference<Fragment>(fragment);
     }
-
     @Override
-    protected List<Client> doInBackground(String... params) {
+    protected Client doInBackground(String... params) {
+
+        String clientId= params[0];
+
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        String clientsJsonStr;
-        List<Client> clientList = new ArrayList<>();
-
+        String clientJsonStr;
+        Client client=null;
         try {
-            URL url = new URL(SERVER_HOST+"/v1/clients");
+            URL url = new URL(SERVER_HOST+"/v1/clients/"+clientId);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -48,7 +47,7 @@ public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
-                return clientList;
+                return client;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
@@ -56,27 +55,28 @@ public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
                 buffer.append(line).append("\n");
             }
             if (buffer.length() == 0) {
-                return clientList;
+                return client;
             }
-            clientsJsonStr = buffer.toString();
+            clientJsonStr = buffer.toString();
             try {
-                JSONObject json = new JSONObject(clientsJsonStr);
-                JSONArray resultJSON = (JSONArray) json.get("results");
-                Client client;
-                for (int i = 0; i < resultJSON.length(); i++) {
-                    JSONObject row = resultJSON.getJSONObject(i);
-                    client= new Client();
-                    client.setName(row.getString("name"));
-                    client.setLastName(row.getString("lastname"));
-                    client.setThumbnail(row.getString("thumbnail"));
-                    clientList.add(client);
-                }
+                JSONObject clientJson = new JSONObject(clientJsonStr);
+                    client= new Client(clientJson.getLong("id"));
+                    client.setName(clientJson.getString("name"));
+                    client.setLastName(clientJson.getString("lastname"));
+                    client.setAddress(clientJson.getString("address"));
+                    client.setThumbnail(clientJson.getString("thumbnail"));
+                    client.setCuil(clientJson.getString("cuil"));
+                    client.setLat(clientJson.getDouble("lat"));
+                    client.setLon(clientJson.getDouble("lon"));
+                    client.setEmail(clientJson.getString("email"));
+                    client.setAvatar(clientJson.getString("avatar"));
+                    client.setPhoneNumber(clientJson.getString("phone_number"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } catch (IOException e) {
             Log.e(GetClientTask.class.getCanonicalName(), "Error ", e);
-            return clientList;
+            return client;
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -85,21 +85,23 @@ public class GetClientTask extends AsyncTask<String,Void,List<Client>> {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(GetClientTask.class.getCanonicalName(), "Error closing stream", e);
+                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
                 }
             }
         }
-        return clientList;
+        return  client;
     }
 
     @Override
-    protected void onPostExecute(List<Client> clients) {
-        super.onPostExecute(clients);
-        ArrayAdapter<Client> clientArrayAdapter= weekAdapterReference.get();
-        if(clientArrayAdapter!=null){
-            clientArrayAdapter.addAll(clients);
+    protected void onPostExecute(Client client) {
+
+        super.onPostExecute(client);
+        Fragment fragment= weekFragmentReference.get();
+        if(fragment!=null){
+            ((ClientDetailFragment)fragment).updateClientInformation(client);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
     }
+
 }

@@ -41,8 +41,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
         }
 
         holder.name.setText(client.getLastName()+", "+client.getName());
-        // TODO: add AddressLine attribute
-        holder.address.setText(client.getEmail());
+        holder.address.setText(client.getAddress());
         Picasso.with(this.getContext()).load(client.getThumbnail()).into(holder.image);
 
         return convertView;

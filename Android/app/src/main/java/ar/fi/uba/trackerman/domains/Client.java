@@ -4,21 +4,21 @@ package ar.fi.uba.trackerman.domains;
  * Created by plucadei on 29/3/16.
  */
 public class Client {
+    private long id;
     private String name;
     private String lastName;
-    private String cuit;
+    private String cuil;
+    private String address;
     private String email;
-    private String lon;
-    private String lat;
+    private double lon;
+    private double lat;
     private String thumbnail;
+    private String avatar;
+    private String phoneNumber;
 
-    public Client() {
-        this.name = name;
-        this.lastName = lastName;
-        this.cuit = cuit;
-        this.email = email;
-        this.lon = lon;
-        this.lat = lat;
+    public Client(long id) {
+        super();
+        this.id= id;
     }
 
     public String getName() {
@@ -37,12 +37,12 @@ public class Client {
         this.lastName = lastName;
     }
 
-    public String getCuit() {
-        return cuit;
+    public String getCuil() {
+        return cuil;
     }
 
-    public void setCuit(String cuit) {
-        this.cuit = cuit;
+    public void setCuil(String cuil) {
+        this.cuil = cuil;
     }
 
     public String getEmail() {
@@ -53,19 +53,19 @@ public class Client {
         this.email = email;
     }
 
-    public String getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(String lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -76,4 +76,18 @@ public class Client {
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
+
+    public void setAddress(String address) { this.address = address; }
+
+    public String getAddress() { return address; }
+
+    public long getId() { return id; }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
+
+    public String getAvatar() { return avatar; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 }

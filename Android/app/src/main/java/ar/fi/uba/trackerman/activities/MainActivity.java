@@ -19,25 +19,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     public void openMyClientsActivity(View view) {
-        Log.i(getClass().getName(), "openMyClientsActivity");
         Intent intent = new Intent(this, MyClientsActivity.class);
         startActivity(intent);
     }
 
     public void openProductsActivity(View view) {
-        Log.i(getClass().getName(), "openProductsActivity");
         Snackbar.make(view, "Not Yet Implemented!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
