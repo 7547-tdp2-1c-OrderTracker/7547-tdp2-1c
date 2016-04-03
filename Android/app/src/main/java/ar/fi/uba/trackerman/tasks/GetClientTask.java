@@ -22,7 +22,7 @@ import ar.fi.uba.trackerman.fragments.ClientDetailFragment;
  * Created by plucadei on 31/3/16.
  */
 public class GetClientTask extends AsyncTask<String,Void,Client> {
-    private static final String SERVER_HOST="http://192.168.1.34:8090";
+    private static final String SERVER_HOST="http://192.168.1.43:8090";
     private WeakReference<Fragment> weekFragmentReference;
 
     public GetClientTask(Fragment fragment) {

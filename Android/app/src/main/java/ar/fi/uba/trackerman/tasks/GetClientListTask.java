@@ -1,8 +1,10 @@
 package ar.fi.uba.trackerman.tasks;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,29 +20,37 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.ClientSearchResult;
 
 
-public class GetClientListTask extends AsyncTask<String,Void,List<Client>> {
+public class GetClientListTask extends AsyncTask<Long,Void,ClientSearchResult> {
 
-    private static final String SERVER_HOST="http://192.168.1.34:8090";
+    private static final String SERVER_HOST="http://192.168.1.43:8090";
+    private WeakReference<ClientsListAdapter> weekAdapterReference;
 
-    private WeakReference<ArrayAdapter<Client>> weekAdapterReference;
-
-    public GetClientListTask(ArrayAdapter<Client> adapter) {
-        weekAdapterReference = new WeakReference<ArrayAdapter<Client>>(adapter);
+    public GetClientListTask(ClientsListAdapter adapter) {
+        weekAdapterReference = new WeakReference<ClientsListAdapter>(adapter);
     }
 
     @Override
-    protected List<Client> doInBackground(String... params) {
+    protected ClientSearchResult doInBackground(Long... params) {
+        Long offset= params[0];
+
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         String clientsJsonStr;
-        List<Client> clientList = new ArrayList<>();
+        ClientSearchResult clientSearchResult;
 
         try {
-            URL url = new URL(SERVER_HOST+"/v1/clients");
+            String urlString= SERVER_HOST+"/v1/clients?limit=10";
+            if(offset!=null){
+                urlString+="&offset="+offset.toString();
+            }
+            Log.d(this.getClass().getCanonicalName(),"About to get :"+urlString);
+            URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -48,7 +58,7 @@ public class GetClientListTask extends AsyncTask<String,Void,List<Client>> {
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
-                return clientList;
+                return new ClientSearchResult();
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
@@ -56,28 +66,17 @@ public class GetClientListTask extends AsyncTask<String,Void,List<Client>> {
                 buffer.append(line).append("\n");
             }
             if (buffer.length() == 0) {
-                return clientList;
+                return new ClientSearchResult();
             }
             clientsJsonStr = buffer.toString();
             try {
-                JSONObject json = new JSONObject(clientsJsonStr);
-                JSONArray resultJSON = (JSONArray) json.get("results");
-                Client client;
-                for (int i = 0; i < resultJSON.length(); i++) {
-                    JSONObject row = resultJSON.getJSONObject(i);
-                    client= new Client(row.getLong("id"));
-                    client.setName(row.getString("name"));
-                    client.setLastName(row.getString("lastname"));
-                    client.setAddress(row.getString("address"));
-                    client.setThumbnail(row.getString("thumbnail"));
-                    clientList.add(client);
-                }
+                return parseJsonClientSearchResult(clientsJsonStr);
             } catch (JSONException e) {
-                e.printStackTrace();
+
             }
         } catch (IOException e) {
-            Log.e(GetClientListTask.class.getCanonicalName(), "Error ", e);
-            return clientList;
+            Log.e(this.getClass().getCanonicalName(), "Error fetching clients.", e);
+            return null;
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -90,15 +89,34 @@ public class GetClientListTask extends AsyncTask<String,Void,List<Client>> {
                 }
             }
         }
-        return clientList;
+        return null;
+    }
+
+    private ClientSearchResult parseJsonClientSearchResult(String jsonString) throws JSONException{
+        JSONObject json = new JSONObject(jsonString);
+        JSONObject pagingJSON = json.getJSONObject("paging");
+        ClientSearchResult clientSearchResult= new ClientSearchResult();
+        clientSearchResult.setTotal(pagingJSON.getLong("total"));
+        clientSearchResult.setOffset(pagingJSON.getLong("offset"));
+        JSONArray resultJSON = (JSONArray) json.get("results");
+        Client client;
+        for (int i = 0; i < resultJSON.length(); i++) {
+            JSONObject row = resultJSON.getJSONObject(i);
+            client= new Client(row.getLong("id"));
+            client.setName(row.getString("name"));
+            client.setLastName(row.getString("lastname"));
+            client.setAddress(row.getString("address"));
+            client.setThumbnail(row.getString("thumbnail"));
+            clientSearchResult.addClient(client);
+        }
+        return clientSearchResult;
     }
 
     @Override
-    protected void onPostExecute(List<Client> clients) {
-        super.onPostExecute(clients);
-        ArrayAdapter<Client> clientArrayAdapter= weekAdapterReference.get();
-        if(clientArrayAdapter!=null){
-            clientArrayAdapter.addAll(clients);
+    protected void onPostExecute(ClientSearchResult clientSearchResult) {
+        ClientsListAdapter clientListAdapter= weekAdapterReference.get();
+        if(clientListAdapter!=null){
+            clientListAdapter.addClients(clientSearchResult);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }

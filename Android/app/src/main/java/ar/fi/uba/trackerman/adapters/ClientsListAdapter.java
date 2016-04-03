@@ -13,18 +13,58 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.ClientSearchResult;
+import ar.fi.uba.trackerman.tasks.GetClientListTask;
+import ar.fi.uba.trackerman.tasks.GetClientTask;
 import fi.uba.ar.soldme.R;
 
 public class ClientsListAdapter extends ArrayAdapter<Client> {
 
+    private long total;
+    private long offset;
+    private boolean fetching;
+
     public ClientsListAdapter(Context context, int resource,
                            List<Client> clients) {
         super(context, resource, clients);
+        total=1;
+        offset=0;
+        fetching=false;
     }
+
+    public void refresh(){
+        this.clear();
+        offset=0;
+        total=1;
+        fetchMore();
+    }
+
+    public void fetchMore(){
+        if(offset<total && !fetching){
+            fetching=true;
+            GetClientListTask asyncTask= new GetClientListTask(this);
+            asyncTask.execute(offset);
+        }
+    }
+
+    public void addClients(ClientSearchResult clientSearchResult){
+        if(clientSearchResult!=null) {
+            this.addAll(clientSearchResult.getClients());
+            this.offset = this.getCount();
+            this.total = clientSearchResult.getTotal();
+            fetching = false;
+        }else{
+            long perro= 1+1;
+        }
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Client client = this.getItem(position);
         ViewHolder holder;
+        if(position==this.getCount()-1){
+            fetchMore();
+        }
 
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) getContext()

@@ -27,21 +27,5 @@ public class MyClientsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_clients);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_my_clients);
         setSupportActionBar(toolbar);
-
-        ListView lista= (ListView)findViewById(R.id.listView);
-        ArrayAdapter<Client> clientAdapter;
-        clientAdapter = new ClientsListAdapter( this, R.layout.list_client_item, new ArrayList<Client>());
-        lista.setAdapter(clientAdapter);
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Client client= (Client)parent.getItemAtPosition(position);
-                Intent intent = new Intent(getBaseContext(), ClientDetailActivity.class);
-                intent.putExtra(Intent.EXTRA_UID,client.getId());
-                startActivity(intent);
-            }
-        });
-
-        new GetClientListTask(clientAdapter).execute();
     }
 }
