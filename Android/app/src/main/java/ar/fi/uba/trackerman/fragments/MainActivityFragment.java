@@ -14,6 +14,7 @@ import fi.uba.ar.soldme.R;
 public class MainActivityFragment extends Fragment {
 
     public MainActivityFragment() {
+        super();
     }
 
     @Override
