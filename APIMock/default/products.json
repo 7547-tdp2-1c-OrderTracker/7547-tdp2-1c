@@ -1,11 +1,10 @@
-[
-	{
-		"id": 1,
-		"name": "product 1",
-		"stock": 32,
-		"price": 8910,
-		"currency": "ARS",
-		"thumbnail": "/default.png",
-		"picture": "/default.png"
-	}
-]
+[{
+	"id": 1,
+	"name": "product 1",
+	"stock": 32,
+	"price": 8910,
+	"brand": "brand 1",
+	"currency": "ARS",
+	"thumbnail": "/default.png",
+	"picture": "/default.png"
+}]
