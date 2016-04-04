@@ -10,4 +10,6 @@
     <string name="client_address">Address</string>
     <string name="client_phone">Phone</string>
     <string name="client_email">Email</string>
+    <string name="clients_option">Off Road</string>
+    <string name="products_option">Products</string>
 </resources>
