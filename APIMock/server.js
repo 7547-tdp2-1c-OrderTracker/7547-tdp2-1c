@@ -48,7 +48,7 @@ var serve = function(entityName, mapfunc) {
 		res.end();
 	});
 };
-
+/*
 serve('products', function(req,res) {
 	var fullUrl = req.protocol + '://' + req.get('host');
 	if (req.get('port')) {
@@ -66,7 +66,8 @@ serve('products', function(req,res) {
 		}
 		return product;
 	}
-});
+});*/
+serve('products');
 serve('clients');
 
 app.use("/images", express.static('images'));
