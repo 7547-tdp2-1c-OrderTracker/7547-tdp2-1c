@@ -2,5 +2,14 @@
     <string name="app_name">TrackerMan</string>
     <string name="action_settings">Settings</string>
     <string name="off_road_button">Off Road</string>
-    <string name="products_button">Productos</string>
+    <string name="products_button">Products</string>
+    <string name="client_id">ID</string>
+    <string name="client_lastname">Lastname</string>
+    <string name="client_name">Name</string>
+    <string name="client_cuil">CUIL</string>
+    <string name="client_address">Address</string>
+    <string name="client_phone">Phone</string>
+    <string name="client_email">Email</string>
+    <string name="clients_option">Off Road</string>
+    <string name="products_option">Products</string>
 </resources>
