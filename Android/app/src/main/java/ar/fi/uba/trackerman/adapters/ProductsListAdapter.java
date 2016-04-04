@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
@@ -83,7 +84,9 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
 
         holder.name.setText(product.getName());
         holder.brand.setText(product.getBrand());
-        holder.price.setText(Double.toString(product.getPrice()));
+        DecimalFormat decimalFormat = new DecimalFormat("¤ #,##0.00");
+        String formattedValue = decimalFormat.format(product.getPrice());
+        holder.price.setText(formattedValue);
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;
