@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openProductsActivity(View view) {
-        Snackbar.make(view, "Not Yet Implemented!", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Intent intent = new Intent(this, ProductsListActivity.class);
+        startActivity(intent);
     }
 }

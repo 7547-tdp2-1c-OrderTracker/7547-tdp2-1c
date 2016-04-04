@@ -16,28 +16,18 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="ar.fi.uba.trackerman.activities.MyClientsActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.fi.uba.trackerman.activities.MainActivity" />
+            android:name="ar.fi.uba.trackerman.activities.MyClientsActivity">
         </activity>
         <activity
-            android:name="ar.fi.uba.trackerman.activities.ClientDetailActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="ar.fi.uba.trackerman.activities.MyClientsActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.fi.uba.trackerman.activities.MyClientsActivity" />
+            android:name="ar.fi.uba.trackerman.activities.ClientDetailActivity">
         </activity>
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.ProductsListActivity">
+            </activity>
     </application>
 
 </manifest>

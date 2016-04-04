@@ -21,8 +21,6 @@ public class ClientDetailActivity extends AppCompatActivity {
         Intent intent= getIntent();
         long clientId= intent.getLongExtra(Intent.EXTRA_UID,0);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_client_detail);
-        setSupportActionBar(toolbar);
         Fragment fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_client_detail);
         new GetClientTask(fragment).execute(Long.toString(clientId));
     }
