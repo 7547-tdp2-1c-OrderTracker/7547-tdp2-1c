@@ -3,24 +3,18 @@ package ar.fi.uba.trackerman.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import ar.fi.uba.trackerman.activities.ClientDetailActivity;
+import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.tasks.GetClientListTask;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -53,7 +47,7 @@ public class ClientsListFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Client client= (Client)parent.getItemAtPosition(position);
-        Intent intent = new Intent(getContext(), ClientDetailActivity.class);
+        Intent intent = new Intent(getContext(), ClientActivity.class);
         intent.putExtra(Intent.EXTRA_UID,client.getId());
         startActivity(intent);
     }

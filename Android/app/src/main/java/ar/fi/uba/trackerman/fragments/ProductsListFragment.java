@@ -1,6 +1,5 @@
 package ar.fi.uba.trackerman.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,10 +11,8 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-import ar.fi.uba.trackerman.activities.ClientDetailActivity;
-import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
+
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
-import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Product;
 import fi.uba.ar.soldme.R;
 

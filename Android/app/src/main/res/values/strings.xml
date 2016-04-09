@@ -12,4 +12,6 @@
     <string name="client_email">Email</string>
     <string name="clients_option">Off Road</string>
     <string name="products_option">Products</string>
+    <string name="title_activity_client">ClientActivity</string>
+    <string name="create_order_comment">ClientActivity</string>
 </resources>
