@@ -1,7 +1,6 @@
 package ar.fi.uba.trackerman.tasks;
 
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -16,17 +15,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.fragments.ClientDetailFragment;
 
 /**
  * Created by plucadei on 31/3/16.
  */
 public class GetClientTask extends AsyncTask<String,Void,Client> {
-    private static final String SERVER_HOST="http://192.168.1.43:8090";
-    private WeakReference<Fragment> weekFragmentReference;
+    private static final String SERVER_HOST="http://192.168.1.35:8090";
+    private WeakReference<ClientReciver> weekReciverReference;
 
-    public GetClientTask(Fragment fragment) {
-        weekFragmentReference = new WeakReference<Fragment>(fragment);
+    public GetClientTask(ClientReciver reciver) {
+        weekReciverReference = new WeakReference<ClientReciver>(reciver);
     }
     @Override
     protected Client doInBackground(String... params) {
@@ -96,12 +94,16 @@ public class GetClientTask extends AsyncTask<String,Void,Client> {
     protected void onPostExecute(Client client) {
 
         super.onPostExecute(client);
-        Fragment fragment= weekFragmentReference.get();
-        if(fragment!=null){
-            ((ClientDetailFragment)fragment).updateClientInformation(client);
+        ClientReciver reciver= weekReciverReference.get();
+        if(reciver!=null){
+            ((ClientReciver)reciver).updateClientInformation(client);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
+    }
+
+    public interface ClientReciver{
+        public void updateClientInformation(Client client);
     }
 
 }
