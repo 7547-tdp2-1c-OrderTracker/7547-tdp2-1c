@@ -20,7 +20,7 @@ import ar.fi.uba.trackerman.domains.Client;
  * Created by plucadei on 31/3/16.
  */
 public class GetClientTask extends AsyncTask<String,Void,Client> {
-    private static final String SERVER_HOST="http://192.168.1.35:8090";
+    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
     private WeakReference<ClientReciver> weekReciverReference;
 
     public GetClientTask(ClientReciver reciver) {

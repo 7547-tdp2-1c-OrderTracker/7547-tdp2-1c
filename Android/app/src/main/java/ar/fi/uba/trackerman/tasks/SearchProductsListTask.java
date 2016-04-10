@@ -21,7 +21,7 @@ import ar.fi.uba.trackerman.domains.ProductsSearchResult;
 
 public class SearchProductsListTask extends AsyncTask<Long,Void,ProductsSearchResult> {
 
-    private static final String SERVER_HOST="http://192.168.1.35:8090";
+    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
     private WeakReference<ProductsListAdapter> weekAdapterReference;
 
     public SearchProductsListTask(ProductsListAdapter adapter) {
