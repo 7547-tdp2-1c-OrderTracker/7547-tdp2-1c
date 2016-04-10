@@ -3,8 +3,6 @@ package ar.fi.uba.trackerman.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,7 +15,14 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.tasks.GetClientTask;
 import fi.uba.ar.soldme.R;
 
-public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver{
+public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener{
+
+    private long clientId;
+
+    public ClientActivity(){
+        super();
+        clientId=0;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +33,20 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent= getIntent();
-        long clientId= intent.getLongExtra(Intent.EXTRA_UID, 0);
+        clientId= intent.getLongExtra(Intent.EXTRA_UID, 0);
         new GetClientTask(this).execute(Long.toString(clientId));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, getString(R.string.create_order_comment), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
     }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(this, ProductsListActivity.class);
+        intent.putExtra(Intent.EXTRA_UID,clientId);
+        startActivity(intent);
+    }
+
     public void updateClientInformation(Client client){
             Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
             ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
