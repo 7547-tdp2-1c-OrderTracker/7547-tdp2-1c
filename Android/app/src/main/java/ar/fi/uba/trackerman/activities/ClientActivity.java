@@ -49,5 +49,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             ((TextView)findViewById(R.id.client_detail_address)).setText(client.getAddress());
             ((TextView)findViewById(R.id.client_detail_phone)).setText(client.getPhoneNumber());
             ((TextView)findViewById(R.id.client_detail_email)).setText(client.getEmail());
+            String mapURL="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=400x300&maptype=roadmap&key=AIzaSyB7KkfXSNVvngEQ0LwhvLSt7i1oB4p2RdQ&center="+client.getLat()+','+client.getLon()+"&markers=color:blue%7C"+client.getLat()+','+client.getLon();
+            Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
     }
 }
