@@ -1,17 +1,16 @@
 <resources>
     <string name="app_name">TrackerMan</string>
     <string name="action_settings">Opciones</string>
-    <string name="off_road_button">Clientes</string>
-    <string name="products_button">Productos</string>
-    <string name="client_id">Codigo</string>
+    <string name="action_filter">Filtrar</string>
+
+    <string name="client_id">Código</string>
     <string name="client_lastname">Apellido</string>
     <string name="client_name">Nombre</string>
     <string name="client_cuil">CUIL</string>
-    <string name="client_address">Direccion</string>
-    <string name="client_phone">Telefono</string>
+    <string name="client_address">Dirección</string>
+    <string name="client_phone">Teléfono</string>
     <string name="client_email">Email</string>
-    <string name="clients_option">Clientes</string>
-    <string name="products_option">Productos</string>
-    <string name="title_activity_client">ClientActivity</string>
-    <string name="create_order_comment">ClientActivity</string>
+
+    <string name="clients">Clientes</string>
+    <string name="products">Productos</string>
 </resources>

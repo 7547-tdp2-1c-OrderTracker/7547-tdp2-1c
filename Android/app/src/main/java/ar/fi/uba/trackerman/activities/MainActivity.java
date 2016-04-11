@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        String[] options={getString(R.string.clients_option),getString(R.string.products_option)};
+        String[] options={getString(R.string.clients),getString(R.string.products)};
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, options));

@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +49,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     }
 
     public void updateClientInformation(Client client){
+            ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getLastName()+", "+client.getName());
             Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
             ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
             ((TextView)findViewById(R.id.client_detail_lastname)).setText(client.getLastName());

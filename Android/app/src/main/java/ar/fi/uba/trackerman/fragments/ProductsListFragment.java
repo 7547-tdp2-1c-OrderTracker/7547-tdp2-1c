@@ -21,10 +21,6 @@ import fi.uba.ar.soldme.R;
  */
 public class ProductsListFragment extends Fragment implements AdapterView.OnItemClickListener{
 
-    public ProductsListFragment(){
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -14,10 +14,8 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
-import ar.fi.uba.trackerman.tasks.GetClientListTask;
 import ar.fi.uba.trackerman.tasks.SearchProductsListTask;
 import fi.uba.ar.soldme.R;
 
@@ -27,7 +25,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
     private boolean fetching;
 
     public ProductsListAdapter(Context context, int resource,
-                              List<Product> products) {
+                               List<Product> products) {
         super(context, resource, products);
         total=1;
         offset=0;
@@ -98,5 +96,4 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         public TextView price;
         public ImageView image;
     }
-
 }
