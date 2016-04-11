@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
+import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -62,7 +63,7 @@ public class BrandsListAdapter extends ArrayAdapter<Brand> {
         }
 
         holder.name.setText(brand.getName());
-        Picasso.with(this.getContext()).load(brand.getPicture()).into(holder.image);
+        Picasso.with(this.getContext()).load(brand.getPicture()).transform(new CircleTransform()).into(holder.image);
 
         return convertView;
     }

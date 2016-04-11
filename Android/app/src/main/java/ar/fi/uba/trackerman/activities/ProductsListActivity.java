@@ -30,8 +30,13 @@ public class ProductsListActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(this, ProductsFilterActivity.class);
-        startActivity(intent);
-        return true;
+        if(item.getItemId()==R.id.action_filter) {
+            Intent intent = new Intent(this, ProductsFilterActivity.class);
+            startActivity(intent);
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }

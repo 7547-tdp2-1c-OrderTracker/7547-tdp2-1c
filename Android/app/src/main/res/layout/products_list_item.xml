@@ -26,11 +26,5 @@
             android:layout_height="wrap_content"
             android:text="Brand"
             android:id="@+id/product_row_brand" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Price"
-            android:id="@+id/product_row_price" />
     </LinearLayout>
 </LinearLayout>
