@@ -89,7 +89,8 @@
                 android:layout_column="1"
                 android:text="@string/codigo_del_cliente"
                 android:textSize="18sp"
-                android:layout_margin="16dp" />
+                android:layout_margin="16dp"
+                android:layout_marginRight="50dp" />
 
             <ImageView
                 android:layout_width="56dp"
@@ -107,7 +108,8 @@
                 android:layout_column="1"
                 android:textSize="18sp"
                 android:layout_margin="16dp"
-                android:text="@string/nombre_del_cliente" />
+                android:text="@string/nombre_del_cliente"
+                android:layout_marginRight="50dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +129,8 @@
                 android:layout_column="1"
                 android:textSize="18sp"
                 android:layout_margin="16dp"
-                android:text="@string/cuil_del_cliente" />
+                android:text="@string/cuil_del_cliente"
+                android:layout_marginRight="50dp" />
         </GridLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -158,7 +161,8 @@
                     android:text="@string/direcci_n_del_cliente"
                     android:textSize="18sp"
                     android:textIsSelectable="true"
-                    android:nestedScrollingEnabled="false" />
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginRight="50dp" />
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -170,7 +174,8 @@
                     android:id="@+id/client_detail_phone"
                     android:layout_margin="16dp"
                     android:text="@string/tel_fono_del_cliente"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_marginRight="50dp" />
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -182,7 +187,8 @@
                     android:id="@+id/client_detail_email"
                     android:layout_margin="16dp"
                     android:text="@string/email_del_cliente"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_marginRight="50dp" />
             </GridLayout>
 
         </android.support.v7.widget.CardView>
