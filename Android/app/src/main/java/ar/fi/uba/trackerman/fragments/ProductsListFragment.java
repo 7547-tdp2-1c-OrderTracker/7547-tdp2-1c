@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-
+import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
 import ar.fi.uba.trackerman.domains.Product;
 import fi.uba.ar.soldme.R;
@@ -42,5 +43,8 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Product product= (Product)parent.getItemAtPosition(position);
+        Intent intent = new Intent(getContext(), ProductActivity.class);
+        intent.putExtra(Intent.EXTRA_UID,product.getId());
+        startActivity(intent);
     }
 }

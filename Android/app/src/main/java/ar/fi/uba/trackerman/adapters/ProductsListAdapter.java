@@ -19,6 +19,7 @@ import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 public class ProductsListAdapter extends ArrayAdapter<Product> {
+
     private long total;
     private long offset;
     private boolean fetching;
