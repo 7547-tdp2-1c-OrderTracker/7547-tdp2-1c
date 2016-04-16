@@ -98,7 +98,10 @@ public class SearchProductsListTask extends AsyncTask<Long,Void,ProductsSearchRe
             product= new Product(row.getLong("id"));
             product.setName(row.getString("name"));
             product.setBrand(row.getString("brand"));
-            product.setPrice(row.getDouble("price"));
+            // @TODO: deberiamos volar en algun momento el price. verificar tambien la clase Product y que todo cierre.
+            product.setPrice(row.getDouble("retailPrice"));
+            product.setRetailPrice(row.getDouble("retailPrice"));
+            product.setWholesalePrice(row.getDouble("wholesalePrice"));
             product.setCurrency(row.getString("currency"));
             product.setStock(row.getInt("stock"));
             product.setPicture(row.getString("picture"));

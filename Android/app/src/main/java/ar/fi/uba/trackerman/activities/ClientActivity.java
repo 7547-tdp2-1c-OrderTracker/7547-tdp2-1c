@@ -51,6 +51,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     public void updateClientInformation(Client client){
             ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getFullName());
             Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
+
             ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
             ((TextView)findViewById(R.id.client_detail_name)).setText(client.getFullName());
             ((TextView)findViewById(R.id.client_detail_cuil)).setText(client.getCuil());

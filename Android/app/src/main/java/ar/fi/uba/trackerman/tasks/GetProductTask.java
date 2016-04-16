@@ -66,6 +66,11 @@ public class GetProductTask extends AsyncTask<String,Void,Product> {
                     product.setPicture(row.getString("picture"));
                     product.setStock(row.getInt("stock"));
                     product.setDescription(row.getString("description"));
+                    product.setCurrency(row.getString("currency"));
+                    // @TODO: deberiamos volar en algun momento el price. verificar tambien la clase Product y que todo cierre.
+                    product.setPrice(row.getDouble("retailPrice"));
+                    product.setRetailPrice(row.getDouble("retailPrice"));
+                    product.setWholesalePrice(row.getDouble("wholesalePrice"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

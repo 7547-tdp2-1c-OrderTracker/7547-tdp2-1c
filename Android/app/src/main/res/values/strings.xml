@@ -25,6 +25,7 @@
     <string name="nombre_del_producto">Nombre del producto</string>
     <string name="marca_del_producto">Marca del producto</string>
     <string name="stock_del_producto">Stock del producto</string>
+    <string name="precio_del_producto">Precio del producto</string>
     <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
 
 </resources>

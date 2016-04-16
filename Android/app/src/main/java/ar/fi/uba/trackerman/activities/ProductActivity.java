@@ -65,7 +65,9 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_name)).setText(product.getName());
         ((TextView) findViewById(R.id.product_detail_brand)).setText(product.getBrand());
         ((TextView) findViewById(R.id.product_detail_stock)).setText(Long.toString(product.getStock()));
+        ((TextView) findViewById(R.id.product_detail_price)).setText(product.getPriceWithCurrency());
         ((TextView) findViewById(R.id.product_detail_description)).setText(product.getDescription());
+
     }
 
 }
