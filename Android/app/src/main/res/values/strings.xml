@@ -15,10 +15,19 @@
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
+
     <string name="email_del_cliente">Email del cliente</string>
     <string name="tel_fono_del_cliente">Teléfono del cliente</string>
     <string name="direcci_n_del_cliente">Dirección del cliente</string>
     <string name="codigo_del_cliente">Código del cliente</string>
     <string name="nombre_del_cliente">Nombre del Cliente</string>
     <string name="cuil_del_cliente">CUIL del Cliente</string>
+
+    <string name="codigo_del_producto">Codigo del producto</string>
+    <string name="nombre_del_producto">Nombre del producto</string>
+    <string name="marca_del_producto">Marca del producto</string>
+    <string name="stock_del_producto">Stock del producto</string>
+    <string name="precio_del_producto">Precio del producto</string>
+    <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
+
 </resources>

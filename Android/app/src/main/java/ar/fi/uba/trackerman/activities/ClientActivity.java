@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -37,23 +38,34 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         clientId= intent.getLongExtra(Intent.EXTRA_UID, 0);
         new GetClientTask(this).execute(Long.toString(clientId));
 
+        View phoneView=findViewById(R.id.client_detail_phone);
+        phoneView.setOnClickListener(this);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(this, ProductsListActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,clientId);
-        startActivity(intent);
+        if (view.getId()==R.id.fab) {
+            Intent intent = new Intent(this, ProductsListActivity.class);
+            intent.putExtra(Intent.EXTRA_UID, clientId);
+            startActivity(intent);
+        }else
+        if(view.getId()==R.id.client_detail_phone){
+            String uri = "tel:" + ((TextView)view).getText().toString().trim();
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(uri));
+            startActivity(intent);
+        }
     }
 
     public void updateClientInformation(Client client){
-            ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getLastName()+", "+client.getName());
+            ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getFullName());
             Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
+
             ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
-            //((TextView)findViewById(R.id.client_detail_lastname)).setText(client.getLastName());
-            ((TextView)findViewById(R.id.client_detail_name)).setText(client.getLastName() +", "+client.getName());
+            ((TextView)findViewById(R.id.client_detail_name)).setText(client.getFullName());
             ((TextView)findViewById(R.id.client_detail_cuil)).setText(client.getCuil());
             ((TextView)findViewById(R.id.client_detail_address)).setText(client.getAddress());
             ((TextView)findViewById(R.id.client_detail_phone)).setText(client.getPhoneNumber());
