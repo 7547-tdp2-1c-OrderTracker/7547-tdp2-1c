@@ -89,7 +89,7 @@ public class GetBrandsListTask extends AsyncTask<Long,Void,List<Brand>> {
         Brand brand;
         for (int i = 0; i < resultJSON.length(); i++) {
             JSONObject row = resultJSON.getJSONObject(i);
-            brand= new Brand(row.getString("name"),row.getString("picture"));
+            brand= new Brand(row.getLong("id"),row.getString("name"),row.getString("picture"));
             brands.add(brand);
         }
         return brands;

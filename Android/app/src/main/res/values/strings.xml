@@ -11,6 +11,8 @@
     <string name="client_phone">Teléfono</string>
     <string name="client_email">Email</string>
 
+    <string name="apply">Aplicar</string>
+
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
     <string name="email_del_cliente">Email del cliente</string>

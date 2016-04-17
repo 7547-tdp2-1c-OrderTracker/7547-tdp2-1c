@@ -5,11 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
@@ -19,11 +22,14 @@ import fi.uba.ar.soldme.R;
 /**
  * Created by plucadei on 10/4/16.
  */
-public class BrandsListAdapter extends ArrayAdapter<Brand> {
+public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterView.OnItemClickListener{
+
+    List<Long> selected;
 
     public BrandsListAdapter(Context context, int resource,
                              List<Brand> brands) {
         super(context, resource, resource, brands);
+        selected= new ArrayList<>();
     }
 
     public void refresh(){
@@ -64,12 +70,33 @@ public class BrandsListAdapter extends ArrayAdapter<Brand> {
 
         holder.name.setText(brand.getName());
         Picasso.with(this.getContext()).load(brand.getPicture()).transform(new CircleTransform()).into(holder.image);
-
+        if(selected.contains(brand.getId())){
+            convertView.setBackgroundResource(R.color.colorAccent);
+        }else {
+            convertView.setBackgroundResource(android.R.color.transparent);
+        }
         return convertView;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Brand brand=this.getItem(position);
+        if(selected.contains(brand.getId())){
+            selected.remove(brand.getId());
+            view.setBackgroundResource(android.R.color.transparent);
+        }else{
+            selected.add(brand.getId());
+            view.setBackgroundResource(R.color.colorAccent);
+        }
+    }
+
+    public List<Long> getSelected(){
+        return selected;
     }
 
     private static class ViewHolder {
         public TextView name;
         public ImageView image;
     }
+
 }

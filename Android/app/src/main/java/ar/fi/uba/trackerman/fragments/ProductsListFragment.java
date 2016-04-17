@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,14 +22,19 @@ import fi.uba.ar.soldme.R;
  */
 public class ProductsListFragment extends Fragment implements AdapterView.OnItemClickListener{
 
+    private String brands;
+    private ProductsListAdapter productsAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        brands=null;
         View fragmentView= inflater.inflate(R.layout.fragment_products_list, container, false);
         ListView productsList= (ListView)fragmentView.findViewById(R.id.productsListView);
+        Activity activity= getActivity();
 
-        ProductsListAdapter productsAdapter = new ProductsListAdapter( getContext(), R.layout.products_list_item, new ArrayList<Product>());
+        productsAdapter = new ProductsListAdapter( getContext(), R.layout.products_list_item, new ArrayList<Product>());
+        productsAdapter.setBrands(brands);
         productsList.setAdapter(productsAdapter);
         productsList.setOnItemClickListener(this);
 
@@ -37,6 +43,11 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
         productsList.setEmptyView(bar);
         productsAdapter.refresh();
         return fragmentView;
+    }
+
+    public void setBrands(String brands){
+        productsAdapter.setBrands(brands);
+        productsAdapter.refresh();
     }
 
     @Override

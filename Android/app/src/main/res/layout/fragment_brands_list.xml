@@ -8,5 +8,5 @@
     android:id="@+id/brands_list_view"
     android:layout_weight="1"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_products_filter">/>
+    tools:showIn="@layout/activity_products_filter">
 </ListView>

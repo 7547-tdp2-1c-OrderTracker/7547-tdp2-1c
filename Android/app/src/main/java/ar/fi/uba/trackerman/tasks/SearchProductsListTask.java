@@ -23,9 +23,11 @@ public class SearchProductsListTask extends AsyncTask<Long,Void,ProductsSearchRe
 
     private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
     private WeakReference<ProductsListAdapter> weekAdapterReference;
+    private String brandFilter;
 
-    public SearchProductsListTask(ProductsListAdapter adapter) {
+    public SearchProductsListTask(ProductsListAdapter adapter, String brandsFilter) {
         weekAdapterReference = new WeakReference<ProductsListAdapter>(adapter);
+        this.brandFilter=brandsFilter;
     }
 
     @Override
@@ -41,6 +43,9 @@ public class SearchProductsListTask extends AsyncTask<Long,Void,ProductsSearchRe
             String urlString= SERVER_HOST+"/v1/products?limit=10";
             if(offset!=null){
                 urlString+="&offset="+offset.toString();
+            }
+            if(brandFilter!=null){
+                urlString+="&brand_id="+brandFilter;
             }
             Log.d(this.getClass().getCanonicalName(), "About to get :" + urlString);
             URL url = new URL(urlString);
@@ -98,7 +103,7 @@ public class SearchProductsListTask extends AsyncTask<Long,Void,ProductsSearchRe
             product= new Product(row.getLong("id"));
             product.setName(row.getString("name"));
             product.setBrand(row.getString("brand"));
-            product.setPrice(row.getDouble("price"));
+            //product.setPrice(row.getDouble("price"));
             product.setCurrency(row.getString("currency"));
             product.setStock(row.getInt("stock"));
             product.setPicture(row.getString("picture"));

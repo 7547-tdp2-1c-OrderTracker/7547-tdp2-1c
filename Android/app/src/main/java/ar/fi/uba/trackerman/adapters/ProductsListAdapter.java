@@ -22,6 +22,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
     private long total;
     private long offset;
     private boolean fetching;
+    private String brands;
 
     public ProductsListAdapter(Context context, int resource,
                                List<Product> products) {
@@ -40,7 +41,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            SearchProductsListTask asyncTask= new SearchProductsListTask(this);
+            SearchProductsListTask asyncTask= new SearchProductsListTask(this,brands);
             asyncTask.execute(offset);
         }
     }
@@ -83,6 +84,10 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;
+    }
+
+    public void setBrands(String brands) {
+        this.brands = brands;
     }
 
     private static class ViewHolder {
