@@ -60,7 +60,7 @@
         tools:context="ar.fi.uba.trackerman.activities.ClientActivity"
         tools:showIn="@layout/activity_client">
         <android.support.v7.widget.CardView
-            android:visibility=""
+            android:visibility="visible"
             android:layout_gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
