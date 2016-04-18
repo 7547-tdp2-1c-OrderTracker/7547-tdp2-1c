@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +14,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.tasks.GetClientTask;
+import ar.fi.uba.trackerman.tasks.OrdersTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener{
@@ -48,9 +54,27 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     @Override
     public void onClick(View view) {
         if (view.getId()==R.id.fab) {
-            Intent intent = new Intent(this, ProductsListActivity.class);
-            intent.putExtra(Intent.EXTRA_UID, clientId);
-            startActivity(intent);
+
+            // validar si existe una orden
+            // si no hay orden, crear una nueva
+            // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
+            OrdersTask ot = new OrdersTask();
+            String vendor = String.valueOf(AppSettings.getVendorId());
+            List orders = ot.getDraftOrders(vendor);
+            if (orders == null) {
+                // mostrar SnackBar
+                CoordinatorLayout cl  = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
+                ShowMessage.showSnackbarSimpleMessage(cl, "No se puede iniciar un nuevo pedido 111");
+            } else {
+
+                CoordinatorLayout cl  = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
+                ShowMessage.showSnackbarSimpleMessage(cl, "No se puede iniciar un nuevo pedido 2222");
+
+//                Intent intent = new Intent(this, ProductsListActivity.class);
+  //              intent.putExtra(Intent.EXTRA_UID, clientId);
+    //            startActivity(intent);
+            }
+
         }else
         if(view.getId()==R.id.client_detail_phone){
             String uri = "tel:" + ((TextView)view).getText().toString().trim();

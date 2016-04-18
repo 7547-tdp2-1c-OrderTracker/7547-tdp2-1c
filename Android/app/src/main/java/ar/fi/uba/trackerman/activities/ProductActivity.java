@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.Snackbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
@@ -23,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.tasks.GetProductTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 
@@ -55,8 +55,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     public void showSnackbarSimpleMessage(String msg){
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG);
-        snackbar.show();
+        ShowMessage.showSnackbarSimpleMessage(coordinatorLayout, "Agregar este producto al carro y mostrar carro!");
     }
 
     public boolean isValidQuantity(String txt) {
