@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.domains;
 
 public class OrderItem {
+    private long id;
     private String thumbnail;
     private String brand;
     private long productId;
@@ -9,7 +10,8 @@ public class OrderItem {
     private String currency;
     private int quantity;
 
-    public OrderItem(long productId, String name, int quantity, double unitPrice, String currency, String brand, String thumbnail){
+    public OrderItem(long id, long productId, String name, int quantity, double unitPrice, String currency, String brand, String thumbnail){
+        this.id= id;
         this.productId= productId;
         this.name= name;
         this.unitPrice= unitPrice;
@@ -17,6 +19,10 @@ public class OrderItem {
         this.quantity= quantity;
         this.thumbnail= thumbnail;
         this.brand=brand;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public long getProductId() {

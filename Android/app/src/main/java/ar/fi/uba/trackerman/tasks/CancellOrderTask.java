@@ -65,8 +65,7 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
             }
             orderJsonStr = buffer.toString();
             try {
-                return getMockedOrder(orderJsonStr);
-                // return parseOrderJson(orderJsonStr);
+                return parseOrderJson(orderJsonStr);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -88,35 +87,30 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
         return order;
     }
 
-    private Order getMockedOrder(String lalala) throws JSONException{
-        Order order= new Order(3,3,3,"Hoy","cancelled",50.00,"ARS");
-        order.addOrderItem(new OrderItem(1,"Zapatilla Nike",3,15.00,"ARS","Adidas","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png"));
-        order.addOrderItem(new OrderItem(2,"Medias Puma",1,5.00,"ARS","Adidas","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png"));
-        return order;
-    };
-
     private Order parseOrderJson(String orderJsonStr) throws JSONException{
         Order order;
         JSONObject orderJson = new JSONObject(orderJsonStr);
         long id=orderJson.getLong("id");
         long vendorId= orderJson.getLong("vendor_id");
         long clientId= orderJson.getLong("client_id");
-        String dateCreated= orderJson.getString("date_created");
+        String dateCreated= "HOY";orderJson.getString("delivery_date");
         double total_price= orderJson.getDouble("total_price");
-        String currency= orderJson.getString("currency");
+        // TODO: DESCOMENTAR ESTO!!!
+        String currency= "ARS";//orderJson.getString("currency");
         String status= orderJson.getString("status");
         order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
         JSONArray itemsJson= orderJson.getJSONArray("order_items");
         for (int i = 0; i < itemsJson.length(); i++) {
             JSONObject row = itemsJson.getJSONObject(i);
+            long itemId= row.getLong("id");
             long product_id = row.getLong("product_id");
             String name= row.getString("name");
             int quantity= row.getInt("quantity");
-            double price= row.getDouble("price");
+            double price= row.getDouble("unit_price");
             String currencyItem= row.getString("currency");
-            String brand= row.getString("brand");
-            String picture= row.getString("picture");
-            OrderItem item= new OrderItem(product_id,name,quantity,price,currencyItem,brand,picture);
+            String brand= "ADIDAS";//row.getString("brand");
+            String picture= "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png";//row.getString("picture");
+            OrderItem item= new OrderItem(itemId,product_id,name,quantity,price,currencyItem,brand,picture);
             order.addOrderItem(item);
         }
         return order;
