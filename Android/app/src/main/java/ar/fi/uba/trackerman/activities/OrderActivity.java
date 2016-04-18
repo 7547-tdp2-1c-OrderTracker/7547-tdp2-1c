@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
     private long orderId=0;
     private long itemId=0;
     ListView orderItems;
+    OrderActivity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
         orderId= intent.getLongExtra(Intent.EXTRA_UID, 0);
         GetOrderTask task= new GetOrderTask(this);
         task.execute(Long.toString(orderId));
+        activity= this;
     }
 
     @Override
@@ -140,7 +143,9 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
                                     if("FAIL".equals(result)){
                                         Log.e(this.getClass().getCanonicalName(),"Fail");
                                     }else{
-                                        Log.e(this.getClass().getCanonicalName(),"Done");
+                                        Log.e(this.getClass().getCanonicalName(),"ACA TOY");
+                                        GetOrderTask task= new GetOrderTask(activity);
+                                        task.execute(Long.toString(orderId));
                                     }
                                 };
                             });

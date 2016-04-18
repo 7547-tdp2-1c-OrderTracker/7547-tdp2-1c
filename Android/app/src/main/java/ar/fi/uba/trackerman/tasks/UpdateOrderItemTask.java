@@ -26,7 +26,7 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String> {
 
     @Override
     protected String doInBackground(String... params) {
-
+        Log.e(this.getClass().getCanonicalName(),"ACA tOY 1");
         String orderId= params[0];
         String itemId= params[1];
         String quantity= params[2];
@@ -89,7 +89,7 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String> {
         if(modifier!=null){
             modifier.updateOrderItem(result);
         }else{
-            Log.w(this.getClass().getCanonicalName(), "Adapter no longer available!");
+            Log.e(this.getClass().getCanonicalName(), "Adapter no longer available!");
         }
     }
 

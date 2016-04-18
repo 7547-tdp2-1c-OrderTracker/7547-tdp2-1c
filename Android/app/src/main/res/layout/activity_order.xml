@@ -35,7 +35,7 @@
             android:layout_height="match_parent">
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="437dp"
                 android:id="@+id/order_items_list">
             </ListView>
             <TextView

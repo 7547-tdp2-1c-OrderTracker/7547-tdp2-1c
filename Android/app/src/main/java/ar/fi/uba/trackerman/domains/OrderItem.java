@@ -99,4 +99,8 @@ public class OrderItem {
     public String toString() {
         return name;
     }
+
+    public double getTotalPrice() {
+        return quantity*unitPrice;
+    }
 }
