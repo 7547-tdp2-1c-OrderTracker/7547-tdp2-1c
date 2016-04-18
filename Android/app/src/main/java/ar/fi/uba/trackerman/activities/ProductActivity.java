@@ -1,6 +1,8 @@
 package ar.fi.uba.trackerman.activities;
 
+import android.content.DialogInterface;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +10,13 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.Snackbar;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.squareup.picasso.Picasso;
@@ -23,6 +29,7 @@ import fi.uba.ar.soldme.R;
 public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReciver, View.OnClickListener{
 
     private long productId;
+    private int quantity;
 
     public ProductActivity(){
         super();
@@ -52,12 +59,69 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         snackbar.show();
     }
 
+    public boolean isValidQuantity(String txt) {
+        if (txt.isEmpty()) return false;
+        if (Integer.parseInt(txt.toString()) == 0) return false;
+        return true;
+    }
+
+    public boolean isValidStock(String txt) {
+        if (isValidQuantity(txt)) {
+            if (Integer.parseInt(txt.toString()) <= this.quantity) return true;
+        }
+        return false;
+    }
+
+    public void showQuantityDialog() {
+
+        final EditText edittext = new EditText(this);
+        edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Indicar cantidad")
+                .setMessage("")
+                .setView(edittext)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String editTextValue = edittext.getText().toString();
+
+                        if (isValidQuantity(editTextValue)) {
+                            if (isValidStock(editTextValue)){
+
+                                // TODO: agregar el item al pedido usando la cantidad
+
+                                String msg = "Cantidad:"+ editTextValue + "Agregar producto al carro y mostrar pedido";
+                                showSnackbarSimpleMessage(msg);
+                            } else {
+                                showSnackbarSimpleMessage("Stock inválido");
+                            }
+                        } else {
+                            showSnackbarSimpleMessage("Valor inválido");
+                        }
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                    }
+                })
+                .show();
+
+    }
+
     @Override
     public void onClick(View view) {
-        showSnackbarSimpleMessage("Agregar este producto al carro y mostrar carro!");
+
+        if (view.getId()==R.id.fab) {
+            showQuantityDialog();
+        }
+
     }
 
     public void updateProductInformation(Product product) {
+
+        this.quantity = product.getStock();
+
         ((CollapsingToolbarLayout) findViewById(R.id.product_detail_collapsing_toolbar)).setTitle(product.getName());
         Picasso.with(this).load(product.getPicture()).into(((ImageView) findViewById(R.id.product_detail_image)));
 
