@@ -20,16 +20,25 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.GetProductTask;
+import ar.fi.uba.trackerman.tasks.PostOrderItemsTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 
-public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReciver, View.OnClickListener{
+public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReciver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long productId;
     private int quantity;
+    private List<Order> draftOrders;
 
     public ProductActivity(){
         super();
@@ -51,24 +60,24 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+
+        //Preguntamos por las ordenes
+        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
     }
 
     public void showSnackbarSimpleMessage(String msg){
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
-        ShowMessage.showSnackbarSimpleMessage(coordinatorLayout, "Agregar este producto al carro y mostrar carro!");
+        ShowMessage.showSnackbarSimpleMessage(coordinatorLayout, msg);
     }
 
     public boolean isValidQuantity(String txt) {
         if (txt.isEmpty()) return false;
-        if (Integer.parseInt(txt.toString()) == 0) return false;
-        return true;
+        return Integer.parseInt(txt) > 0;
     }
 
     public boolean isValidStock(String txt) {
-        if (isValidQuantity(txt)) {
-            if (Integer.parseInt(txt.toString()) <= this.quantity) return true;
-        }
-        return false;
+        return Integer.parseInt(txt) <= this.quantity;
     }
 
     public void showQuantityDialog() {
@@ -82,20 +91,16 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
                 .setView(edittext)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String editTextValue = edittext.getText().toString();
+                        String quantityRequested = edittext.getText().toString();
 
-                        if (isValidQuantity(editTextValue)) {
-                            if (isValidStock(editTextValue)){
-
-                                // TODO: agregar el item al pedido usando la cantidad
-
-                                String msg = "Cantidad:"+ editTextValue + "Agregar producto al carro y mostrar pedido";
-                                showSnackbarSimpleMessage(msg);
+                        if (isValidQuantity(quantityRequested)) {
+                            if (isValidStock(quantityRequested)) {
+                                addingItemsToOrder(String.valueOf(draftOrders.get(0).getId()), String.valueOf(productId), quantityRequested);
                             } else {
-                                showSnackbarSimpleMessage("Stock inválido");
+                                showSnackbarSimpleMessage("Lo siento! disponemos de "+quantity+" unidades");
                             }
                         } else {
-                            showSnackbarSimpleMessage("Valor inválido");
+                            showSnackbarSimpleMessage("El valor es inválido!");
                         }
                     }
                 })
@@ -108,11 +113,26 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     }
 
+
+    private void addingItemsToOrder(String orderId, String productId, String quantity) {
+        new PostOrderItemsTask(this).execute(orderId, productId, quantity);
+    }
+
     @Override
     public void onClick(View view) {
 
         if (view.getId()==R.id.fab) {
-            showQuantityDialog();
+            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
+            if (this.draftOrders == null) {
+                ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
+            } else if (this.draftOrders.size() == 0) {
+                // si no hay orden, Avisar
+                ShowMessage.showSnackbarSimpleMessage(cl, "No hay pedido en curso. Cree uno desde el cliente!");
+            } else {
+                // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
+                showQuantityDialog();
+            }
+
         }
 
     }
@@ -133,4 +153,15 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     }
 
+    @Override
+    public void setDraftOrders(List<Order> orders) {
+        this.draftOrders = orders;
+    }
+
+    public void afterCreatingOrderItem(OrderItem orderItem) {
+        //TODO plucadei Reemplazar por Activity correcta
+        Intent intent = new Intent(this, MyClientsActivity.class);
+        intent.putExtra(Intent.EXTRA_UID, orderItem.getId());
+        startActivity(intent);
+    }
 }

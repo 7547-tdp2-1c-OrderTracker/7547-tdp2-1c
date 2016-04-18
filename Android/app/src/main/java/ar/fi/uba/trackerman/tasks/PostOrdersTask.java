@@ -23,18 +23,18 @@ import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
-public class PostOrdersTask extends AbstractTask<String,Void,Boolean,ClientActivity>{
+public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivity>{
 
     public PostOrdersTask(ClientActivity activity) {
         super(activity);
     }
 
-    public Boolean createOrder(String vendorId, String clientId) {
+    public Order createOrder(String vendorId, String clientId) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         String json=null;
-        Boolean isOrderCreated = false;
+        Order order = null;
 
         try {
             //---------------------------------------------------------
@@ -68,7 +68,7 @@ public class PostOrdersTask extends AbstractTask<String,Void,Boolean,ClientActiv
 
             json = buffer.toString();
             try {
-                isOrderCreated = isJsonCorrect(json);
+                order = getOrderResponse(json);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -87,12 +87,11 @@ public class PostOrdersTask extends AbstractTask<String,Void,Boolean,ClientActiv
                 }
             }
         }
-        return isOrderCreated;
+        return order;
     }
 
-    private Boolean isJsonCorrect(String jsonString) throws JSONException, ParseException {
+    private Order getOrderResponse(String jsonString) throws JSONException, ParseException {
         JSONObject json = new JSONObject(jsonString);
-        Boolean isCorrect = false;
         Order order = null;
 
         try {
@@ -108,23 +107,25 @@ public class PostOrdersTask extends AbstractTask<String,Void,Boolean,ClientActiv
                 //do nothing. just because it's atomic double
             }
             order.setVendorId(json.getLong("vendor_id"));
-
-            isCorrect = true;
         } catch (Exception e) {
             Log.e("parse_create_order_json","Error parseando la creacion de la orden",e);
         }
 
-        return isCorrect;
+        return order;
     }
 
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Order doInBackground(String... params) {
         return this.createOrder(params[0], params[1]);
     }
 
     @Override
-    protected void onPostExecute(Boolean isOrderCorrect) {
-        super.onPostExecute(isOrderCorrect);
-        weakReference.get().afterCreatingOrder(isOrderCorrect);
+    protected void onPostExecute(Order order) {
+        super.onPostExecute(order);
+        if (order == null){
+            weakReference.get().showSnackbarSimpleMessage("Cáspitas! Tenemos un problema!");
+        } else {
+            weakReference.get().afterCreatingOrder(order);
+        }
     }
 }

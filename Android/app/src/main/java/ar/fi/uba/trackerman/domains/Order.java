@@ -13,12 +13,12 @@ public class Order {
     private Date dateCreated;
     private String status;
     private long clientId;
-    private List<OrderEntry> orderEntries;
+    private List<OrderItem> orderItems;
 
     public Order(long id, long clientId) {
         this.id= id;
         this.clientId = clientId;
-        this.orderEntries = Collections.EMPTY_LIST;
+        this.orderItems = Collections.EMPTY_LIST;
     }
 
     public long getId() {
@@ -73,8 +73,8 @@ public class Order {
         this.clientId = clientId;
     }
 
-    public List getOrderEntries() {
-        return orderEntries;
+    public List getOrderItems() {
+        return orderItems;
     }
 
     @Override

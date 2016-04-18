@@ -2,7 +2,6 @@ package ar.fi.uba.trackerman.tasks;
 
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,39 +9,45 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
-import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
+public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,ProductActivity>{
 
-public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,GetDraftOrdersTask.DraftOrdersValidation>{
-
-    public GetDraftOrdersTask(DraftOrdersValidation validation) {
-        super(validation);
+    public PostOrderItemsTask(ProductActivity activity) {
+        super(activity);
     }
 
-    public List<Order> getDraftOrders(String vendorId) {
+    public OrderItem createOrderItem(String orderId, String productId, String quantity) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         String json=null;
-        List<Order> orders=null;
+        OrderItem orderItem = null;
 
         try {
             //---------------------------------------------------------
-            URL url = new URL(AppSettings.getServerHost()+"/v1/orders?status=draft&vendor_id="+vendorId);
+            URL url = new URL(AppSettings.getServerHost()+"/v1/orders/"+orderId+"/order_items");
             //---------------------------------------------------------;
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+
+            String str =  "{\"product_id\": "+productId+",\"quantity\":"+quantity+"}";
+            byte[] outputInBytes = str.getBytes("UTF-8");
+            OutputStream os = urlConnection.getOutputStream();
+            os.write(outputInBytes);
+            os.close();
+
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
@@ -61,12 +66,12 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
 
             json = buffer.toString();
             try {
-                orders = parseJson(json);
+                orderItem = validateResponse(json);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (IOException e) {
-            Log.e(GetDraftOrdersTask.class.getCanonicalName(), "Error ", e);
+            Log.e(PostOrderItemsTask.class.getCanonicalName(), "Error ", e);
             return null;
         } finally{
             if (urlConnection != null) {
@@ -80,48 +85,42 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
                 }
             }
         }
-        return orders;
+        return orderItem;
     }
 
-    private List<Order> parseJson(String jsonString) throws JSONException, ParseException {
+    private OrderItem validateResponse(String jsonString) throws JSONException, ParseException {
         JSONObject json = new JSONObject(jsonString);
-        JSONArray resultJSON = (JSONArray) json.get("results");
-        List<Order> orders= new ArrayList<Order>();
-        Order order;
-        for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject row = resultJSON.getJSONObject(i);
-            order= new Order(row.getLong("id"),row.getLong("client_id"));
+        OrderItem orderItem = null;
 
-            String deliveryDate = row.getString("delivery_date");
-            if (deliveryDate != null && !"null".equalsIgnoreCase(deliveryDate)) order.setDeliveryDate(DateUtils.parseDate(deliveryDate));
-
-            String dateCreated = row.getString("date_created");
-            if (dateCreated != null && !"null".equalsIgnoreCase(dateCreated)) order.setDateCreated(DateUtils.parseDate(dateCreated));
-
-            order.setStatus(row.getString("status"));
+        try {
+            orderItem = new OrderItem(json.getLong("id"),json.getLong("order_id"),json.getLong("product_id"),json.getInt("quantity"));
+            orderItem.setName(json.getString("name"));
+            orderItem.setCurrency(json.getString("currency"));
+            orderItem.setBrandName(json.getString("brand_name"));
             try{
-                order.setTotalPrice(row.getDouble("total_price"));
+                orderItem.setUnitPrice(json.getDouble("unit_price"));
             } catch (JSONException e) {
                 //do nothing. just because it's atomic double
             }
-            order.setVendorId(row.getLong("vendor_id"));
-            orders.add(order);
+        } catch (Exception e) {
+            Log.e("create_order_item_json", "Error parseando la creacion de orden item", e);
         }
-        return orders;
+
+        return orderItem;
     }
 
     @Override
-    protected List<Order> doInBackground(String... strings) {
-        return this.getDraftOrders(strings[0]);
+    protected OrderItem doInBackground(String... params) {
+        return this.createOrderItem(params[0], params[1], params[2]);
     }
 
     @Override
-    protected void onPostExecute(List<Order> orders) {
-        super.onPostExecute(orders);
-        weakReference.get().setDraftOrders(orders);
-    }
-
-    public interface DraftOrdersValidation {
-        public void setDraftOrders(List<Order> orders);
+    protected void onPostExecute(OrderItem orderItem) {
+        super.onPostExecute(orderItem);
+        if (orderItem==null) {
+            weakReference.get().showSnackbarSimpleMessage("Cáspitas! Tenemos un problema!");
+        } else {
+            weakReference.get().afterCreatingOrderItem(orderItem);
+        }
     }
 }

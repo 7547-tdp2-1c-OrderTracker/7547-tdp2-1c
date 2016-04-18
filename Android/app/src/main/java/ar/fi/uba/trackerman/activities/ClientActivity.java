@@ -25,7 +25,7 @@ import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
-public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener{
+public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long clientId;
     private List<Order> draftOrders;
@@ -54,7 +54,12 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         fab.setOnClickListener(this);
 
         //Preguntamos por las ordenes
-        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()), Long.toString(clientId));
+        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
+    }
+
+    public void showSnackbarSimpleMessage(String msg){
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
+        ShowMessage.showSnackbarSimpleMessage(coordinatorLayout, msg);
     }
 
     @Override
@@ -92,14 +97,15 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
     }
 
+    @Override
     public void setDraftOrders(List<Order> orders) {
         this.draftOrders = orders;
     }
 
-    public void afterCreatingOrder(boolean orderCreated) {
+    public void afterCreatingOrder(Order orderCreated) {
         //TODO plucadei Reemplazar por Activity correcta
         Intent intent = new Intent(this, ProductsListActivity.class);
-        intent.putExtra(Intent.EXTRA_UID, clientId);
+        intent.putExtra(Intent.EXTRA_UID, orderCreated.getId());
         startActivity(intent);
     }
 }
