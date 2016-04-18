@@ -102,15 +102,15 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
         JSONArray itemsJson= orderJson.getJSONArray("order_items");
         for (int i = 0; i < itemsJson.length(); i++) {
             JSONObject row = itemsJson.getJSONObject(i);
-            long itemId= row.getLong("id");
+            long orderId = row.getLong("id");
             long product_id = row.getLong("product_id");
             String name= row.getString("name");
             int quantity= row.getInt("quantity");
             double price= row.getDouble("unit_price");
             String currencyItem= row.getString("currency");
-            String brand= "ADIDAS";//row.getString("brand");
-            String picture= "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png";//row.getString("picture");
-            OrderItem item= new OrderItem(itemId,product_id,name,quantity,price,currencyItem,brand,picture);
+            String brand= row.getString("brand");
+            String picture= row.getString("picture");
+            OrderItem item= new OrderItem(orderId,product_id,name,quantity,price,currencyItem,brand,picture);
             order.addOrderItem(item);
         }
         return order;

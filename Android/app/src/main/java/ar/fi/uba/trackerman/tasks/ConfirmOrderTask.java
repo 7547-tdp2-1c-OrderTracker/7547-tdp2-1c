@@ -95,22 +95,21 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order> {
         long clientId= orderJson.getLong("client_id");
         String dateCreated= "HOY";orderJson.getString("delivery_date");
         double total_price= orderJson.getDouble("total_price");
-        // TODO: DESCOMENTAR ESTO!!!
-        String currency= "ARS";//orderJson.getString("currency");
+        String currency= orderJson.getString("currency");
         String status= orderJson.getString("status");
         order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
         JSONArray itemsJson= orderJson.getJSONArray("order_items");
         for (int i = 0; i < itemsJson.length(); i++) {
             JSONObject row = itemsJson.getJSONObject(i);
-            long itemId= row.getLong("id");
+            long orderItemId = row.getLong("id");
             long product_id = row.getLong("product_id");
             String name= row.getString("name");
             int quantity= row.getInt("quantity");
             double price= row.getDouble("unit_price");
             String currencyItem= row.getString("currency");
-            String brand= "ADIDAS";//row.getString("brand");
-            String picture= "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png";//row.getString("picture");
-            OrderItem item= new OrderItem(itemId,product_id,name,quantity,price,currencyItem,brand,picture);
+            String brand= row.getString("brand");
+            String picture= row.getString("picture");
+            OrderItem item= new OrderItem(orderItemId,product_id,name,quantity,price,currencyItem,brand,picture);
             order.addOrderItem(item);
         }
         return order;

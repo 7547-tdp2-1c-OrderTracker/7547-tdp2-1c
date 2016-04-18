@@ -54,12 +54,14 @@ public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {
 
         Picasso.with(this.getContext()).load(orderItem.getThumbnail()).into(holder.image);
         holder.name.setText(orderItem.getName());
-        holder.brand.setText(orderItem.getBrand());
+        holder.brand.setText(orderItem.getBrandName());
         holder.quantity.setText(Integer.toString(orderItem.getQuantity()));
         holder.price.setText(Double.toString(orderItem.getUnitPrice()));
-        holder.total.setText(Double.toString(orderItem.getTotalPrice()));
+        //FIXME  plucadei esto no compila
+        //holder.total.setText(Double.toString(orderItem.getTotalPrice()));
         holder.itemCurrency.setText(orderItem.getCurrency());
-        holder.itemCurrency.setText(orderItem.getCurrency());
+        //FIXME  plucadei esto esta de mas
+        //holder.itemCurrency.setText(orderItem.getCurrency());
 
         return convertView;
     }
