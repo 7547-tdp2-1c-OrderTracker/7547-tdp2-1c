@@ -58,9 +58,10 @@ public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {
         holder.quantity.setText(Integer.toString(orderItem.getQuantity()));
         holder.price.setText(Double.toString(orderItem.getUnitPrice()));
 
-        //holder.total.setText(Double.toString(order.getTotalPrice()));
+        holder.total.setText(Double.toString(orderItem.getTotalPrice()));
 
         holder.itemCurrency.setText(orderItem.getCurrency());
+        holder.totalCurrency.setText(orderItem.getCurrency());
 
         return convertView;
     }

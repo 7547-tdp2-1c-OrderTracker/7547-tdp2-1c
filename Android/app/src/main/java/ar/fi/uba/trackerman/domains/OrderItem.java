@@ -96,6 +96,10 @@ public class OrderItem {
         this.thumbnail = thumbnail;
     }
 
+    public Double getTotalPrice() {
+        return this.unitPrice * this.quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
