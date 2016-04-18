@@ -16,6 +16,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
@@ -95,18 +96,20 @@ public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivit
         Order order = null;
 
         try {
-            order= new Order(json.getLong("id"),json.getLong("client_id"));
 
-            String deliveryDate = json.getString("delivery_date");
-            if (deliveryDate != null && !"null".equalsIgnoreCase(deliveryDate)) order.setDeliveryDate(DateUtils.parseDate(deliveryDate));
+            long id = json.getLong("id");
+            long clientId = json.getLong("client_id");
+            long vendorId = json.getLong("vendor_id");
 
-            order.setStatus(json.getString("status"));
-            try{
-                order.setTotalPrice(json.getDouble("total_price"));
-            } catch (JSONException e) {
-                //do nothing. just because it's atomic double
-            }
-            order.setVendorId(json.getLong("vendor_id"));
+            String dateCreatedStr = json.getString("date_created");
+            Date dateCreated = null;
+            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+
+            String status = json.getString("status");
+            double totalPrice = json.getDouble("total_price");
+            String currency = json.getString("currency");
+
+            order= new Order(id,clientId,vendorId,dateCreated,status,totalPrice,currency);
         } catch (Exception e) {
             Log.e("parse_create_order_json","Error parseando la creacion de la orden",e);
         }

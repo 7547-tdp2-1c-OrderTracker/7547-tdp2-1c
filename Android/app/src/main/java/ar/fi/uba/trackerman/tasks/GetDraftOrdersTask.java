@@ -15,6 +15,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
@@ -89,22 +90,18 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
         List<Order> orders= new ArrayList<Order>();
         Order order;
         for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject row = resultJSON.getJSONObject(i);
-            order= new Order(row.getLong("id"),row.getLong("client_id"));
-
-            String deliveryDate = row.getString("delivery_date");
-            if (deliveryDate != null && !"null".equalsIgnoreCase(deliveryDate)) order.setDeliveryDate(DateUtils.parseDate(deliveryDate));
-
-            String dateCreated = row.getString("date_created");
-            if (dateCreated != null && !"null".equalsIgnoreCase(dateCreated)) order.setDateCreated(DateUtils.parseDate(dateCreated));
-
-            order.setStatus(row.getString("status"));
-            try{
-                order.setTotalPrice(row.getDouble("total_price"));
-            } catch (JSONException e) {
-                //do nothing. just because it's atomic double
-            }
-            order.setVendorId(row.getLong("vendor_id"));
+            JSONObject orderJson = resultJSON.getJSONObject(i);
+            long id=orderJson.getLong("id");
+            long vendorId= orderJson.getLong("vendor_id");
+            long clientId= orderJson.getLong("client_id");
+            String dateCreatedStr = orderJson.getString("date_created");
+            Date dateCreated = null;
+            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+            double total_price= orderJson.getDouble("total_price");
+            // TODO: DESCOMENTAR ESTO!!!
+            String currency= "ARS";//orderJson.getString("currency");
+            String status= orderJson.getString("status");
+            order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
             orders.add(order);
         }
         return orders;

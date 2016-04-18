@@ -93,15 +93,16 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,Produ
         OrderItem orderItem = null;
 
         try {
-            orderItem = new OrderItem(json.getLong("id"),json.getLong("order_id"),json.getLong("product_id"),json.getInt("quantity"));
-            orderItem.setName(json.getString("name"));
-            orderItem.setCurrency(json.getString("currency"));
-            orderItem.setBrandName(json.getString("brand_name"));
-            try{
-                orderItem.setUnitPrice(json.getDouble("unit_price"));
-            } catch (JSONException e) {
-                //do nothing. just because it's atomic double
-            }
+            long id = json.getLong("id");
+            long productId = json.getLong("product_id");
+            String name = json.getString("name");
+            int quantity = json.getInt("quantity");
+            double unitPrice = json.getDouble("unit_price");
+            String currency = json.getString("currency");
+            String brandName = json.getString("brand_name");
+            String thumbnail = json.getString("thumbnail");
+
+            orderItem = new OrderItem(id,productId,name,quantity,unitPrice,currency,brandName,thumbnail);
         } catch (Exception e) {
             Log.e("create_order_item_json", "Error parseando la creacion de orden item", e);
         }

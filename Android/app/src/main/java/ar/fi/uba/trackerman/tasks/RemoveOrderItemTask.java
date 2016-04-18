@@ -11,16 +11,14 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.utils.AppSettings;
 
-public class RemoveOrderItemTask extends AbstractTask<String,Void,String> {
+public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
 
-    private WeakReference<OrderItemRemover> weekModifierReference;
-
-    public RemoveOrderItemTask(OrderItemRemover modifier) {
-        weekModifierReference = new WeakReference<OrderItemRemover>(modifier);
-
+    public RemoveOrderItemTask(OrderActivity activity) {
+        super(activity);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String> {
     @Override
     protected void onPostExecute(String result) {
         Log.e(this.getClass().getCanonicalName(),"el resultado "+ result);
-        OrderItemRemover modifier= weekModifierReference.get();
+        OrderItemRemover modifier= weakReference.get();
         if(modifier!=null){
             modifier.updateOrderItem(result);
         }else{

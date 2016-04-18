@@ -14,18 +14,20 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
+import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.utils.DateUtils;
 
 /**
  * Created by plucadei on 31/3/16.
  */
-public class ConfirmOrderTask extends AbstractTask<String,Void,Order> {
-    private WeakReference<OrderConfirmer> weekConfirmerReference;
+public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivity> {
 
-    public ConfirmOrderTask(OrderConfirmer reciver) {
-        weekConfirmerReference = new WeakReference<OrderConfirmer>(reciver);
+    public ConfirmOrderTask(OrderActivity activity) {
+        super(activity);
     }
 
     @Override
@@ -93,7 +95,11 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order> {
         long id=orderJson.getLong("id");
         long vendorId= orderJson.getLong("vendor_id");
         long clientId= orderJson.getLong("client_id");
-        String dateCreated= "HOY";orderJson.getString("delivery_date");
+
+        String dateCreatedStr = orderJson.getString("date_created");
+        Date dateCreated = null;
+        if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+
         double total_price= orderJson.getDouble("total_price");
         String currency= orderJson.getString("currency");
         String status= orderJson.getString("status");
@@ -117,7 +123,7 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order> {
 
     @Override
     protected void onPostExecute(Order order) {
-        OrderConfirmer reciver= weekConfirmerReference.get();
+        OrderConfirmer reciver= weakReference.get();
         if(reciver!=null){
             reciver.updateOrderInformation(order);
         }else{

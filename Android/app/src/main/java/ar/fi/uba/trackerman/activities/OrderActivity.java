@@ -33,7 +33,7 @@ import ar.fi.uba.trackerman.tasks.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.UpdateOrderItemTask;
 import fi.uba.ar.soldme.R;
 
-public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, EmptyOrderTask.OrderCleaner, RemoveOrderItemTask.OrderItemRemover{
+public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, EmptyOrderTask.OrderCleaner, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
 
     private long orderId=0;
     private long itemId=0;
@@ -143,17 +143,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String editTextValue = edittext.getText().toString();
                         if (isValidQuantity(editTextValue)) {
-                            UpdateOrderItemTask task = new UpdateOrderItemTask(new UpdateOrderItemTask.OrderItemModifier(){
-                                public void updateOrderItem(String result){
-                                    if("FAIL".equals(result)){
-                                        showSnackbarSimpleMessage("Fallo al modificar la cantidad.");
-                                    }else{
-                                        showSnackbarSimpleMessage("Cantidad modificada.");
-                                        GetOrderTask task= new GetOrderTask(activity);
-                                        task.execute(Long.toString(orderId));
-                                    }
-                                };
-                            });
+                            UpdateOrderItemTask task = new UpdateOrderItemTask(OrderActivity.this);
                             task.execute(Long.toString(orderId),Long.toString(itemId),editTextValue);
                         } else {
                             showSnackbarSimpleMessage("Valor inválido");
@@ -164,6 +154,16 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
                     }
                 })
                 .show();
+    }
+
+    public void afterUpdateOrderItem(String result){
+        if("FAIL".equals(result)){
+            showSnackbarSimpleMessage("Fallo al modificar la cantidad.");
+        }else{
+            showSnackbarSimpleMessage("Cantidad modificada.");
+            GetOrderTask task= new GetOrderTask(activity);
+            task.execute(Long.toString(orderId));
+        }
     }
 
     @Override

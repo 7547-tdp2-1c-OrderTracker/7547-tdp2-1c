@@ -11,37 +11,35 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
 
 import ar.fi.uba.trackerman.utils.AppSettings;
 
-public class UpdateOrderItemTask extends AbstractTask<String,Void,String> {
+public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
 
-    private WeakReference<OrderItemModifier> weekModifierReference;
-
-    public UpdateOrderItemTask(OrderItemModifier modifier) {
-        weekModifierReference = new WeakReference<OrderItemModifier>(modifier);
-
+    public UpdateOrderItemTask(OrderActivity activity) {
+        super(activity);
     }
 
     @Override
     protected String doInBackground(String... params) {
-        Log.e(this.getClass().getCanonicalName(),"ACA tOY 1");
-        String orderId= params[0];
-        String itemId= params[1];
-        String quantity= params[2];
+        Log.e(this.getClass().getCanonicalName(), "ACA tOY 1");
+        String orderId = params[0];
+        String itemId = params[1];
+        String quantity = params[2];
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         String orderJsonStr;
-        Order order=null;
+        Order order = null;
         try {
-            URL url = new URL(AppSettings.getServerHost()+"/v1/orders/"+orderId+"/order_items/"+itemId);
+            URL url = new URL(AppSettings.getServerHost() + "/v1/orders/" + orderId + "/order_items/" + itemId);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("PUT");
             urlConnection.setRequestProperty("Content-Type", "application/json");
-            String str =  "{\"quantity\": "+quantity+"}";
+            String str = "{\"quantity\": " + quantity + "}";
             byte[] outputInBytes = str.getBytes("UTF-8");
             OutputStream os = urlConnection.getOutputStream();
             os.write(outputInBytes);
@@ -63,12 +61,12 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String> {
             }
             orderJsonStr = buffer.toString();
             return "OK";
-                // return parseOrderJson(orderJsonStr);
+            // return parseOrderJson(orderJsonStr);
 
         } catch (IOException e) {
             Log.e(ConfirmOrderTask.class.getCanonicalName(), "Error ", e);
             return "FAIL";
-        } finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -82,19 +80,18 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String> {
         }
     }
 
-
     @Override
     protected void onPostExecute(String result) {
-        OrderItemModifier modifier= weekModifierReference.get();
+        OrderItemModifier modifier= weakReference.get();
         if(modifier!=null){
-            modifier.updateOrderItem(result);
+            modifier.afterUpdateOrderItem(result);
         }else{
             Log.e(this.getClass().getCanonicalName(), "Adapter no longer available!");
         }
     }
 
     public interface OrderItemModifier {
-        public void updateOrderItem(String Item);
+        public void afterUpdateOrderItem(String Item);
     }
 
 }
