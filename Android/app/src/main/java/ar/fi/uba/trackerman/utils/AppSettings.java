@@ -2,7 +2,7 @@ package ar.fi.uba.trackerman.utils;
 
 public class AppSettings {
 
-    private static final String SERVER_HOST = "https://powerful-hollows-15939.herokuapp.com";
+    private static final String SERVER_HOST = "https://trackerman-api.herokuapp.com";
 
     private static final long VENDOR_ID = 1;
 
