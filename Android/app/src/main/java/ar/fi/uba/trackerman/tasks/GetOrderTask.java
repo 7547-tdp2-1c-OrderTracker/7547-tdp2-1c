@@ -95,6 +95,7 @@ public class GetOrderTask extends AbstractTask<String,Void,Order> {
         JSONArray itemsJson= orderJson.getJSONArray("order_items");
         for (int i = 0; i < itemsJson.length(); i++) {
             JSONObject row = itemsJson.getJSONObject(i);
+            long orderitemId = row.getLong("id");
             long product_id = row.getLong("product_id");
             String name= row.getString("name");
             int quantity= row.getInt("quantity");
@@ -102,7 +103,7 @@ public class GetOrderTask extends AbstractTask<String,Void,Order> {
             String currencyItem= row.getString("currency");
             String brand= "ADIDAS";//row.getString("brand");
             String picture= "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png";//row.getString("picture");
-            OrderItem item= new OrderItem(product_id,name,quantity,price,currencyItem,brand,picture);
+            OrderItem item= new OrderItem(orderitemId,product_id,name,quantity,price,currencyItem,brand,picture);
             order.addOrderItem(item);
         }
         return order;

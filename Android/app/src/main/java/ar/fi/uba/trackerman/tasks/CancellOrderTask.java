@@ -90,8 +90,8 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
 
     private Order getMockedOrder(String lalala) throws JSONException{
         Order order= new Order(3,3,3,"Hoy","cancelled",50.00,"ARS");
-        order.addOrderItem(new OrderItem(1,"Zapatilla Nike",3,15.00,"ARS","Adidas","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png"));
-        order.addOrderItem(new OrderItem(2,"Medias Puma",1,5.00,"ARS","Adidas","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png"));
+        order.addOrderItem(new OrderItem(1,1,"Zapatilla Nike",3,15.00,"ARS","Adidas","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png"));
+        order.addOrderItem(new OrderItem(2,2,"Medias Puma",1,5.00,"ARS","Adidas","https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_brand_Adidas.png/50px-Logo_brand_Adidas.png"));
         return order;
     };
 
@@ -109,6 +109,7 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
         JSONArray itemsJson= orderJson.getJSONArray("order_items");
         for (int i = 0; i < itemsJson.length(); i++) {
             JSONObject row = itemsJson.getJSONObject(i);
+            long orderId = row.getLong("id");
             long product_id = row.getLong("product_id");
             String name= row.getString("name");
             int quantity= row.getInt("quantity");
@@ -116,7 +117,7 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
             String currencyItem= row.getString("currency");
             String brand= row.getString("brand");
             String picture= row.getString("picture");
-            OrderItem item= new OrderItem(product_id,name,quantity,price,currencyItem,brand,picture);
+            OrderItem item= new OrderItem(orderId,product_id,name,quantity,price,currencyItem,brand,picture);
             order.addOrderItem(item);
         }
         return order;
