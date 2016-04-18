@@ -20,6 +20,7 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.tasks.GetClientTask;
 import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.PostOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -59,27 +60,17 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     @Override
     public void onClick(View view) {
         if (view.getId()==R.id.fab) {
-
-            // validar si existe una orden
-            // si no hay orden, crear una nueva
-            // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
-
             CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
             if (this.draftOrders == null) {
                 ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
             } else if (this.draftOrders.size() > 0) {
+                // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
                 ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
             } else {
-                //caso en que no tengo drafts, debo crear la orden
-
-
-//                Intent intent = new Intent(this, ProductsListActivity.class);
-  //              intent.putExtra(Intent.EXTRA_UID, clientId);
-    //            startActivity(intent);
+                // si no hay orden, crear una nueva
+                new PostOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()), Long.toString(clientId));
             }
-
-        }else
-        if(view.getId()==R.id.client_detail_phone){
+        } else if(view.getId()==R.id.client_detail_phone){
             String uri = "tel:" + ((TextView)view).getText().toString().trim();
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(uri));
@@ -103,5 +94,12 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
 
     public void setDraftOrders(List<Order> orders) {
         this.draftOrders = orders;
+    }
+
+    public void afterCreatingOrder(boolean orderCreated) {
+        //TODO plucadei Reemplazar por Activity correcta
+        Intent intent = new Intent(this, ProductsListActivity.class);
+        intent.putExtra(Intent.EXTRA_UID, clientId);
+        startActivity(intent);
     }
 }
