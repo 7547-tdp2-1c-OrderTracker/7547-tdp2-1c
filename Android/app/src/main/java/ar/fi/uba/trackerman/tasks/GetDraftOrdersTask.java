@@ -1,6 +1,5 @@
 package ar.fi.uba.trackerman.tasks;
 
-import android.content.SyncStatusObserver;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -17,12 +16,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.DateUtils;
 
-public class OrdersTask extends AbstractTask<String,Void,List<Order>>{
+public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,ClientActivity>{
+
+    public GetDraftOrdersTask(ClientActivity activity) {
+        super(activity);
+    }
 
     public List<Order> getDraftOrders(String vendorId) {
         HttpURLConnection urlConnection = null;
@@ -33,7 +37,6 @@ public class OrdersTask extends AbstractTask<String,Void,List<Order>>{
 
         try {
             //---------------------------------------------------------
-            //TODO please replace by order by vendor
             URL url = new URL(AppSettings.getServerHost()+"/v1/orders?status=draft&vendor_id="+vendorId);
             //---------------------------------------------------------;
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -61,7 +64,7 @@ public class OrdersTask extends AbstractTask<String,Void,List<Order>>{
                 e.printStackTrace();
             }
         } catch (IOException e) {
-            Log.e(OrdersTask.class.getCanonicalName(), "Error ", e);
+            Log.e(GetDraftOrdersTask.class.getCanonicalName(), "Error ", e);
             return null;
         } finally{
             if (urlConnection != null) {
@@ -78,8 +81,6 @@ public class OrdersTask extends AbstractTask<String,Void,List<Order>>{
         return orders;
     }
 
-    private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
     private List<Order> parseJson(String jsonString) throws JSONException, ParseException {
         JSONObject json = new JSONObject(jsonString);
         JSONArray resultJSON = (JSONArray) json.get("results");
@@ -88,11 +89,21 @@ public class OrdersTask extends AbstractTask<String,Void,List<Order>>{
         for (int i = 0; i < resultJSON.length(); i++) {
             JSONObject row = resultJSON.getJSONObject(i);
             order= new Order(row.getLong("id"),row.getLong("client_id"));
+
             String deliveryDate = row.getString("delivery_date");
-            order.setDeliveryDate(deliveryDate==null? null : FORMATTER.parse(deliveryDate));
+            if (deliveryDate != null && !"null".equalsIgnoreCase(deliveryDate)) order.setDeliveryDate(DateUtils.parseDate(deliveryDate));
+
+            String dateCreated = row.getString("date_created");
+            if (dateCreated != null && !"null".equalsIgnoreCase(dateCreated)) order.setDateCreated(DateUtils.parseDate(dateCreated));
+
             order.setStatus(row.getString("status"));
-            order.setTotalPrice(row.getDouble("total_price"));
-            order.setVisitId(row.getLong("visit_id"));
+            try{
+                order.setTotalPrice(row.getDouble("total_price"));
+            } catch (JSONException e) {
+                //do nothing. just because it's atomic double
+            }
+            order.setVendorId(row.getLong("vendor_id"));
+            orders.add(order);
         }
         return orders;
     }
@@ -100,5 +111,11 @@ public class OrdersTask extends AbstractTask<String,Void,List<Order>>{
     @Override
     protected List<Order> doInBackground(String... strings) {
         return this.getDraftOrders(strings[0]);
+    }
+
+    @Override
+    protected void onPostExecute(List<Order> orders) {
+        super.onPostExecute(orders);
+        weakReference.get().setDraftOrders(orders);
     }
 }

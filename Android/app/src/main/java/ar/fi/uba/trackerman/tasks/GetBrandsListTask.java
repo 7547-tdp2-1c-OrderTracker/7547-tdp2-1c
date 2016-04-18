@@ -20,12 +20,10 @@ import java.util.List;
 import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
 
-public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>> {
-
-    private WeakReference<BrandsListAdapter> weekAdapterReference;
+public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,BrandsListAdapter> {
 
     public GetBrandsListTask(BrandsListAdapter adapter) {
-        weekAdapterReference = new WeakReference<BrandsListAdapter>(adapter);
+        super(adapter);
     }
 
     @Override
@@ -96,7 +94,7 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>> {
 
     @Override
     protected void onPostExecute(List<Brand> brands) {
-        BrandsListAdapter brandsListAdapter= weekAdapterReference.get();
+        BrandsListAdapter brandsListAdapter= weakReference.get();
         if(brandsListAdapter!=null){
             brandsListAdapter.addBrands(brands);
         }else{

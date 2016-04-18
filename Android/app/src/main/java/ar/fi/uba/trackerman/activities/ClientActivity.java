@@ -17,8 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.tasks.GetClientTask;
-import ar.fi.uba.trackerman.tasks.OrdersTask;
+import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -26,6 +27,7 @@ import fi.uba.ar.soldme.R;
 public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener{
 
     private long clientId;
+    private List<Order> draftOrders;
 
     public ClientActivity(){
         super();
@@ -49,6 +51,9 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         phoneView.setOnClickListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        //Preguntamos por las ordenes
+        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()), Long.toString(clientId));
     }
 
     @Override
@@ -58,17 +63,15 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             // validar si existe una orden
             // si no hay orden, crear una nueva
             // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
-            OrdersTask ot = new OrdersTask();
-            String vendor = String.valueOf(AppSettings.getVendorId());
-            List orders = ot.getDraftOrders(vendor);
-            if (orders == null) {
-                // mostrar SnackBar
-                CoordinatorLayout cl  = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
-                ShowMessage.showSnackbarSimpleMessage(cl, "No se puede iniciar un nuevo pedido 111");
-            } else {
 
-                CoordinatorLayout cl  = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
-                ShowMessage.showSnackbarSimpleMessage(cl, "No se puede iniciar un nuevo pedido 2222");
+            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
+            if (this.draftOrders == null) {
+                ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
+            } else if (this.draftOrders.size() > 0) {
+                ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
+            } else {
+                //caso en que no tengo drafts, debo crear la orden
+
 
 //                Intent intent = new Intent(this, ProductsListActivity.class);
   //              intent.putExtra(Intent.EXTRA_UID, clientId);
@@ -96,5 +99,9 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             ((TextView)findViewById(R.id.client_detail_email)).setText(client.getEmail());
             String mapURL="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=400x300&maptype=roadmap&key=AIzaSyB7KkfXSNVvngEQ0LwhvLSt7i1oB4p2RdQ&center="+client.getLat()+','+client.getLon()+"&markers=color:blue%7C"+client.getLat()+','+client.getLon();
             Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
+    }
+
+    public void setDraftOrders(List<Order> orders) {
+        this.draftOrders = orders;
     }
 }

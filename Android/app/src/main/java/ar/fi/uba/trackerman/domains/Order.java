@@ -7,9 +7,10 @@ import java.util.List;
 public class Order {
 
     private long id;
-    private long visitId;
+    private long vendorId;
     private double totalPrice;
     private Date deliveryDate;
+    private Date dateCreated;
     private String status;
     private long clientId;
     private List<OrderEntry> orderEntries;
@@ -24,12 +25,12 @@ public class Order {
         return id;
     }
 
-    public long getVisitId() {
-        return visitId;
+    public long getVendorId() {
+        return vendorId;
     }
 
-    public void setVisitId(long visitId) {
-        this.visitId = visitId;
+    public void setVendorId(long vendorId) {
+        this.vendorId = vendorId;
     }
 
     public double getTotalPrice() {
@@ -46,6 +47,14 @@ public class Order {
 
     public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getStatus() {
@@ -76,10 +85,12 @@ public class Order {
         Order order = (Order) o;
 
         if (id != order.id) return false;
-        if (visitId != order.visitId) return false;
+        if (vendorId != order.vendorId) return false;
         if (Double.compare(order.totalPrice, totalPrice) != 0) return false;
         if (clientId != order.clientId) return false;
         if (deliveryDate != null ? !deliveryDate.equals(order.deliveryDate) : order.deliveryDate != null)
+            return false;
+        if (dateCreated != null ? !dateCreated.equals(order.dateCreated) : order.dateCreated != null)
             return false;
         return status.equals(order.status);
 
@@ -90,10 +101,11 @@ public class Order {
         int result;
         long temp;
         result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (visitId ^ (visitId >>> 32));
+        result = 31 * result + (int) (vendorId ^ (vendorId >>> 32));
         temp = Double.doubleToLongBits(totalPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (deliveryDate != null ? deliveryDate.hashCode() : 0);
+        result = 31 * result + (dateCreated != null ? dateCreated.hashCode() : 0);
         result = 31 * result + status.hashCode();
         result = 31 * result + (int) (clientId ^ (clientId >>> 32));
         return result;

@@ -25,11 +25,11 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 
 
-public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult> {
-    private WeakReference<ClientsListAdapter> weekAdapterReference;
+public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {
+
 
     public GetClientListTask(ClientsListAdapter adapter) {
-        weekAdapterReference = new WeakReference<ClientsListAdapter>(adapter);
+        super(adapter);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
 
     @Override
     protected void onPostExecute(ClientSearchResult clientSearchResult) {
-        ClientsListAdapter clientListAdapter= weekAdapterReference.get();
+        ClientsListAdapter clientListAdapter= weakReference.get();
         if(clientListAdapter!=null){
             clientListAdapter.addClients(clientSearchResult);
         }else{
