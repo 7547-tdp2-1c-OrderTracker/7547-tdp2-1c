@@ -6,10 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +25,7 @@ import fi.uba.ar.soldme.R;
 public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer{
 
     private long orderId=0;
-
+    ListView orderItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +35,46 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        orderItems= (ListView)findViewById(R.id.order_items_list);
+        registerForContextMenu(orderItems);
+
         Intent intent= getIntent();
         orderId= intent.getLongExtra(Intent.EXTRA_UID, 0);
         GetOrderTask task= new GetOrderTask(this);
         task.execute(Long.toString(orderId));
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getMenuInflater();
+
+            AdapterView.AdapterContextMenuInfo info =
+                    (AdapterView.AdapterContextMenuInfo)menuInfo;
+
+            menu.setHeaderTitle(
+                    orderItems.getAdapter().getItem(info.position).toString());
+
+            inflater.inflate(R.menu.menu_orders_context, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.remove_order_item:
+
+                return true;
+            case R.id.modify_item_quantity:
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     @Override

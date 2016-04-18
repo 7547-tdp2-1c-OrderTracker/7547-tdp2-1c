@@ -50,4 +50,9 @@ public class OrderItem {
     public double getTotalPrice() {
         return quantity*unitPrice;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
