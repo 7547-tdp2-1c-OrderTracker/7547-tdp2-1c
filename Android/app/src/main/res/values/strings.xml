@@ -15,6 +15,11 @@
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
+    <string name="orders">Pedidos</string>
+
+    <string name="action_empty">Vaciar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="confirm_order">Confirmar Pedido</string>
 
     <string name="email_del_cliente">Email del cliente</string>
     <string name="tel_fono_del_cliente">Teléfono del cliente</string>

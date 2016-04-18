@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        String[] options={getString(R.string.clients),getString(R.string.products)};
+        String[] options={getString(R.string.clients),getString(R.string.products),getString(R.string.orders)};
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, options));
@@ -34,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
                     openMyClientsActivity(null);
-                }else{
+                }else if(position==1){
                     openProductsActivity(null);
+                }else{
+                    openOrdersActivity(null);
                 }
             }
         });
@@ -48,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void openProductsActivity(View view) {
         Intent intent = new Intent(this, ProductsListActivity.class);
+        startActivity(intent);
+    }
+
+    public void openOrdersActivity(View view) {
+        Intent intent = new Intent(this, OrderActivity.class);
+        intent.putExtra(Intent.EXTRA_UID,6l);
         startActivity(intent);
     }
 }
