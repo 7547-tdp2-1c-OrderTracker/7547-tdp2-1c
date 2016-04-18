@@ -65,7 +65,7 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order> {
             }
             orderJsonStr = buffer.toString();
             try {
-                return parseOrderJson(orderJsonStr);
+                order = parseOrderJson(orderJsonStr);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

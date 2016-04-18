@@ -27,12 +27,13 @@ import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.tasks.CancellOrderTask;
 import ar.fi.uba.trackerman.tasks.ConfirmOrderTask;
+import ar.fi.uba.trackerman.tasks.EmptyOrderTask;
 import ar.fi.uba.trackerman.tasks.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.UpdateOrderItemTask;
 import fi.uba.ar.soldme.R;
 
-public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover{
+public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, EmptyOrderTask.OrderCleaner, RemoveOrderItemTask.OrderItemRemover{
 
     private long orderId=0;
     private long itemId=0;
@@ -94,7 +95,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
     @Override
     public void updateOrderInformation(Order order) {
         ListView orderItems= (ListView)findViewById(R.id.order_items_list);
-        orderItems.setAdapter(new OrderItemsListAdapter(this,R.layout.order_item_list_item,order.getOrderItems()));
+        orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, order.getOrderItems()));
         TextView total= (TextView)findViewById(R.id.order_total);
         total.setText("Total: " + order.getTotalPrice() + " $");
     }
@@ -112,7 +113,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
             task.execute(Long.toString(this.orderId));
         }
         if(item.getItemId()==R.id.action_empty) {
-            CancellOrderTask task= new CancellOrderTask(this);
+            EmptyOrderTask task= new EmptyOrderTask(this);
             task.execute(Long.toString(this.orderId));
         }
         return false;
