@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,10 +28,11 @@ import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.tasks.CancellOrderTask;
 import ar.fi.uba.trackerman.tasks.ConfirmOrderTask;
 import ar.fi.uba.trackerman.tasks.GetOrderTask;
+import ar.fi.uba.trackerman.tasks.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.UpdateOrderItemTask;
 import fi.uba.ar.soldme.R;
 
-public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer{
+public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover{
 
     private long orderId=0;
     private long itemId=0;
@@ -77,7 +80,8 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
 
         switch (item.getItemId()) {
             case R.id.remove_order_item:
-
+                RemoveOrderItemTask task= new RemoveOrderItemTask(this);
+                task.execute(Long.toString(orderId),Long.toString(itemId));
                 return true;
             case R.id.modify_item_quantity:
                 showQuantityDialog();
@@ -141,9 +145,9 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
                             UpdateOrderItemTask task = new UpdateOrderItemTask(new UpdateOrderItemTask.OrderItemModifier(){
                                 public void updateOrderItem(String result){
                                     if("FAIL".equals(result)){
-                                        Log.e(this.getClass().getCanonicalName(),"Fail");
+                                        showSnackbarSimpleMessage("Fallo al modificar la cantidad.");
                                     }else{
-                                        Log.e(this.getClass().getCanonicalName(),"ACA TOY");
+                                        showSnackbarSimpleMessage("Cantidad modificada.");
                                         GetOrderTask task= new GetOrderTask(activity);
                                         task.execute(Long.toString(orderId));
                                     }
@@ -151,7 +155,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
                             });
                             task.execute(Long.toString(orderId),Long.toString(itemId),editTextValue);
                         } else {
-                            Log.e(this.getClass().getCanonicalName(), "Valor inválido");
+                            showSnackbarSimpleMessage("Valor inválido");
                         }
                 }})
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -159,6 +163,23 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void updateOrderItem(String result) {
+        if("FAIL".equals(result)){
+            showSnackbarSimpleMessage("Fallo al eliminar el producto.");
+        }else {
+            showSnackbarSimpleMessage("Producto eliminado.");
+            GetOrderTask task = new GetOrderTask(activity);
+            task.execute(Long.toString(orderId));
+        }
+    }
+
+    public void showSnackbarSimpleMessage(String msg){
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cordinator_layout_order_view);
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 };
 

@@ -101,6 +101,6 @@ public class OrderItem {
     }
 
     public double getTotalPrice() {
-        return quantity*unitPrice;
+        return quantity * unitPrice;
     }
 }

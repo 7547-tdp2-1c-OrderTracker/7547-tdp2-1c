@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openOrdersActivity(View view) {
         Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,6l);
+        intent.putExtra(Intent.EXTRA_UID,14l);
         startActivity(intent);
     }
 }
