@@ -20,9 +20,8 @@ import java.util.List;
 import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
 
-public class GetBrandsListTask extends AsyncTask<Long,Void,List<Brand>> {
+public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>> {
 
-    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
     private WeakReference<BrandsListAdapter> weekAdapterReference;
 
     public GetBrandsListTask(BrandsListAdapter adapter) {

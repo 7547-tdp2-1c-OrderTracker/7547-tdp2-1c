@@ -39,8 +39,8 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         new GetClientTask(this).execute(Long.toString(clientId));
 
         View phoneView=findViewById(R.id.client_detail_phone);
-        phoneView.setOnClickListener(this);
 
+        phoneView.setOnClickListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
     }

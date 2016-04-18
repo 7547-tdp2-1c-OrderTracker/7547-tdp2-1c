@@ -25,9 +25,7 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 
 
-public class GetClientListTask extends AsyncTask<Long,Void,ClientSearchResult> {
-
-    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
+public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult> {
     private WeakReference<ClientsListAdapter> weekAdapterReference;
 
     public GetClientListTask(ClientsListAdapter adapter) {

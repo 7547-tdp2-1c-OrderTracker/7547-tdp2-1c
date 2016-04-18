@@ -19,9 +19,8 @@ import ar.fi.uba.trackerman.domains.Product;
 /**
  * Created by glaghi on 16/4/16.
  */
-public class GetProductTask extends AsyncTask<String,Void,Product> {
+public class GetProductTask extends AbstractTask<String,Void,Product> {
 
-    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
     private WeakReference<ProductReciver> weekReciverReference;
 
     public GetProductTask(ProductReciver reciver) {
