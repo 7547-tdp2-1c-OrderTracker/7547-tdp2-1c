@@ -100,6 +100,18 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
         total.setText("Total: " + order.getTotalPrice() + " $");
     }
 
+    public void afterOrderCancelled(Order order) {
+        Intent intent = new Intent(this, MyClientsActivity.class);
+        startActivity(intent);
+    }
+
+    public void afterOrderConfirmed(Order order) {
+        showSnackbarSimpleMessage("Su pedido ha sido confirmado");
+        try {Thread.sleep(5000);} catch (Exception e) {}
+        Intent intent = new Intent(this, MyClientsActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

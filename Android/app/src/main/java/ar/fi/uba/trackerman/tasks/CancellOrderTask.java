@@ -124,13 +124,13 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order,OrderActivi
     protected void onPostExecute(Order order) {
         OrderCanceller reciver= weakReference.get();
         if(reciver!=null){
-            reciver.updateOrderInformation(order);
+            reciver.afterOrderCancelled(order);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
     }
 
     public interface OrderCanceller{
-        public void updateOrderInformation(Order order);
+        public void afterOrderCancelled(Order order);
     }
 }

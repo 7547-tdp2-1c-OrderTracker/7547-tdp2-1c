@@ -103,6 +103,7 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,Produ
             String thumbnail = json.getString("thumbnail");
 
             orderItem = new OrderItem(id,productId,name,quantity,unitPrice,currency,brandName,thumbnail);
+            orderItem.setOrderId(json.getLong("order_id"));
         } catch (Exception e) {
             Log.e("create_order_item_json", "Error parseando la creacion de orden item", e);
         }
