@@ -160,7 +160,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     public void afterCreatingOrderItem(OrderItem orderItem) {
         //TODO plucadei Reemplazar por Activity correcta
-        Intent intent = new Intent(this, MyClientsActivity.class);
+        Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID, orderItem.getId());
         startActivity(intent);
     }
