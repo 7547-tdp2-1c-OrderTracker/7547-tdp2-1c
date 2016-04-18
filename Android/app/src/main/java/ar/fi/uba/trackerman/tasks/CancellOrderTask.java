@@ -41,7 +41,7 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order> {
         try {
             URL url = new URL(SERVER_HOST+"/v1/orders/"+orderId);
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestMethod("PUT");
             urlConnection.setRequestProperty("Content-Type", "application/json");
             String str =  "{\"status\": \"cancelled\"}";
             byte[] outputInBytes = str.getBytes("UTF-8");
