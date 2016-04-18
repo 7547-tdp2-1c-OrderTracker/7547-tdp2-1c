@@ -107,8 +107,8 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order> {
             int quantity= row.getInt("quantity");
             double price= row.getDouble("unit_price");
             String currencyItem= row.getString("currency");
-            String brand= row.getString("brand");
-            String picture= row.getString("picture");
+            String brand= row.getString("brand_name");
+            String picture= row.getString("thumbnail");
             OrderItem item= new OrderItem(orderItemId,product_id,name,quantity,price,currencyItem,brand,picture);
             order.addOrderItem(item);
         }
