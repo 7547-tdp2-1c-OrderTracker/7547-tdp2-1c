@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.domains;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,7 +12,8 @@ public class Order {
     private long id;
     private long clientId;
     private long vendorId;
-    private String dateCreated;
+    private Date deliveryDate;
+    private Date dateCreated;
     private String status;
     private double totalPrice;
     private String currency;
@@ -26,34 +28,6 @@ public class Order {
         this.totalPrice= totalPrice;
         this.currency= currency;
         this.orderItems= new ArrayList<OrderItem>();
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public long getClientId() {
-        return clientId;
-    }
-
-    public long getVendorId() {
-        return vendorId;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public String getCurrency() {
-        return currency;
     }
 
     public List<OrderItem> getOrderItems() {

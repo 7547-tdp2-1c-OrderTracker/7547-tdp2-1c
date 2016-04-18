@@ -10,21 +10,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Product;
 
 /**
  * Created by glaghi on 16/4/16.
  */
-public class GetProductTask extends AbstractTask<String,Void,Product> {
+public class GetProductTask extends AbstractTask<String,Void,Product,ProductActivity> {
 
-    private WeakReference<ProductReciver> weekReciverReference;
-
-    public GetProductTask(ProductReciver reciver) {
-        weekReciverReference = new WeakReference<ProductReciver>(reciver);
+    public GetProductTask(ProductActivity activity) {
+        super(activity);
     }
 
     @Override
@@ -95,7 +93,7 @@ public class GetProductTask extends AbstractTask<String,Void,Product> {
     protected void onPostExecute(Product product) {
 
         super.onPostExecute(product);
-        ProductReciver reciver= weekReciverReference.get();
+        ProductReciver reciver= weakReference.get();
         if(reciver!=null){
             ((ProductReciver)reciver).updateProductInformation(product);
         }else{

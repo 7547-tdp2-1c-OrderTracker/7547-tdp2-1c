@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,13 +14,21 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.tasks.GetClientTask;
+import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.PostOrdersTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
-public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener{
+public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long clientId;
+    private List<Order> draftOrders;
 
     public ClientActivity(){
         super();
@@ -43,16 +52,30 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         phoneView.setOnClickListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        //Preguntamos por las ordenes
+        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
+    }
+
+    public void showSnackbarSimpleMessage(String msg){
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
+        ShowMessage.showSnackbarSimpleMessage(coordinatorLayout, msg);
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId()==R.id.fab) {
-            Intent intent = new Intent(this, ProductsListActivity.class);
-            intent.putExtra(Intent.EXTRA_UID, clientId);
-            startActivity(intent);
-        }else
-        if(view.getId()==R.id.client_detail_phone){
+            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
+            if (this.draftOrders == null) {
+                ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
+            } else if (this.draftOrders.size() > 0) {
+                // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
+                ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
+            } else {
+                // si no hay orden, crear una nueva
+                new PostOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()), Long.toString(clientId));
+            }
+        } else if(view.getId()==R.id.client_detail_phone){
             String uri = "tel:" + ((TextView)view).getText().toString().trim();
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(uri));
@@ -72,5 +95,17 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             ((TextView)findViewById(R.id.client_detail_email)).setText(client.getEmail());
             String mapURL="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=400x300&maptype=roadmap&key=AIzaSyB7KkfXSNVvngEQ0LwhvLSt7i1oB4p2RdQ&center="+client.getLat()+','+client.getLon()+"&markers=color:blue%7C"+client.getLat()+','+client.getLon();
             Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
+    }
+
+    @Override
+    public void setDraftOrders(List<Order> orders) {
+        this.draftOrders = orders;
+    }
+
+    public void afterCreatingOrder(Order orderCreated) {
+        //TODO plucadei Reemplazar por Activity correcta
+        Intent intent = new Intent(this, ProductsListActivity.class);
+        intent.putExtra(Intent.EXTRA_UID, orderCreated.getId());
+        startActivity(intent);
     }
 }
