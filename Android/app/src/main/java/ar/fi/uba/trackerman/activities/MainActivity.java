@@ -21,6 +21,8 @@ import fi.uba.ar.soldme.R;
 
 public class MainActivity extends AppCompatActivity implements GetDraftOrdersTask.DraftOrdersValidation {
 
+    private Order order;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +54,22 @@ public class MainActivity extends AppCompatActivity implements GetDraftOrdersTas
 
     }
 
+    public void openDetailOrder(View view) {
+        if (order != null) {
+            Intent intent = new Intent(this, OrderActivity.class);
+            intent.putExtra(Intent.EXTRA_UID,this.order.getId());
+            startActivity(intent);
+        }
+    }
 
     @Override
     public void setDraftOrders(List<Order> orders) {
         TextView message = (TextView) findViewById(R.id.client_detail_address);
         if (orders.size() > 0) {
+            this.order = orders.get(0);
             message.setText("Tienes un pedido Activo!");
         } else {
+            this.order = null;
             message.setText("No hay pedido en curso");
         }
     }

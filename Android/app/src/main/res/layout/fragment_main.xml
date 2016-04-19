@@ -59,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/client_detail_address"
+                android:onClick="openDetailOrder"
                 android:layout_margin="16dp"
                 android:text="@string/pedido_activo"
                 android:textSize="18sp"
