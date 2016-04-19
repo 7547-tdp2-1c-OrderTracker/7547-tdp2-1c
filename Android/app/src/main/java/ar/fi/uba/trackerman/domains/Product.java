@@ -8,10 +8,16 @@ public class Product {
     private String name;
     private String brand;
     private int stock;
-    private double price;
+    private String description;
+
     private String currency;
+    private double price;
+    private double retailPrice; // minorista
+    private double wholesalePrice; // mayorista
+
     private String picture;
     private String thumbnail;
+
 
     public Product(long id){
         this.id=id;
@@ -45,12 +51,36 @@ public class Product {
         return stock;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
 
     public double getPrice() {
         return price;
+    }
+
+    public double getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(double retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
+    public double getWholesalePrice() {
+        return wholesalePrice;
+    }
+
+    public void setWholesalePrice(double wholesalePrice) {
+        this.wholesalePrice = wholesalePrice;
     }
 
     public void setCurrency(String currency) {
@@ -75,5 +105,10 @@ public class Product {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    public String getPriceWithCurrency() {
+        return this.getCurrency() +" "+ Double.toString(this.getPrice());
+
     }
 }

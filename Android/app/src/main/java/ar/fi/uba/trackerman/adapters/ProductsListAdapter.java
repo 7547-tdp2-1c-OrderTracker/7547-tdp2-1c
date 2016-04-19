@@ -10,24 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
-import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
-import ar.fi.uba.trackerman.tasks.GetClientListTask;
 import ar.fi.uba.trackerman.tasks.SearchProductsListTask;
+import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 public class ProductsListAdapter extends ArrayAdapter<Product> {
+
     private long total;
     private long offset;
     private boolean fetching;
+    private String brands;
 
     public ProductsListAdapter(Context context, int resource,
-                              List<Product> products) {
+                               List<Product> products) {
         super(context, resource, products);
         total=1;
         offset=0;
@@ -43,7 +42,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            SearchProductsListTask asyncTask= new SearchProductsListTask(this);
+            SearchProductsListTask asyncTask= new SearchProductsListTask(this,brands);
             asyncTask.execute(offset);
         }
     }
@@ -75,7 +74,6 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.product_row_name);
             holder.brand= (TextView) convertView.findViewById(R.id.product_row_brand);
-            holder.price= (TextView) convertView.findViewById(R.id.product_row_price);
             holder.image = (ImageView) convertView.findViewById(R.id.product_row_picture);
             convertView.setTag(holder);
         } else {
@@ -84,19 +82,18 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
 
         holder.name.setText(product.getName());
         holder.brand.setText(product.getBrand());
-        DecimalFormat decimalFormat = new DecimalFormat("¤ #,##0.00");
-        String formattedValue = decimalFormat.format(product.getPrice());
-        holder.price.setText(formattedValue);
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;
     }
 
+    public void setBrands(String brands) {
+        this.brands = brands;
+    }
+
     private static class ViewHolder {
         public TextView name;
         public TextView brand;
-        public TextView price;
         public ImageView image;
     }
-
 }

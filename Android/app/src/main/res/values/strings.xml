@@ -1,17 +1,39 @@
 <resources>
     <string name="app_name">TrackerMan</string>
     <string name="action_settings">Opciones</string>
-    <string name="off_road_button">Clientes</string>
-    <string name="products_button">Productos</string>
-    <string name="client_id">Codigo</string>
+    <string name="action_filter">Filtrar</string>
+
+    <string name="client_id">Código</string>
     <string name="client_lastname">Apellido</string>
     <string name="client_name">Nombre</string>
     <string name="client_cuil">CUIL</string>
-    <string name="client_address">Direccion</string>
-    <string name="client_phone">Telefono</string>
+    <string name="client_address">Dirección</string>
+    <string name="client_phone">Teléfono</string>
     <string name="client_email">Email</string>
-    <string name="clients_option">Clientes</string>
-    <string name="products_option">Productos</string>
-    <string name="title_activity_client">ClientActivity</string>
-    <string name="create_order_comment">ClientActivity</string>
+
+    <string name="apply">Aplicar</string>
+
+    <string name="clients">Clientes</string>
+    <string name="products">Productos</string>
+    <string name="orders">Pedidos</string>
+
+    <string name="action_empty">Vaciar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="confirm_order">Confirmar Pedido</string>
+
+    <string name="email_del_cliente">Email del cliente</string>
+    <string name="tel_fono_del_cliente">Teléfono del cliente</string>
+    <string name="direcci_n_del_cliente">Dirección del cliente</string>
+    <string name="codigo_del_cliente">Código del cliente</string>
+    <string name="nombre_del_cliente">Nombre del Cliente</string>
+    <string name="cuil_del_cliente">CUIL del Cliente</string>
+
+    <string name="codigo_del_producto">Codigo del producto</string>
+    <string name="nombre_del_producto">Nombre del producto</string>
+    <string name="marca_del_producto">Marca del producto</string>
+    <string name="stock_del_producto">Stock del producto</string>
+    <string name="precio_del_producto">Precio del producto</string>
+    <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
+
+    <string name="pedido_activo">No hay pedido en curso</string>
 </resources>

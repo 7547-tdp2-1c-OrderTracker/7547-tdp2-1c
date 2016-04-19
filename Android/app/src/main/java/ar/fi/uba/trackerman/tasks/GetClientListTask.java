@@ -25,13 +25,11 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 
 
-public class GetClientListTask extends AsyncTask<Long,Void,ClientSearchResult> {
+public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {
 
-    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
-    private WeakReference<ClientsListAdapter> weekAdapterReference;
 
     public GetClientListTask(ClientsListAdapter adapter) {
-        weekAdapterReference = new WeakReference<ClientsListAdapter>(adapter);
+        super(adapter);
     }
 
     @Override
@@ -114,7 +112,7 @@ public class GetClientListTask extends AsyncTask<Long,Void,ClientSearchResult> {
 
     @Override
     protected void onPostExecute(ClientSearchResult clientSearchResult) {
-        ClientsListAdapter clientListAdapter= weekAdapterReference.get();
+        ClientsListAdapter clientListAdapter= weakReference.get();
         if(clientListAdapter!=null){
             clientListAdapter.addClients(clientSearchResult);
         }else{

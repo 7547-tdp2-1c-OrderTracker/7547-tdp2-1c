@@ -14,17 +14,16 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Client;
 
 /**
  * Created by plucadei on 31/3/16.
  */
-public class GetClientTask extends AsyncTask<String,Void,Client> {
-    private static final String SERVER_HOST="https://powerful-hollows-15939.herokuapp.com";
-    private WeakReference<ClientReciver> weekReciverReference;
+public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivity> {
 
-    public GetClientTask(ClientReciver reciver) {
-        weekReciverReference = new WeakReference<ClientReciver>(reciver);
+    public GetClientTask(ClientActivity activity) {
+        super(activity);
     }
     @Override
     protected Client doInBackground(String... params) {
@@ -94,7 +93,7 @@ public class GetClientTask extends AsyncTask<String,Void,Client> {
     protected void onPostExecute(Client client) {
 
         super.onPostExecute(client);
-        ClientReciver reciver= weekReciverReference.get();
+        ClientReciver reciver= weakReference.get();
         if(reciver!=null){
             ((ClientReciver)reciver).updateClientInformation(client);
         }else{

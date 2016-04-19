@@ -16,6 +16,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.tasks.GetClientListTask;
+import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 public class ClientsListAdapter extends ArrayAdapter<Client> {
@@ -82,7 +83,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
 
         holder.name.setText(client.getLastName()+", "+client.getName());
         holder.address.setText(client.getAddress());
-        Picasso.with(this.getContext()).load(client.getThumbnail()).into(holder.image);
+        Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
 
         return convertView;
     }
