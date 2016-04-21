@@ -2,7 +2,6 @@ package ar.fi.uba.trackerman.tasks;
 
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,10 +13,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Order;
@@ -31,83 +29,28 @@ public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivit
     }
 
     public Order createOrder(String vendorId, String clientId) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String json=null;
-        Order order = null;
-
-        try {
-            //---------------------------------------------------------
-            URL url = new URL(AppSettings.getServerHost()+"/v1/orders");
-            //---------------------------------------------------------;
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-
-            String str =  "{\"client_id\": "+clientId+",\"vendor_id\":"+vendorId+"}";
-            byte[] outputInBytes = str.getBytes("UTF-8");
-            OutputStream os = urlConnection.getOutputStream();
-            os.write(outputInBytes);
-            os.close();
-
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return null;
-            }
-
-            json = buffer.toString();
-            try {
-                order = getOrderResponse(json);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            Log.e(PostOrdersTask.class.getCanonicalName(), "Error ", e);
-            return null;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return order;
+        String body = "{\"client_id\": "+clientId+",\"vendor_id\":"+vendorId+"}";
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        return (Order) restClient.post("/v1/orders", body, headers);
     }
 
-    private Order getOrderResponse(String jsonString) throws JSONException, ParseException {
-        JSONObject json = new JSONObject(jsonString);
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject orderJson = new JSONObject(json);
         Order order = null;
-
         try {
+            long id = orderJson.getLong("id");
+            long clientId = orderJson.getLong("client_id");
+            long vendorId = orderJson.getLong("vendor_id");
 
-            long id = json.getLong("id");
-            long clientId = json.getLong("client_id");
-            long vendorId = json.getLong("vendor_id");
-
-            String dateCreatedStr = json.getString("date_created");
+            String dateCreatedStr = orderJson.getString("date_created");
             Date dateCreated = null;
             if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
 
-            String status = json.getString("status");
-            double totalPrice = json.getDouble("total_price");
-            String currency = json.getString("currency");
+            String status = orderJson.getString("status");
+            double totalPrice = orderJson.getDouble("total_price");
+            String currency = orderJson.getString("currency");
 
             order= new Order(id,clientId,vendorId,dateCreated,status,totalPrice,currency);
         } catch (Exception e) {

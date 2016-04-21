@@ -16,77 +16,38 @@ import java.net.URL;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.server.RestClient;
 
 /**
  * Created by plucadei on 31/3/16.
  */
-public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivity> {
+public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivity> implements RestClient.ResponseParse {
 
     public GetClientTask(ClientActivity activity) {
         super(activity);
     }
+
     @Override
     protected Client doInBackground(String... params) {
+        String clientId = params[0];
+        return (Client) restClient.get("/v1/clients/"+clientId,null);
+    }
 
-        String clientId= params[0];
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String clientJsonStr;
-        Client client=null;
-        try {
-            URL url = new URL(SERVER_HOST+"/v1/clients/"+clientId);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return client;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return client;
-            }
-            clientJsonStr = buffer.toString();
-            try {
-                JSONObject clientJson = new JSONObject(clientJsonStr);
-                    client= new Client(clientJson.getLong("id"));
-                    client.setName(clientJson.getString("name"));
-                    client.setLastName(clientJson.getString("lastname"));
-                    client.setAddress(clientJson.getString("address"));
-                    client.setThumbnail(clientJson.getString("thumbnail"));
-                    client.setCuil(clientJson.getString("cuil"));
-                    client.setLat(clientJson.getDouble("lat"));
-                    client.setLon(clientJson.getDouble("lon"));
-                    client.setEmail(clientJson.getString("email"));
-                    client.setAvatar(clientJson.getString("avatar"));
-                    client.setPhoneNumber(clientJson.getString("phone_number"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            Log.e(GetClientTask.class.getCanonicalName(), "Error ", e);
-            return client;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return  client;
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject clientJson = new JSONObject(json);
+        Client client= new Client(clientJson.getLong("id"));
+        client.setName(clientJson.getString("name"));
+        client.setLastName(clientJson.getString("lastname"));
+        client.setAddress(clientJson.getString("address"));
+        client.setThumbnail(clientJson.getString("thumbnail"));
+        client.setCuil(clientJson.getString("cuil"));
+        client.setLat(clientJson.getDouble("lat"));
+        client.setLon(clientJson.getDouble("lon"));
+        client.setEmail(clientJson.getString("email"));
+        client.setAvatar(clientJson.getString("avatar"));
+        client.setPhoneNumber(clientJson.getString("phone_number"));
+        return client;
     }
 
     @Override

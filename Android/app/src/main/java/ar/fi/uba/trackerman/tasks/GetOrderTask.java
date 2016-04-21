@@ -31,60 +31,13 @@ public class GetOrderTask extends AbstractTask<String,Void,Order,OrderActivity> 
 
     @Override
     protected Order doInBackground(String... params) {
-
         String orderId= params[0];
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String orderJsonStr;
-        Order order=null;
-        try {
-            URL url = new URL(SERVER_HOST+"/v1/orders/"+orderId);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return order;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return order;
-            }
-            orderJsonStr = buffer.toString();
-            try {
-                return parseOrderJson(orderJsonStr);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            Log.e(GetOrderTask.class.getCanonicalName(), "Error ", e);
-            return order;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(this.getClass().getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return order;
+        return (Order) restClient.get("/v1/orders/"+orderId);
     }
 
-    private Order parseOrderJson(String orderJsonStr) throws JSONException{
-        Order order;
-        JSONObject orderJson = new JSONObject(orderJsonStr);
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject orderJson = new JSONObject(json);
         long id=orderJson.getLong("id");
         long vendorId= orderJson.getLong("vendor_id");
         long clientId= orderJson.getLong("client_id");
@@ -97,7 +50,7 @@ public class GetOrderTask extends AbstractTask<String,Void,Order,OrderActivity> 
         // TODO: DESCOMENTAR ESTO!!!
         String currency= "ARS";//orderJson.getString("currency");
         String status= orderJson.getString("status");
-        order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
+        Order order = new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
         JSONArray itemsJson= orderJson.getJSONArray("order_items");
         for (int i = 0; i < itemsJson.length(); i++) {
             JSONObject row = itemsJson.getJSONObject(i);

@@ -32,61 +32,13 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
     }
 
     public List<Order> getDraftOrders(String vendorId) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String json=null;
-        List<Order> orders=null;
-
-        try {
-            //---------------------------------------------------------
-            URL url = new URL(AppSettings.getServerHost()+"/v1/orders?status=draft&vendor_id="+vendorId);
-            //---------------------------------------------------------;
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return null;
-            }
-
-            json = buffer.toString();
-            try {
-                orders = parseJson(json);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            Log.e(GetDraftOrdersTask.class.getCanonicalName(), "Error ", e);
-            return null;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return orders;
+        return (List<Order>) restClient.get("/v1/orders?status=draft&vendor_id="+vendorId);
     }
 
-    private List<Order> parseJson(String jsonString) throws JSONException, ParseException {
-        JSONObject json = new JSONObject(jsonString);
-        JSONArray resultJSON = (JSONArray) json.get("results");
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject ordersList = new JSONObject(json);
+        JSONArray resultJSON = (JSONArray) ordersList.get("results");
         List<Order> orders= new ArrayList<Order>();
         Order order;
         for (int i = 0; i < resultJSON.length(); i++) {

@@ -28,60 +28,13 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,Brands
 
     @Override
     protected List<Brand> doInBackground(Long... params) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String brandsJsonStr;
-        List<Brand> brands=null;
-
-        try {
-            String urlString= SERVER_HOST+"/v1/brands?limit=999";
-            Log.d(this.getClass().getCanonicalName(),"About to get :"+urlString);
-            URL url = new URL(urlString);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return brands;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return brands;
-            }
-            brandsJsonStr = buffer.toString();
-            try {
-                return parseJsonToBrand(brandsJsonStr);
-            } catch (JSONException e) {
-
-            }
-        } catch (IOException e) {
-            Log.e(this.getClass().getCanonicalName(), "Error fetching brands.", e);
-            return brands;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetBrandsListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return brands;
+        return (List<Brand>) restClient.get("/v1/brands?limit=999",null);
     }
 
-    private List<Brand> parseJsonToBrand(String jsonString) throws JSONException{
-        JSONObject json = new JSONObject(jsonString);
-        JSONArray resultJSON = (JSONArray) json.get("results");
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject brandList = new JSONObject(json);
+        JSONArray resultJSON = (JSONArray) brandList.get("results");
         List<Brand> brands= new ArrayList<Brand>();
         Brand brand;
         for (int i = 0; i < resultJSON.length(); i++) {

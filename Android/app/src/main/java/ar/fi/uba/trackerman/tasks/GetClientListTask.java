@@ -34,69 +34,26 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
 
     @Override
     protected ClientSearchResult doInBackground(Long... params) {
-        Long offset= params[0];
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String clientsJsonStr;
-        ClientSearchResult clientSearchResult;
-
-        try {
-            String urlString= SERVER_HOST+"/v1/clients?limit=10";
-            if(offset!=null){
-                urlString+="&offset="+offset.toString();
-            }
-            Log.d(this.getClass().getCanonicalName(),"About to get :"+urlString);
-            URL url = new URL(urlString);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return new ClientSearchResult();
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return new ClientSearchResult();
-            }
-            clientsJsonStr = buffer.toString();
-            try {
-                return parseJsonClientSearchResult(clientsJsonStr);
-            } catch (JSONException e) {
-
-            }
-        } catch (IOException e) {
-            Log.e(this.getClass().getCanonicalName(), "Error fetching clients.", e);
-            return null;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
+        String urlString = "/v1/clients?limit=10";
+        Long offset = params[0];
+        if(offset != null){
+            urlString += "&offset="+offset.toString();
         }
-        return null;
+
+        ClientSearchResult clientSearchResult = (ClientSearchResult) restClient.get(urlString,null);
+        //TODO testear caso particular, solo en la exception devuelve null
+        if (clientSearchResult==null) clientSearchResult = new ClientSearchResult();
+        return clientSearchResult;
     }
 
-    private ClientSearchResult parseJsonClientSearchResult(String jsonString) throws JSONException{
-        JSONObject json = new JSONObject(jsonString);
-        JSONObject pagingJSON = json.getJSONObject("paging");
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject clientsList = new JSONObject(json);
+        JSONObject pagingJSON = clientsList.getJSONObject("paging");
         ClientSearchResult clientSearchResult= new ClientSearchResult();
         clientSearchResult.setTotal(pagingJSON.getLong("total"));
         clientSearchResult.setOffset(pagingJSON.getLong("offset"));
-        JSONArray resultJSON = (JSONArray) json.get("results");
+        JSONArray resultJSON = (JSONArray) clientsList.get("results");
         Client client;
         for (int i = 0; i < resultJSON.length(); i++) {
             JSONObject row = resultJSON.getJSONObject(i);

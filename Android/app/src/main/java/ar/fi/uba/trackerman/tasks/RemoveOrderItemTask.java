@@ -2,6 +2,8 @@ package ar.fi.uba.trackerman.tasks;
 
 import android.util.Log;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +12,12 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.utils.AppSettings;
 
 public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
@@ -23,54 +28,25 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected String doInBackground(String... params) {
-        String orderId= params[0];
-        String itemId= params[1];
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String orderJsonStr;
-        Order order=null;
+        String orderId = params[0];
+        String itemId = params[1];
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        String resp = null;
+        String url = "/v1/orders/" + orderId + "/order_items/" + itemId;
         try {
-            URL url = new URL(AppSettings.getServerHost()+"/v1/orders/"+orderId+"/order_items/"+itemId);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("DELETE");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return "OK";
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return "OK";
-            }
-            orderJsonStr = buffer.toString();
-            return "OK";
-
-        } catch (IOException e) {
-            Log.e(ConfirmOrderTask.class.getCanonicalName(), "Error ", e);
-            return "FAIL";
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(this.getClass().getCanonicalName(), "Error closing stream", e);
-                }
-            }
+            resp = (String) restClient.delete(url, null,headers);
+            if (resp == null) resp = "OK";
+        } catch (ServerErrorException e) {
+            resp = "FAIL";
         }
+        return resp;
     }
 
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        return "OK";
+    }
 
     @Override
     protected void onPostExecute(String result) {
