@@ -15,6 +15,8 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
@@ -32,66 +34,16 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivi
 
     @Override
     protected Order doInBackground(String... params) {
-
         String orderId= params[0];
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String orderJsonStr;
-        Order order=null;
-        try {
-            URL url = new URL(SERVER_HOST+"/v1/orders/"+orderId);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("PUT");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            String str =  "{\"status\": \"confirm\"}";
-            byte[] outputInBytes = str.getBytes("UTF-8");
-            OutputStream os = urlConnection.getOutputStream();
-            os.write(outputInBytes);
-            os.close();
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return order;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return order;
-            }
-            orderJsonStr = buffer.toString();
-            try {
-                order = parseOrderJson(orderJsonStr);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            Log.e(ConfirmOrderTask.class.getCanonicalName(), "Error ", e);
-            return order;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(this.getClass().getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return order;
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        return (Order) restClient.put("/v1/orders/"+orderId,"{\"status\": \"confirm\"}",headers);
     }
 
-    private Order parseOrderJson(String orderJsonStr) throws JSONException{
+    @Override
+    public Object readResponse(String json) throws JSONException {
         Order order;
-        JSONObject orderJson = new JSONObject(orderJsonStr);
+        JSONObject orderJson = new JSONObject(json);
         long id=orderJson.getLong("id");
         long vendorId= orderJson.getLong("vendor_id");
         long clientId= orderJson.getLong("client_id");

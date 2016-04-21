@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.activities.ProductActivity;
@@ -28,82 +30,30 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,Produ
     }
 
     public OrderItem createOrderItem(String orderId, String productId, String quantity) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String json=null;
-        OrderItem orderItem = null;
-
-        try {
-            //---------------------------------------------------------
-            URL url = new URL(AppSettings.getServerHost()+"/v1/orders/"+orderId+"/order_items");
-            //---------------------------------------------------------;
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-
-            String str =  "{\"product_id\": "+productId+",\"quantity\":"+quantity+"}";
-            byte[] outputInBytes = str.getBytes("UTF-8");
-            OutputStream os = urlConnection.getOutputStream();
-            os.write(outputInBytes);
-            os.close();
-
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return null;
-            }
-
-            json = buffer.toString();
-            try {
-                orderItem = validateResponse(json);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            Log.e(PostOrderItemsTask.class.getCanonicalName(), "Error ", e);
-            return null;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
-        }
-        return orderItem;
+        String body = "{\"product_id\": "+productId+",\"quantity\":"+quantity+"}";
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        String url = "/v1/orders/"+orderId+"/order_items";
+        return (OrderItem) restClient.post(url, body, headers);
     }
 
-    private OrderItem validateResponse(String jsonString) throws JSONException, ParseException {
-        JSONObject json = new JSONObject(jsonString);
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject orderItemJson = new JSONObject(json);
         OrderItem orderItem = null;
 
         try {
-            long id = json.getLong("id");
-            long productId = json.getLong("product_id");
-            String name = json.getString("name");
-            int quantity = json.getInt("quantity");
-            double unitPrice = json.getDouble("unit_price");
-            String currency = json.getString("currency");
-            String brandName = json.getString("brand_name");
-            String thumbnail = json.getString("thumbnail");
+            long id = orderItemJson.getLong("id");
+            long productId = orderItemJson.getLong("product_id");
+            String name = orderItemJson.getString("name");
+            int quantity = orderItemJson.getInt("quantity");
+            double unitPrice = orderItemJson.getDouble("unit_price");
+            String currency = orderItemJson.getString("currency");
+            String brandName = orderItemJson.getString("brand_name");
+            String thumbnail = orderItemJson.getString("thumbnail");
 
             orderItem = new OrderItem(id,productId,name,quantity,unitPrice,currency,brandName,thumbnail);
-            orderItem.setOrderId(json.getLong("order_id"));
+            orderItem.setOrderId(orderItemJson.getLong("order_id"));
         } catch (Exception e) {
             Log.e("create_order_item_json", "Error parseando la creacion de orden item", e);
         }

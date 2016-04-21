@@ -30,71 +30,27 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
 
     @Override
     protected ProductsSearchResult doInBackground(Long... params) {
+        String urlString = "/v1/products?limit=10";
         Long offset= params[0];
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String productsJsonStr;
-
-        try {
-            String urlString= SERVER_HOST+"/v1/products?limit=10";
-            if(offset!=null){
-                urlString+="&offset="+offset.toString();
-            }
-            if(brandFilter!=null){
-                urlString+="&brand_id="+brandFilter;
-            }
-            Log.d(this.getClass().getCanonicalName(), "About to get :" + urlString);
-            URL url = new URL(urlString);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return new ProductsSearchResult();
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            if (buffer.length() == 0) {
-                return new ProductsSearchResult();
-            }
-            productsJsonStr = buffer.toString();
-            try {
-                return parseJsonResponse(productsJsonStr);
-            } catch (JSONException e) {
-                Log.e(this.getClass().getCanonicalName(), "Error parsing response.", e);
-                return null;
-            }
-        } catch (IOException e) {
-            Log.e(this.getClass().getCanonicalName(), "Error fetching clients.", e);
-            return null;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(GetClientListTask.class.getCanonicalName(), "Error closing stream", e);
-                }
-            }
+        if(offset != null){
+            urlString += "&offset="+offset.toString();
         }
+        if(brandFilter!=null){
+            urlString+="&brand_id="+brandFilter;
+        }
+        ProductsSearchResult productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
+        if (productsSearchResult == null) productsSearchResult = new ProductsSearchResult();
+        return productsSearchResult;
     }
 
-    private ProductsSearchResult parseJsonResponse(String jsonString) throws JSONException{
-        JSONObject json = new JSONObject(jsonString);
-        JSONObject pagingJSON = json.getJSONObject("paging");
+    @Override
+    public Object readResponse(String json) throws JSONException {
+        JSONObject productSearchResultJson = new JSONObject(json);
+        JSONObject pagingJSON = productSearchResultJson.getJSONObject("paging");
         ProductsSearchResult productsSearchResult= new ProductsSearchResult();
         productsSearchResult.setTotal(pagingJSON.getLong("total"));
         productsSearchResult.setOffset(pagingJSON.getLong("offset"));
-        JSONArray resultJSON = (JSONArray) json.get("results");
+        JSONArray resultJSON = (JSONArray) productSearchResultJson.get("results");
         Product product;
         for (int i = 0; i < resultJSON.length(); i++) {
             JSONObject row = resultJSON.getJSONObject(i);
