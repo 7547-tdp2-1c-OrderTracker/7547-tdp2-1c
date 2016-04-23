@@ -5,12 +5,10 @@
     android:background="@drawable/icon"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:padding="16dp">
 
+<!--
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
@@ -23,12 +21,15 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="Nombre Vendedor"
+        android:textColor="@color/cardview_shadow_start_color"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/cardview_shadow_start_color"
         android:text="vendedor@email.com" />
+-->
 
 </LinearLayout>
