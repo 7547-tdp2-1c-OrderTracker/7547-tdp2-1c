@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,9 +22,9 @@ import ar.fi.uba.trackerman.utils.AppSettings;
 import fi.uba.ar.soldme.R;
 
 public class MainActivity extends AppCompatActivity implements
-        GetDraftOrdersTask.DraftOrdersValidation,
-        NavigationView.OnNavigationItemSelectedListener {
+        GetDraftOrdersTask.DraftOrdersValidation {
 
+    DrawerLayout drawerLayout;
     private Order order;
 
     @Override
@@ -32,42 +33,22 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        /*
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        String[] options={getString(R.string.clients),getString(R.string.products)};
-
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, options));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    openMyClientsActivity(null);
-                } else if (position == 1) {
-                    openProductsActivity(null);
-                } else {
-                    openOrdersActivity(null);
-                }
-            }
-        });
-        */
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (navigationView != null) {
+            setupNavigationDrawerContent(navigationView);
+        }
+
+        setupNavigationDrawerContent(navigationView);
 
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
-
     }
 
     public void openDetailOrder(View view) {
@@ -95,15 +76,20 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    public void openMyOrdersActivity(View view) {
+        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+    }
+
+    public void openMyCalendarActivity(View view) {
+        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+    }
+
     public void openProductsActivity(View view) {
         Intent intent = new Intent(this, ProductsListActivity.class);
         startActivity(intent);
     }
 
     public void openOrdersActivity(View view) {
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,14l);
-        startActivity(intent);
     }
 
     @Override
@@ -121,24 +107,36 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    private void setupNavigationDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-        if (id == R.id.nav_camera) {
-            openMyClientsActivity(null);
-        } else if (id == R.id.nav_gallery) {
-            openProductsActivity(null);
-        } else if (id == R.id.nav_slideshow) {
-            Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_clients:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openMyClientsActivity(null);
+                                return true;
+                            case R.id.nav_products:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openProductsActivity(null);
+                                return true;
+                            case R.id.nav_orders:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openMyOrdersActivity(null);
+                                return true;
+                            case R.id.nav_calendar_day:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openMyCalendarActivity(null);
+                                return true;
+                        }
+                        return true;
+                    }
+                });
     }
 }

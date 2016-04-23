@@ -2,34 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/icon"
-    android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:padding="16dp">
+    android:padding="10dp"
+    android:layout_gravity="center">
 
-<!--
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/menu_header_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:src="@android:drawable/sym_def_app_icon" />
+        android:src="@drawable/icon" />
+    <!--
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="Nombre Vendedor"
-        android:textColor="@color/cardview_shadow_start_color"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="Nombre Vendedor"
+            android:textColor="@color/cardview_shadow_start_color"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/cardview_shadow_start_color"
-        android:text="vendedor@email.com" />
--->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/cardview_shadow_start_color"
+            android:text="vendedor@email.com" />
+    -->
 
 </LinearLayout>
