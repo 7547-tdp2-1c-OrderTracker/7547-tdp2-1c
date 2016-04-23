@@ -3,6 +3,16 @@
     <string name="action_settings">Opciones</string>
     <string name="action_filter">Filtrar</string>
 
+    <!-- items del menu lateral -->
+    <string name="menu_clients">Clientes</string>
+    <string name="menu_products">Productos</string>
+    <string name="menu_orders">Pedidos</string>
+    <string name="menu_agenda_del_dia">Agenda del día</string>
+
+    <string name="clients">Clientes</string>
+    <string name="products">Productos</string>
+    <string name="orders">Pedidos</string>
+
     <string name="client_id">Código</string>
     <string name="client_lastname">Apellido</string>
     <string name="client_name">Nombre</string>
@@ -12,11 +22,6 @@
     <string name="client_email">Email</string>
 
     <string name="apply">Aplicar</string>
-
-    <string name="clients">Clientes</string>
-    <string name="products">Productos</string>
-    <string name="orders">Pedidos</string>
-
     <string name="action_empty">Vaciar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="confirm_order">Confirmar Pedido</string>
@@ -36,4 +41,7 @@
     <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
 
     <string name="pedido_activo">No hay pedido en curso</string>
+
+    <string name="navigation_drawer_open">Drawer abierto</string>
+    <string name="navigation_drawer_close">Drawer cerrado</string>
 </resources>
