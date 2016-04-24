@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,14 +20,14 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
-import ar.fi.uba.trackerman.tasks.GetClientTask;
-import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
-import ar.fi.uba.trackerman.tasks.PostOrdersTask;
+import ar.fi.uba.trackerman.tasks.client.GetClientTask;
+import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
-public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
+public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long clientId;
     private List<Order> draftOrders;
@@ -47,9 +49,11 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         clientId= intent.getLongExtra(Intent.EXTRA_UID, 0);
         new GetClientTask(this).execute(Long.toString(clientId));
 
-        View phoneView=findViewById(R.id.client_detail_phone);
+        findViewById(R.id.client_detail_phone).setOnClickListener(this);
+        findViewById(R.id.client_detail_phone_number_icon).setOnClickListener(this);
+        findViewById(R.id.client_detail_email).setOnClickListener(this);
+        findViewById(R.id.client_detail_email_icon).setOnClickListener(this);
 
-        phoneView.setOnClickListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
@@ -75,26 +79,59 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
                 // si no hay orden, crear una nueva
                 new PostOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()), Long.toString(clientId));
             }
-        } else if(view.getId()==R.id.client_detail_phone){
-            String uri = "tel:" + ((TextView)view).getText().toString().trim();
+        } else if((view.getId() == R.id.client_detail_phone || view.getId() == R.id.client_detail_phone_number_icon)
+                && isValidPhone(((TextView)findViewById(R.id.client_detail_phone)).getText())){
+            String uri = "tel:" + ((TextView)findViewById(R.id.client_detail_phone)).getText().toString().trim();
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(uri));
             startActivity(intent);
         }
+        if((view.getId() == R.id.client_detail_email || view.getId() == R.id.client_detail_email_icon)
+                && isValidMail(((TextView) findViewById(R.id.client_detail_email)).getText())){
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto",((TextView) findViewById(R.id.client_detail_email)).getText().toString().trim(), null));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "[OrderTracker] - Mensaje del vendedor");
+            startActivity(Intent.createChooser(intent, "Send email..."));
+        }
+    }
+
+    private boolean isValidMail(CharSequence expectedMail) {
+        String trimmedMail = expectedMail.toString().trim();
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(trimmedMail).matches();
+    }
+
+    private boolean isValidPhone(CharSequence expectedPhone) {
+        String trimmedPhone = expectedPhone.toString().trim();
+        return PhoneNumberUtils.isGlobalPhoneNumber(trimmedPhone);
     }
 
     public void updateClientInformation(Client client){
-            ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getFullName());
-            Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
+        ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getFullName());
+        Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
 
-            ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
-            ((TextView)findViewById(R.id.client_detail_name)).setText(client.getFullName());
-            ((TextView)findViewById(R.id.client_detail_cuil)).setText(client.getCuil());
-            ((TextView)findViewById(R.id.client_detail_address)).setText(client.getAddress());
-            ((TextView)findViewById(R.id.client_detail_phone)).setText(client.getPhoneNumber());
-            ((TextView)findViewById(R.id.client_detail_email)).setText(client.getEmail());
-            String mapURL="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=400x300&maptype=roadmap&key=AIzaSyB7KkfXSNVvngEQ0LwhvLSt7i1oB4p2RdQ&center="+client.getLat()+','+client.getLon()+"&markers=color:blue%7C"+client.getLat()+','+client.getLon();
-            Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
+        ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
+        ((TextView)findViewById(R.id.client_detail_name)).setText(client.getFullName());
+        ((TextView)findViewById(R.id.client_detail_cuil)).setText(client.getCuil());
+        ((TextView)findViewById(R.id.client_detail_address)).setText(client.getAddress());
+
+        int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+
+        TextView phoneField = ((TextView)findViewById(R.id.client_detail_phone));
+        phoneField.setText(client.getPhoneNumber());
+        if (isValidPhone(phoneField.getText())) {
+            ((ImageView)findViewById(R.id.client_detail_phone_number_icon)).setColorFilter(colorAccent);
+            phoneField.setTextColor(colorAccent);
+        }
+
+        TextView mailField = ((TextView)findViewById(R.id.client_detail_email));
+        mailField.setText(client.getEmail());
+        if (isValidMail(mailField.getText())) {
+            ((ImageView)findViewById(R.id.client_detail_email_icon)).setColorFilter(colorAccent);
+            mailField.setTextColor(colorAccent);
+        }
+
+        String mapURL="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=400x300&maptype=roadmap&key=AIzaSyB7KkfXSNVvngEQ0LwhvLSt7i1oB4p2RdQ&center="+client.getLat()+','+client.getLon()+"&markers=color:blue%7C"+client.getLat()+','+client.getLon();
+        Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
     }
 
     @Override

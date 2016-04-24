@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.order;
 
 import android.util.Log;
 
@@ -21,56 +21,45 @@ import java.util.Map;
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
 /**
  * Created by plucadei on 31/3/16.
  */
-public class EmptyOrderTask extends AbstractTask<String,Void,Order,OrderActivity> {
+public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivity> {
 
-    public EmptyOrderTask(OrderActivity activity) {
+    public ConfirmOrderTask(OrderActivity activity) {
         super(activity);
     }
 
     @Override
     protected Order doInBackground(String... params) {
-        String orderId = params[0];
+        String orderId= params[0];
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
-        return (Order) restClient.put("/v1/orders/"+orderId+"/empty",null,headers);
+        String url = "/v1/orders/"+orderId;
+        String body = "{\"status\": \"confirmed\"}";
+        return (Order) restClient.put(url,body,headers);
     }
 
     @Override
     public Object readResponse(String json) throws JSONException {
-        Order order;
         JSONObject orderJson = new JSONObject(json);
-        long id=orderJson.getLong("id");
-        long vendorId= orderJson.getLong("vendor_id");
-        long clientId= orderJson.getLong("client_id");
-
-        String dateCreatedStr = orderJson.getString("date_created");
-        Date dateCreated = null;
-        if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-
-        double total_price = orderJson.getDouble("total_price");
-        // TODO: DESCOMENTAR ESTO!!!
-        String currency= orderJson.getString("currency");
-        String status= orderJson.getString("status");
-        order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
-        return order;
+        return Order.fromJson(orderJson);
     }
 
     @Override
     protected void onPostExecute(Order order) {
-        OrderCleaner reciver= weakReference.get();
+        OrderConfirmer reciver= weakReference.get();
         if(reciver!=null){
-            reciver.updateOrderInformation(order);
+            reciver.afterOrderConfirmed(order);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
     }
 
-    public interface OrderCleaner {
-        public void updateOrderInformation(Order order);
+    public interface OrderConfirmer {
+        public void afterOrderConfirmed(Order order);
     }
 }

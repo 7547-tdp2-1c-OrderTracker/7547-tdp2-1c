@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Order;
-import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import fi.uba.ar.soldme.R;
 

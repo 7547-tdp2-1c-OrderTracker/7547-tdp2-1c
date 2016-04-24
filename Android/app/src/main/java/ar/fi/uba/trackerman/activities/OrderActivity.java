@@ -1,9 +1,7 @@
 package ar.fi.uba.trackerman.activities;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -11,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,12 +22,12 @@ import android.widget.TextView;
 import ar.fi.uba.trackerman.adapters.OrderItemsListAdapter;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
-import ar.fi.uba.trackerman.tasks.CancellOrderTask;
-import ar.fi.uba.trackerman.tasks.ConfirmOrderTask;
-import ar.fi.uba.trackerman.tasks.EmptyOrderTask;
-import ar.fi.uba.trackerman.tasks.GetOrderTask;
-import ar.fi.uba.trackerman.tasks.RemoveOrderItemTask;
-import ar.fi.uba.trackerman.tasks.UpdateOrderItemTask;
+import ar.fi.uba.trackerman.tasks.order.CancellOrderTask;
+import ar.fi.uba.trackerman.tasks.order.ConfirmOrderTask;
+import ar.fi.uba.trackerman.tasks.order.EmptyOrderTask;
+import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
+import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
+import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import fi.uba.ar.soldme.R;
 
 public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, EmptyOrderTask.OrderCleaner, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{

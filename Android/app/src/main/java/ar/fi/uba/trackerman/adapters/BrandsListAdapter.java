@@ -15,14 +15,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import ar.fi.uba.trackerman.domains.Brand;
-import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
+import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 /**
  * Created by plucadei on 10/4/16.
  */
-public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterView.OnItemClickListener{
+public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterView.OnItemClickListener,GetBrandsListTask.BrandsListAggregator{
 
     List<Long> selected;
 
@@ -42,6 +42,7 @@ public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterVie
         asyncTask.execute();
     }
 
+    @Override
     public void addBrands(List<Brand> brands){
         if(brands!=null) {
             this.addAll(brands);

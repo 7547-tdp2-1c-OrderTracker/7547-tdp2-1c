@@ -1,5 +1,10 @@
 package ar.fi.uba.trackerman.domains;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+
 public class OrderItem {
 
     private long id;
@@ -143,4 +148,22 @@ public class OrderItem {
         return name;
     }
 
+    public static OrderItem fromJson(JSONObject json) {
+        OrderItem orderItem = null;
+        try {
+            long orderItemId = json.getLong("id");
+            long product_id = json.getLong("product_id");
+            String name = json.getString("name");
+            int quantity = json.getInt("quantity");
+            double price = json.getDouble("unit_price");
+            String currencyItem = json.getString("currency");
+            String brand = json.getString("brand_name");
+            String picture = json.getString("thumbnail");
+            orderItem = new OrderItem(orderItemId,product_id,name,quantity,price,currencyItem,brand,picture);
+            orderItem.setOrderId(json.getLong("order_id"));
+        } catch (JSONException e) {
+            throw new OrderTrackerException("Error parsing OrderItem", e);
+        }
+        return orderItem;
+    }
 }

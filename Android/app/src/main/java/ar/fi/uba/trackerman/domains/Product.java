@@ -1,13 +1,20 @@
 package ar.fi.uba.trackerman.domains;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+
 /**
  * Created by plucadei on 3/4/16.
  */
 public class Product {
     private long id;
     private String name;
-    private String brand;
+    private long brandId;
     private int stock;
+    private String code;
+    private String status;
     private String description;
 
     private String currency;
@@ -35,12 +42,12 @@ public class Product {
         return name;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setBrandId(long brandId) {
+        this.brandId = brandId;
     }
 
-    public String getBrand() {
-        return brand;
+    public long getBrandId() {
+        return brandId;
     }
 
     public void setStock(int stock) {
@@ -49,6 +56,22 @@ public class Product {
 
     public int getStock() {
         return stock;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDescription() {
@@ -109,6 +132,29 @@ public class Product {
 
     public String getPriceWithCurrency() {
         return this.getCurrency() +" "+ Double.toString(this.getPrice());
+    }
 
+    public static Product fromJson(JSONObject json) {
+        Product product = null;
+        try {
+            product = new Product(json.getLong("id"));
+            product.setName(json.getString("name"));
+            product.setBrandId(json.getLong("brand_id"));
+            product.setStock(json.getInt("stock"));
+
+            product.setCode(json.getString("code"));
+            product.setStatus(json.getString("status"));
+            product.setDescription(json.getString("description"));
+            product.setCurrency(json.getString("currency"));
+            product.setPrice(json.getDouble("retailPrice"));
+            product.setRetailPrice(json.getDouble("retailPrice"));
+            product.setWholesalePrice(json.getDouble("wholesalePrice"));
+
+            product.setPicture(json.getString("picture"));
+            product.setThumbnail(json.getString("thumbnail"));
+        } catch(JSONException e) {
+            throw new OrderTrackerException("Error parsing Product.",e);
+        }
+        return product;
     }
 }

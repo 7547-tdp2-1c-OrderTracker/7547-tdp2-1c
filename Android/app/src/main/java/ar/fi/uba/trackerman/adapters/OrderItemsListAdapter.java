@@ -1,7 +1,6 @@
 package ar.fi.uba.trackerman.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ar.fi.uba.trackerman.activities.OrderActivity;
-import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.domains.OrderItem;
-import ar.fi.uba.trackerman.tasks.GetClientListTask;
-import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {

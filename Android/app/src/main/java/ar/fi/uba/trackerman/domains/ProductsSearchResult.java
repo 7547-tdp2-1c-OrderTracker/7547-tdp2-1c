@@ -1,5 +1,9 @@
 package ar.fi.uba.trackerman.domains;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +44,22 @@ public class ProductsSearchResult {
 
     public void addProduct(Product product){
         this.products.add(product);
+    }
+
+    public static ProductsSearchResult fromJson(JSONObject json) {
+        ProductsSearchResult productsSearchResult = null;
+        try {
+            productsSearchResult = new ProductsSearchResult();
+            JSONObject pagingJSON = json.getJSONObject("paging");
+            productsSearchResult.setTotal(pagingJSON.getLong("total"));
+            productsSearchResult.setOffset(pagingJSON.getLong("offset"));
+            JSONArray resultJSON = (JSONArray) json.get("results");
+            for (int i = 0; i < resultJSON.length(); i++) {
+                productsSearchResult.addProduct(Product.fromJson(resultJSON.getJSONObject(i)));
+            }
+        } catch(JSONException e) {
+
+        }
+        return productsSearchResult;
     }
 }

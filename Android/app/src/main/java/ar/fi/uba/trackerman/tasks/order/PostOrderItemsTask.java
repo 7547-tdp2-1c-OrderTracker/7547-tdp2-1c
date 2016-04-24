@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.order;
 
 import android.util.Log;
 
@@ -20,10 +20,11 @@ import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
-public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,ProductActivity>{
+public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,ProductActivity> {
 
     public PostOrderItemsTask(ProductActivity activity) {
         super(activity);
@@ -40,25 +41,7 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,Produ
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject orderItemJson = new JSONObject(json);
-        OrderItem orderItem = null;
-
-        try {
-            long id = orderItemJson.getLong("id");
-            long productId = orderItemJson.getLong("product_id");
-            String name = orderItemJson.getString("name");
-            int quantity = orderItemJson.getInt("quantity");
-            double unitPrice = orderItemJson.getDouble("unit_price");
-            String currency = orderItemJson.getString("currency");
-            String brandName = orderItemJson.getString("brand_name");
-            String thumbnail = orderItemJson.getString("thumbnail");
-
-            orderItem = new OrderItem(id,productId,name,quantity,unitPrice,currency,brandName,thumbnail);
-            orderItem.setOrderId(orderItemJson.getLong("order_id"));
-        } catch (Exception e) {
-            Log.e("create_order_item_json", "Error parseando la creacion de orden item", e);
-        }
-
-        return orderItem;
+        return OrderItem.fromJson(orderItemJson);
     }
 
     @Override
