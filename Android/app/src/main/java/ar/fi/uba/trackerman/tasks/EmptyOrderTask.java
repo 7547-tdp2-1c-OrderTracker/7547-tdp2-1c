@@ -42,22 +42,8 @@ public class EmptyOrderTask extends AbstractTask<String,Void,Order,OrderActivity
 
     @Override
     public Object readResponse(String json) throws JSONException {
-        Order order;
         JSONObject orderJson = new JSONObject(json);
-        long id=orderJson.getLong("id");
-        long vendorId= orderJson.getLong("vendor_id");
-        long clientId= orderJson.getLong("client_id");
-
-        String dateCreatedStr = orderJson.getString("date_created");
-        Date dateCreated = null;
-        if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-
-        double total_price = orderJson.getDouble("total_price");
-        // TODO: DESCOMENTAR ESTO!!!
-        String currency= orderJson.getString("currency");
-        String status= orderJson.getString("status");
-        order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
-        return order;
+        return Order.fromJson(orderJson);
     }
 
     @Override

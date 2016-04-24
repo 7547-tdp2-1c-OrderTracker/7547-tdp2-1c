@@ -49,22 +49,7 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject clientsList = new JSONObject(json);
-        JSONObject pagingJSON = clientsList.getJSONObject("paging");
-        ClientSearchResult clientSearchResult= new ClientSearchResult();
-        clientSearchResult.setTotal(pagingJSON.getLong("total"));
-        clientSearchResult.setOffset(pagingJSON.getLong("offset"));
-        JSONArray resultJSON = (JSONArray) clientsList.get("results");
-        Client client;
-        for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject row = resultJSON.getJSONObject(i);
-            client= new Client(row.getLong("id"));
-            client.setName(row.getString("name"));
-            client.setLastName(row.getString("lastname"));
-            client.setAddress(row.getString("address"));
-            client.setThumbnail(row.getString("thumbnail"));
-            clientSearchResult.addClient(client);
-        }
-        return clientSearchResult;
+        return ClientSearchResult.fromJson(clientsList);
     }
 
     @Override

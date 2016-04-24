@@ -35,18 +35,7 @@ public class GetProductTask extends AbstractTask<String,Void,Product,ProductActi
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject row = new JSONObject(json);
-        Product product = new Product(row.getLong("id"));
-        product.setName(row.getString("name"));
-        product.setBrand(row.getString("brand"));
-        product.setPicture(row.getString("picture"));
-        product.setStock(row.getInt("stock"));
-        product.setDescription(row.getString("description"));
-        product.setCurrency(row.getString("currency"));
-        // @TODO: deberiamos volar en algun momento el price. verificar tambien la clase Product y que todo cierre.
-        product.setPrice(row.getDouble("retailPrice"));
-        product.setRetailPrice(row.getDouble("retailPrice"));
-        product.setWholesalePrice(row.getDouble("wholesalePrice"));
-        return product;
+        return Product.fromJson(row);
     }
 
     @Override

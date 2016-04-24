@@ -1,5 +1,10 @@
 package ar.fi.uba.trackerman.domains;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+
 /**
  * Created by plucadei on 3/4/16.
  */
@@ -109,6 +114,24 @@ public class Product {
 
     public String getPriceWithCurrency() {
         return this.getCurrency() +" "+ Double.toString(this.getPrice());
+    }
 
+    public static Product fromJson(JSONObject json) {
+        Product product = null;
+        try {
+            product = new Product(json.getLong("id"));
+            product.setName(json.getString("name"));
+            product.setBrand(json.getString("brand"));
+            product.setPicture(json.getString("picture"));
+            product.setStock(json.getInt("stock"));
+            product.setDescription(json.getString("description"));
+            product.setCurrency(json.getString("currency"));
+            product.setPrice(json.getDouble("retailPrice"));
+            product.setRetailPrice(json.getDouble("retailPrice"));
+            product.setWholesalePrice(json.getDouble("wholesalePrice"));
+        } catch(JSONException e) {
+            throw new OrderTrackerException("Error parsing Product.",e);
+        }
+        return product;
     }
 }

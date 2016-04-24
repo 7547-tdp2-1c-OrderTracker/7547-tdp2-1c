@@ -19,6 +19,7 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
@@ -28,7 +29,10 @@ public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivit
         super(activity);
     }
 
-    public Order createOrder(String vendorId, String clientId) {
+    @Override
+    protected Order doInBackground(String... params) {
+        String vendorId = params[0];
+        String clientId = params[1];
         String body = "{\"client_id\": "+clientId+",\"vendor_id\":"+vendorId+"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
@@ -38,31 +42,7 @@ public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivit
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject orderJson = new JSONObject(json);
-        Order order = null;
-        try {
-            long id = orderJson.getLong("id");
-            long clientId = orderJson.getLong("client_id");
-            long vendorId = orderJson.getLong("vendor_id");
-
-            String dateCreatedStr = orderJson.getString("date_created");
-            Date dateCreated = null;
-            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-
-            String status = orderJson.getString("status");
-            double totalPrice = orderJson.getDouble("total_price");
-            String currency = orderJson.getString("currency");
-
-            order= new Order(id,clientId,vendorId,dateCreated,status,totalPrice,currency);
-        } catch (Exception e) {
-            Log.e("parse_create_order_json","Error parseando la creacion de la orden",e);
-        }
-
-        return order;
-    }
-
-    @Override
-    protected Order doInBackground(String... params) {
-        return this.createOrder(params[0], params[1]);
+        return Order.fromJson(orderJson);
     }
 
     @Override

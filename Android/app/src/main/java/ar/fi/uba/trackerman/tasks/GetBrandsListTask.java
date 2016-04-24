@@ -35,20 +35,17 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,Brands
     public Object readResponse(String json) throws JSONException {
         JSONObject brandList = new JSONObject(json);
         JSONArray resultJSON = (JSONArray) brandList.get("results");
-        List<Brand> brands= new ArrayList<Brand>();
-        Brand brand;
+        List<Brand> brands = new ArrayList<Brand>();
         for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject row = resultJSON.getJSONObject(i);
-            brand= new Brand(row.getLong("id"),row.getString("name"),row.getString("picture"));
-            brands.add(brand);
+            brands.add(Brand.fromJson(resultJSON.getJSONObject(i)));
         }
         return brands;
     }
 
     @Override
     protected void onPostExecute(List<Brand> brands) {
-        BrandsListAdapter brandsListAdapter= weakReference.get();
-        if(brandsListAdapter!=null){
+        BrandsListAdapter brandsListAdapter = weakReference.get();
+        if(brandsListAdapter != null){
             brandsListAdapter.addBrands(brands);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");

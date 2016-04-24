@@ -1,8 +1,15 @@
 package ar.fi.uba.trackerman.domains;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.utils.DateUtils;
 
 /**
  * Created by plucadei on 17/4/16.
@@ -118,5 +125,37 @@ public class Order {
             return this.id==order.id;
         }
         return false;
+    }
+
+    public static Order fromJson(JSONObject json) {
+        Order order = null;
+        try {
+            long id = json.getLong("id");
+            long vendorId = json.getLong("vendor_id");
+            long clientId = json.getLong("client_id");
+            String dateCreatedStr = json.getString("date_created");
+            Date dateCreated = null;
+            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+            String status = json.getString("status");
+            double totalPrice = json.getDouble("total_price");
+            String currency = json.getString("currency");
+            order = new Order(id,clientId,vendorId,dateCreated,status,totalPrice,currency);
+
+            String deliveryDateStr = json.getString("delivery_date");
+            Date deliveryDate = null;
+            if (deliveryDateStr != null && !"null".equalsIgnoreCase(deliveryDateStr)) deliveryDate = DateUtils.parseDate(deliveryDateStr);
+            order.setDeliveryDate(deliveryDate);
+
+            //PROBLEMA, error leyendo order_items
+            if (json.toString().contains("order_items")) {
+                JSONArray itemsJson = json.getJSONArray("order_items");
+                for (int i = 0; i < itemsJson.length(); i++) {
+                    order.addOrderItem(OrderItem.fromJson(itemsJson.getJSONObject(i)));
+                }
+            }
+        } catch (JSONException e) {
+            throw new OrderTrackerException("Error parsing Order.",e);
+        }
+        return order;
     }
 }

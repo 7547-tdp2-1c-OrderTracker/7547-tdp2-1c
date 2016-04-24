@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.net.URL;
 
+import ar.fi.uba.trackerman.utils.AppSettings;
+
 /**
  * Created by smpiano on 4/19/16.
  */
@@ -15,11 +17,11 @@ public class ServerErrorException extends RuntimeException {
     }
 
     public ServerErrorException(URL url) {
-        this("Error en servidor [" + url.getPath() + "]", true);
+        this("Error en servidor [" + AppSettings.getServerHost()+url.getPath() + "]", true);
     }
 
     public ServerErrorException(URL url, Integer status) {
-        this("Error en servidor [" + url.getPath() + "] status [" + status + "]", true);
+        this("Error en servidor [" + AppSettings.getServerHost()+url.getPath() + "] status [" + status + "]", true);
     }
 
     public ServerErrorException(String msg) {

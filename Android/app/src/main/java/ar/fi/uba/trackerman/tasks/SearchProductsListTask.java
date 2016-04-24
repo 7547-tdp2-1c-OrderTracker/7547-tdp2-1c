@@ -46,28 +46,7 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject productSearchResultJson = new JSONObject(json);
-        JSONObject pagingJSON = productSearchResultJson.getJSONObject("paging");
-        ProductsSearchResult productsSearchResult= new ProductsSearchResult();
-        productsSearchResult.setTotal(pagingJSON.getLong("total"));
-        productsSearchResult.setOffset(pagingJSON.getLong("offset"));
-        JSONArray resultJSON = (JSONArray) productSearchResultJson.get("results");
-        Product product;
-        for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject row = resultJSON.getJSONObject(i);
-            product= new Product(row.getLong("id"));
-            product.setName(row.getString("name"));
-            product.setBrand(row.getString("brand"));
-            // @TODO: deberiamos volar en algun momento el price. verificar tambien la clase Product y que todo cierre.
-            product.setPrice(row.getDouble("retailPrice"));
-            product.setRetailPrice(row.getDouble("retailPrice"));
-            product.setWholesalePrice(row.getDouble("wholesalePrice"));
-            product.setCurrency(row.getString("currency"));
-            product.setStock(row.getInt("stock"));
-            product.setPicture(row.getString("picture"));
-            product.setThumbnail(row.getString("thumbnail"));
-            productsSearchResult.addProduct(product);
-        }
-        return productsSearchResult;
+        return ProductsSearchResult.fromJson(productSearchResultJson);
     }
 
     @Override

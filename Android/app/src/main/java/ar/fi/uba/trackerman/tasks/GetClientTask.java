@@ -30,24 +30,13 @@ public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivit
     @Override
     protected Client doInBackground(String... params) {
         String clientId = params[0];
-        return (Client) restClient.get("/v1/clients/"+clientId,null);
+        return (Client) restClient.get("/v1/clients/"+clientId);
     }
 
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject clientJson = new JSONObject(json);
-        Client client= new Client(clientJson.getLong("id"));
-        client.setName(clientJson.getString("name"));
-        client.setLastName(clientJson.getString("lastname"));
-        client.setAddress(clientJson.getString("address"));
-        client.setThumbnail(clientJson.getString("thumbnail"));
-        client.setCuil(clientJson.getString("cuil"));
-        client.setLat(clientJson.getDouble("lat"));
-        client.setLon(clientJson.getDouble("lon"));
-        client.setEmail(clientJson.getString("email"));
-        client.setAvatar(clientJson.getString("avatar"));
-        client.setPhoneNumber(clientJson.getString("phone_number"));
-        return client;
+        return Client.fromJson(clientJson);
     }
 
     @Override

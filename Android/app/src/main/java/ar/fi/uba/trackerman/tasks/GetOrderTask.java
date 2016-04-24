@@ -37,35 +37,8 @@ public class GetOrderTask extends AbstractTask<String,Void,Order,OrderActivity> 
 
     @Override
     public Object readResponse(String json) throws JSONException {
-        JSONObject orderJson = new JSONObject(json);
-        long id=orderJson.getLong("id");
-        long vendorId= orderJson.getLong("vendor_id");
-        long clientId= orderJson.getLong("client_id");
-
-        String dateCreatedStr = orderJson.getString("date_created");
-        Date dateCreated = null;
-        if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-
-        double total_price= orderJson.getDouble("total_price");
-        // TODO: DESCOMENTAR ESTO!!!
-        String currency= "ARS";//orderJson.getString("currency");
-        String status= orderJson.getString("status");
-        Order order = new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
-        JSONArray itemsJson= orderJson.getJSONArray("order_items");
-        for (int i = 0; i < itemsJson.length(); i++) {
-            JSONObject row = itemsJson.getJSONObject(i);
-            long orderitemId = row.getLong("id");
-            long product_id = row.getLong("product_id");
-            String name= row.getString("name");
-            int quantity= row.getInt("quantity");
-            double price= row.getDouble("unit_price");
-            String currencyItem= row.getString("currency");
-            String brand= row.getString("brand_name");
-            String picture= row.getString("thumbnail");
-            OrderItem item= new OrderItem(orderitemId,product_id,name,quantity,price,currencyItem,brand,picture);
-            order.addOrderItem(item);
-        }
-        return order;
+        JSONObject ordersList = new JSONObject(json);
+        return Order.fromJson(ordersList);
     }
 
     @Override

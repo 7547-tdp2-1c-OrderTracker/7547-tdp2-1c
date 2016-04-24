@@ -21,6 +21,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
@@ -35,28 +36,24 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
         return (List<Order>) restClient.get("/v1/orders?status=draft&vendor_id="+vendorId);
     }
 
+    public List<Order> getDraftOrders(String vendorId, String clientId) {
+        return (List<Order>) restClient.get("/v1/orders?status=draft&vendor_id="+vendorId+"&client_id="+clientId);
+    }
+
     @Override
     public Object readResponse(String json) throws JSONException {
-        JSONObject ordersList = new JSONObject(json);
-        JSONArray resultJSON = (JSONArray) ordersList.get("results");
-        List<Order> orders= new ArrayList<Order>();
-        Order order;
-        for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject orderJson = resultJSON.getJSONObject(i);
-            long id=orderJson.getLong("id");
-            long vendorId= orderJson.getLong("vendor_id");
-            long clientId= orderJson.getLong("client_id");
-            String dateCreatedStr = orderJson.getString("date_created");
-            Date dateCreated = null;
-            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-            double total_price= orderJson.getDouble("total_price");
-            // TODO: DESCOMENTAR ESTO!!!
-            String currency= "ARS";//orderJson.getString("currency");
-            String status= orderJson.getString("status");
-            order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
-            orders.add(order);
+        JSONObject ordersList = null;
+        List<Order> list = new ArrayList<Order>();
+        try {
+            ordersList = new JSONObject(json);
+            JSONArray resultsJson = ordersList.getJSONArray("results");
+            for (int i = 0; i < resultsJson.length(); i++) {
+                list.add(Order.fromJson(resultsJson.getJSONObject(i)));
+            }
+        } catch (OrderTrackerException e) {
+            Log.e("business_error","lalalaalal",e);
         }
-        return orders;
+        return list;
     }
 
     @Override

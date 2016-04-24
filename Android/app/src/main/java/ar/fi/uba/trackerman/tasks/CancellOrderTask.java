@@ -37,48 +37,24 @@ public class CancellOrderTask extends AbstractTask<String,Void,Order,OrderActivi
         String orderId= params[0];
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
-        return (Order) restClient.put("/v1/orders/"+orderId,"{\"status\": \"cancelled\"}",headers);
+        String url = "/v1/orders/"+orderId;
+        String body = "{\"status\": \"cancelled\"}";
+        return (Order) restClient.put(url,body,headers);
     }
 
     @Override
     public Object readResponse(String json) throws JSONException {
-        Order order;
         JSONObject orderJson = new JSONObject(json);
-        long id=orderJson.getLong("id");
-        long vendorId= orderJson.getLong("vendor_id");
-        long clientId= orderJson.getLong("client_id");
-        String dateCreatedStr = orderJson.getString("date_created");
-        Date dateCreated = null;
-        if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-        double total_price= orderJson.getDouble("total_price");
-        // TODO: DESCOMENTAR ESTO!!!
-        String currency= "ARS";//orderJson.getString("currency");
-        String status= orderJson.getString("status");
-        order= new Order(id,clientId,vendorId,dateCreated,status,total_price,currency);
-        JSONArray itemsJson= orderJson.getJSONArray("order_items");
-        for (int i = 0; i < itemsJson.length(); i++) {
-            JSONObject row = itemsJson.getJSONObject(i);
-            long orderItemId = row.getLong("id");
-            long product_id = row.getLong("product_id");
-            String name= row.getString("name");
-            int quantity= row.getInt("quantity");
-            double price= row.getDouble("unit_price");
-            String currencyItem= row.getString("currency");
-            String brand= row.getString("brand_name");
-            String picture= row.getString("thumbnail");
-            OrderItem item= new OrderItem(orderItemId,product_id,name,quantity,price,currencyItem,brand,picture);
-            order.addOrderItem(item);
-        }
-        return order;
+        return Order.fromJson(orderJson);
     }
 
     @Override
     protected void onPostExecute(Order order) {
-        OrderCanceller reciver= weakReference.get();
-        if(reciver!=null){
+        OrderCanceller reciver = weakReference.get();
+        if(reciver != null){
             reciver.afterOrderCancelled(order);
         }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
+            Log.w(this.getClass().getCanonicalName(), "Adapter no longer available!");
         }
     }
 
