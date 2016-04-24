@@ -1,17 +1,7 @@
 package ar.fi.uba.trackerman.tasks;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Product;
@@ -40,17 +30,13 @@ public class GetProductTask extends AbstractTask<String,Void,Product,ProductActi
 
     @Override
     protected void onPostExecute(Product product) {
-
         super.onPostExecute(product);
-        ProductReciver reciver= weakReference.get();
-        if(reciver!=null){
-            ((ProductReciver)reciver).updateProductInformation(product);
-        }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
+        if(product != null){
+            ((ProductReceiver) weakReference.get()).updateProductInformation(product);
         }
     }
 
-    public interface ProductReciver{
+    public interface ProductReceiver {
         public void updateProductInformation(Product product);
     }
 

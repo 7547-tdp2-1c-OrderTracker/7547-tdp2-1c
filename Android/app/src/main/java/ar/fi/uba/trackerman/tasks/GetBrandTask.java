@@ -33,6 +33,11 @@ public class GetBrandTask extends AbstractTask<String,Void,Brand,ProductActivity
     @Override
     protected void onPostExecute(Brand brand) {
         super.onPostExecute(brand);
+        if (brand != null) {
+            weakReference.get().afterBrandResolve(brand);
+        } else {
+            weakReference.get().showSnackbarSimpleMessage("No se puede resolver la marca.");
+        }
     }
 
 }

@@ -13,9 +13,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.squareup.picasso.Picasso;
@@ -23,11 +21,10 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Brand;
-import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
-import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
+import ar.fi.uba.trackerman.tasks.GetBrandTask;
 import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.GetProductTask;
 import ar.fi.uba.trackerman.tasks.PostOrderItemsTask;
@@ -36,11 +33,12 @@ import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 
-public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReciver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
+public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long productId;
     private int quantity;
     private List<Order> draftOrders;
+    private Brand brand;
 
 
     public ProductActivity(){
@@ -57,8 +55,8 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent= getIntent();
-        productId= intent.getLongExtra(Intent.EXTRA_UID, 0);
+        Intent intent = getIntent();
+        productId = intent.getLongExtra(Intent.EXTRA_UID, 0);
         new GetProductTask(this).execute(Long.toString(productId));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -122,7 +120,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     @Override
     public void onClick(View view) {
-
         if (view.getId()==R.id.fab) {
             CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
             if (this.draftOrders == null) {
@@ -131,13 +128,12 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
                 // si no hay orden, Avisar
                 ShowMessage.showSnackbarSimpleMessage(cl, "No hay pedido en curso. Cree uno desde el cliente!");
             } else if (this.quantity == 0) {
-                // si no hay stock, aviso
+                // si no hay stock
                 ShowMessage.showSnackbarSimpleMessage(cl, "No tenemos stock del producto!");
             } else {
                 // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
                 showQuantityDialog();
             }
-
         }
 
     }
@@ -151,12 +147,19 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         ((TextView) findViewById(R.id.product_detail_id)).setText(Long.toString(product.getId()));
         ((TextView) findViewById(R.id.product_detail_name)).setText(product.getName());
-        //FIXME smpiano tenes que pasar a un get
-        ((TextView) findViewById(R.id.product_detail_brand)).setText(String.valueOf(product.getBrandId()));
+
+        Long brandId = product.getBrandId();
+        new GetBrandTask(this).execute(String.valueOf(brandId));
+
+        ((TextView) findViewById(R.id.product_detail_brand)).setText(String.valueOf(brandId));
         ((TextView) findViewById(R.id.product_detail_stock)).setText(Long.toString(product.getStock()));
         ((TextView) findViewById(R.id.product_detail_price)).setText(product.getPriceWithCurrency());
         ((TextView) findViewById(R.id.product_detail_description)).setText(product.getDescription());
 
+    }
+
+    public void afterBrandResolve(Brand brand){
+        ((TextView) findViewById(R.id.product_detail_brand)).setText(brand.getName());
     }
 
     @Override
@@ -165,7 +168,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
     }
 
     public void afterCreatingOrderItem(OrderItem orderItem) {
-        //TODO plucadei Reemplazar por Activity correcta
         Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID, orderItem.getOrderId());
         startActivity(intent);

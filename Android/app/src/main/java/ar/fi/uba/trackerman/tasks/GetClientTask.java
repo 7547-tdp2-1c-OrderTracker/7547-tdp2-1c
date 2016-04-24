@@ -43,9 +43,9 @@ public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivit
     protected void onPostExecute(Client client) {
 
         super.onPostExecute(client);
-        ClientReciver reciver= weakReference.get();
-        if(reciver!=null){
-            ((ClientReciver)reciver).updateClientInformation(client);
+        ClientReciver reciver = weakReference.get();
+        if(reciver != null){
+            reciver.updateClientInformation(client);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
