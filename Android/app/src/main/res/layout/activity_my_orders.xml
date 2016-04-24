@@ -52,64 +52,34 @@
                     xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:columnCount="2"
+                    android:columnCount="1"
                     android:orientation="horizontal"
                     android:rowCount="1">
-
-                    <ImageView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:src="@drawable/ic_shopping_basket" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:layout_marginRight="50dp"
                         android:nestedScrollingEnabled="false"
                         android:text="@string/estados_borradores"
                         android:textIsSelectable="true"
                         android:textSize="18sp" />
-                </GridLayout>
 
-            </android.support.v7.widget.CardView>
+                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:id="@+id/order_list_fragment"
+                        android:name="ar.fi.uba.trackerman.fragments.OrdersListFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        tools:layout="@layout/fragment_orders_list" />
 
-            <android.support.v7.widget.CardView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="10dp">
-
-                <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="2"
-                    android:orientation="horizontal"
-                    android:rowCount="1">
-
-                    <ImageView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:src="@drawable/ic_shopping_basket" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:layout_marginRight="50dp"
-                        android:nestedScrollingEnabled="false"
-                        android:text="@string/estados_confirmadas"
-                        android:textIsSelectable="true"
-                        android:textSize="18sp" />
                 </GridLayout>
 
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
-
 
     </android.support.design.widget.CoordinatorLayout>
 
