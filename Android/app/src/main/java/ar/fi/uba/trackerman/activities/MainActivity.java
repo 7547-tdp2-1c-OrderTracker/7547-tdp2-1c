@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -77,11 +75,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void openMyOrdersActivity(View view) {
-        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, MyOrdersActivity.class);
+        startActivity(intent);
     }
 
-    public void openMyCalendarActivity(View view) {
-        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+    public void openMyAgendaActivity(View view) {
+        Intent intent = new Intent(this, MyAgendaActivity.class);
+        startActivity(intent);
     }
 
     public void openProductsActivity(View view) {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements
                             case R.id.nav_calendar_day:
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                openMyCalendarActivity(null);
+                                openMyAgendaActivity(null);
                                 return true;
                         }
                         return true;

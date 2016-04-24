@@ -64,13 +64,32 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.ProductsListActivity" />
         </activity>
-        <activity android:name="ar.fi.uba.trackerman.activities.OrderActivity"
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.OrderActivity"
             android:label="@string/orders"
             android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.MyOrdersActivity"
+            android:label="@string/orders"
+            android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.trackerman.activities.MainActivity" />
+        </activity>
+        <activity android:name="ar.fi.uba.trackerman.activities.MyAgendaActivity"
+            android:label="@string/agenda"
+            android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.trackerman.activities.MainActivity" />
+
         </activity>
     </application>
 
