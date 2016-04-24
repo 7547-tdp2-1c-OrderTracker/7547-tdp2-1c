@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.brand;
 
 import android.util.Log;
 
@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 /**
  * Created by smpiano on 24/4/16.

@@ -18,9 +18,8 @@ import java.util.Map;
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
-import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
-import ar.fi.uba.trackerman.tasks.SearchProductsListTask;
-import ar.fi.uba.trackerman.utils.CircleTransform;
+import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
+import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
 import fi.uba.ar.soldme.R;
 
 public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBrandsListTask.BrandsListAggregator {

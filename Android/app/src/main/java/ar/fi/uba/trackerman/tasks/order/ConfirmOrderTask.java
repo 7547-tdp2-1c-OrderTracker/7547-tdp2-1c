@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.order;
 
 import android.util.Log;
 
@@ -21,6 +21,7 @@ import java.util.Map;
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
 /**

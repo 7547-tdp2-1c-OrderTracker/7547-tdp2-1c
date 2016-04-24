@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.order;
 
 import android.util.Log;
 
@@ -6,27 +6,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import ar.fi.uba.trackerman.activities.ClientActivity;
-import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
-import ar.fi.uba.trackerman.utils.AppSettings;
-import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 
-public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,GetDraftOrdersTask.DraftOrdersValidation>{
+public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,GetDraftOrdersTask.DraftOrdersValidation> {
 
     public GetDraftOrdersTask(DraftOrdersValidation validation) {
         super(validation);

@@ -1,10 +1,11 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.product;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 /**
  * Created by glaghi on 16/4/16.

@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.brand;
 
 import android.util.Log;
 
@@ -9,8 +9,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,GetBrandsListTask.BrandsListAggregator> {
 

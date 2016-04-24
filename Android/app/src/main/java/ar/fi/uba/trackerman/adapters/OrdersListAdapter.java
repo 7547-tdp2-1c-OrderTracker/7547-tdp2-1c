@@ -8,17 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
-import ar.fi.uba.trackerman.tasks.GetClientListTask;
-import ar.fi.uba.trackerman.tasks.GetOrdersListTask;
-import ar.fi.uba.trackerman.utils.CircleTransform;
+import ar.fi.uba.trackerman.tasks.order.GetOrdersListTask;
 import fi.uba.ar.soldme.R;
 
 public class OrdersListAdapter extends ArrayAdapter<Order> {

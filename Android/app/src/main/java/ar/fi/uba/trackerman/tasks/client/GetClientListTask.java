@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.client;
 
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
@@ -23,6 +23,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 
 public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {

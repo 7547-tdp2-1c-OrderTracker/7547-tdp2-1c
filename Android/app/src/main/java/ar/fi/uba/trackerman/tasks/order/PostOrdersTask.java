@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.order;
 
 import android.util.Log;
 
@@ -20,10 +20,11 @@ import java.util.Map;
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 
-public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivity>{
+public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivity> {
 
     public PostOrdersTask(ClientActivity activity) {
         super(activity);

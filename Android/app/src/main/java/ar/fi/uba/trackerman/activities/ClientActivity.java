@@ -1,9 +1,6 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.net.MailTo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,14 +20,14 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
-import ar.fi.uba.trackerman.tasks.GetClientTask;
-import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
-import ar.fi.uba.trackerman.tasks.PostOrdersTask;
+import ar.fi.uba.trackerman.tasks.client.GetClientTask;
+import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
-public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReciver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
+public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long clientId;
     private List<Order> draftOrders;

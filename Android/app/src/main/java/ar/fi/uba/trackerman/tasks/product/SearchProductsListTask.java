@@ -1,4 +1,4 @@
-package ar.fi.uba.trackerman.tasks;
+package ar.fi.uba.trackerman.tasks.product;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -18,6 +18,7 @@ import java.net.URL;
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
+import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearchResult,ProductsListAdapter> {
 
