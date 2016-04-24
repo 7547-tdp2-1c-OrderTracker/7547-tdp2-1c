@@ -79,7 +79,7 @@
             <ImageView
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:src="@drawable/ic_code"
+                android:src="@drawable/ic_account_card_details"
                 android:layout_row="0"
                 android:layout_column="0" />
 
@@ -168,7 +168,9 @@
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:src="@drawable/ic_phone"/>
+                    android:src="@drawable/ic_phone"
+                    android:id="@+id/client_detail_phone_number_icon"
+                    android:clickable="false" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -181,7 +183,8 @@
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:src="@drawable/ic_email"/>
+                    android:src="@drawable/ic_email"
+                    android:id="@+id/client_detail_email_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"

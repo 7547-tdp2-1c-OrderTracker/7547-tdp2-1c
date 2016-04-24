@@ -11,11 +11,13 @@ import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
 public class Brand {
     private long id;
     private String name;
+    private String code;
     private String picture;
 
-    public Brand(long id, String name, String picture) {
+    public Brand(long id, String name, String code, String picture) {
         this.id= id;
         this.name = name;
+        this.code = code;
         this.picture = picture;
     }
 
@@ -25,6 +27,10 @@ public class Brand {
 
     public String getName() {
         return name;
+    }
+
+    public String getCode() {
+        return this.code;
     }
 
     public String getPicture() {
@@ -47,7 +53,7 @@ public class Brand {
 
     public static Brand fromJson(JSONObject json) {
         try {
-            return new Brand(json.getLong("id"),json.getString("name"),json.getString("picture"));
+            return new Brand(json.getLong("id"),json.getString("name"),json.getString("code"),json.getString("picture"));
         } catch (JSONException e) {
             throw new OrderTrackerException("Error parsing Brand.",e);
         }

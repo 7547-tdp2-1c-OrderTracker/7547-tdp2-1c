@@ -22,10 +22,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
 import ar.fi.uba.trackerman.tasks.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.GetProductTask;
 import ar.fi.uba.trackerman.tasks.PostOrderItemsTask;
@@ -39,6 +41,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
     private long productId;
     private int quantity;
     private List<Order> draftOrders;
+
 
     public ProductActivity(){
         super();
@@ -60,7 +63,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-
 
         //Preguntamos por las ordenes
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
@@ -149,7 +151,8 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         ((TextView) findViewById(R.id.product_detail_id)).setText(Long.toString(product.getId()));
         ((TextView) findViewById(R.id.product_detail_name)).setText(product.getName());
-        ((TextView) findViewById(R.id.product_detail_brand)).setText(product.getBrand());
+        //FIXME smpiano tenes que pasar a un get
+        ((TextView) findViewById(R.id.product_detail_brand)).setText(String.valueOf(product.getBrandId()));
         ((TextView) findViewById(R.id.product_detail_stock)).setText(Long.toString(product.getStock()));
         ((TextView) findViewById(R.id.product_detail_price)).setText(product.getPriceWithCurrency());
         ((TextView) findViewById(R.id.product_detail_description)).setText(product.getDescription());

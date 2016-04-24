@@ -22,7 +22,7 @@ import fi.uba.ar.soldme.R;
 /**
  * Created by plucadei on 10/4/16.
  */
-public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterView.OnItemClickListener{
+public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterView.OnItemClickListener,GetBrandsListTask.BrandsListAggregator{
 
     List<Long> selected;
 
@@ -42,6 +42,7 @@ public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterVie
         asyncTask.execute();
     }
 
+    @Override
     public void addBrands(List<Brand> brands){
         if(brands!=null) {
             this.addAll(brands);

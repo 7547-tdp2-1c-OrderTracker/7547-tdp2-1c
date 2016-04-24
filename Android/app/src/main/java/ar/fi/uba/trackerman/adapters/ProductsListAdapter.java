@@ -10,20 +10,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import java.util.List;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
+import ar.fi.uba.trackerman.tasks.GetBrandsListTask;
 import ar.fi.uba.trackerman.tasks.SearchProductsListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
-public class ProductsListAdapter extends ArrayAdapter<Product> {
+public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBrandsListTask.BrandsListAggregator {
 
     private long total;
     private long offset;
     private boolean fetching;
-    private String brands;
+    private String brands; // utlizado para filtrar
+    private Map<Long, Brand> allBrands; // todas las marcas
 
     public ProductsListAdapter(Context context, int resource,
                                List<Product> products) {
@@ -31,6 +37,8 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         total=1;
         offset=0;
         fetching=false;
+        this.allBrands = new HashMap<Long, Brand>();
+        new GetBrandsListTask(this).execute();
     }
     public void refresh(){
         this.clear();
@@ -81,10 +89,17 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         }
 
         holder.name.setText(product.getName());
-        holder.brand.setText(product.getBrand());
+        holder.brand.setText(this.allBrands.get(product.getBrandId()).getName());
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;
+    }
+
+    @Override
+    public void addBrands(List<Brand> brands) {
+        for(Brand b : brands) {
+            this.allBrands.put(b.getId(),b);
+        }
     }
 
     public void setBrands(String brands) {

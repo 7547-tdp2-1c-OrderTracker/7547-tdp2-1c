@@ -1,29 +1,28 @@
 package ar.fi.uba.trackerman.tasks;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
 
-public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,BrandsListAdapter> {
+public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,GetBrandsListTask.BrandsListAggregator> {
 
-    public GetBrandsListTask(BrandsListAdapter adapter) {
+    private List<Brand> brands;
+
+    public GetBrandsListTask(BrandsListAggregator adapter) {
         super(adapter);
+    }
+
+    public GetBrandsListTask(List<Brand> brands) {
+        super(null);
+        this.brands = brands;
     }
 
     @Override
@@ -44,11 +43,15 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,Brands
 
     @Override
     protected void onPostExecute(List<Brand> brands) {
-        BrandsListAdapter brandsListAdapter = weakReference.get();
-        if(brandsListAdapter != null){
-            brandsListAdapter.addBrands(brands);
+        BrandsListAggregator aggregator = weakReference.get();
+        if(aggregator != null){
+            aggregator.addBrands(brands);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
+    }
+
+    public interface BrandsListAggregator {
+        public void addBrands(List<Brand> brands);
     }
 }

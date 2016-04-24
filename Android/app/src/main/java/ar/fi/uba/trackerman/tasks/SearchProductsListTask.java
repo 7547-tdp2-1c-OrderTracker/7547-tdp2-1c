@@ -25,7 +25,7 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
 
     public SearchProductsListTask(ProductsListAdapter adapter, String brandsFilter) {
         super(adapter);
-        this.brandFilter=brandsFilter;
+        this.brandFilter = brandsFilter;
     }
 
     @Override
