@@ -128,6 +128,9 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
             } else if (this.draftOrders.size() == 0) {
                 // si no hay orden, Avisar
                 ShowMessage.showSnackbarSimpleMessage(cl, "No hay pedido en curso. Cree uno desde el cliente!");
+            } else if (this.quantity == 0) {
+                // si no hay stock, aviso
+                ShowMessage.showSnackbarSimpleMessage(cl, "No tenemos stock del producto!");
             } else {
                 // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
                 showQuantityDialog();
