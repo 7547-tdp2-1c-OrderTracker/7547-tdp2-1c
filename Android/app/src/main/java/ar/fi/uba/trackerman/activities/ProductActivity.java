@@ -38,8 +38,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
     private long productId;
     private int quantity;
     private List<Order> draftOrders;
-    private Brand brand;
-
 
     public ProductActivity(){
         super();
@@ -135,11 +133,9 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
                 showQuantityDialog();
             }
         }
-
     }
 
     public void updateProductInformation(Product product) {
-
         this.quantity = product.getStock();
 
         ((CollapsingToolbarLayout) findViewById(R.id.product_detail_collapsing_toolbar)).setTitle(product.getName());
@@ -154,8 +150,10 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_brand)).setText(String.valueOf(brandId));
         ((TextView) findViewById(R.id.product_detail_stock)).setText(Long.toString(product.getStock()));
         ((TextView) findViewById(R.id.product_detail_price)).setText(product.getPriceWithCurrency());
-        ((TextView) findViewById(R.id.product_detail_description)).setText(product.getDescription());
 
+        String description = product.getDescription();
+        TextView descriptionField = ((TextView)findViewById(R.id.product_detail_description));
+        descriptionField.setText((description != null && !"null".equalsIgnoreCase(description))? product.getDescription(): "");
     }
 
     public void afterBrandResolve(Brand brand){

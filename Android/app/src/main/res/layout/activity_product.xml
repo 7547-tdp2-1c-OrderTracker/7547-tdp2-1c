@@ -76,7 +76,7 @@
                     <ImageView
                         android:layout_width="56dp"
                         android:layout_height="56dp"
-                        android:src="@drawable/ic_code"
+                        android:src="@drawable/ic_barcode"
                         android:layout_row="0"
                         android:layout_column="0" />
 
