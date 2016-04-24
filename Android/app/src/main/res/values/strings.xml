@@ -12,6 +12,8 @@
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
     <string name="orders">Pedidos</string>
+    <string name="calendar">Calendario</string>
+    <string name="agenda">Agenda</string>
 
     <string name="client_id">Código</string>
     <string name="client_lastname">Apellido</string>
@@ -41,6 +43,9 @@
     <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
 
     <string name="pedido_activo">No hay pedido en curso</string>
+
+    <string name="estados_confirmadas">Confirmadas</string>
+    <string name="estados_borradores">Borradores</string>
 
     <string name="navigation_drawer_open">Drawer abierto</string>
     <string name="navigation_drawer_close">Drawer cerrado</string>
