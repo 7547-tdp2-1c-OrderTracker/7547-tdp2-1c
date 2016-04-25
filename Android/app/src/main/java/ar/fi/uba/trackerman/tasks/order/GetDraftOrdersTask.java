@@ -46,7 +46,12 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
 
     @Override
     protected List<Order> doInBackground(String... strings) {
-        return this.getDraftOrders(strings[0]);
+        if (strings.length == 1) {
+            return this.getDraftOrders(strings[0]);
+        } else {
+            return this.getDraftOrders(strings[0], strings[1]);
+        }
+
     }
 
     @Override

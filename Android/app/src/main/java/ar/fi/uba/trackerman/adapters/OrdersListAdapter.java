@@ -1,7 +1,6 @@
 package ar.fi.uba.trackerman.adapters;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,21 +10,27 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
+
+import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
 import ar.fi.uba.trackerman.tasks.order.GetOrdersListTask;
-import ar.fi.uba.trackerman.utils.DateUtils;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
-public class OrdersListAdapter extends ArrayAdapter<Order> {
+public class OrdersListAdapter extends ArrayAdapter<Order> implements GetClientListTask.ClientsListAggregator {
 
     private long total;
     private long offset;
     private boolean fetching;
+    private Map<Long, Client> allClients; // todos los clientes
 
     public OrdersListAdapter(Context context, int resource,
                              List<Order> orders) {
@@ -33,6 +38,8 @@ public class OrdersListAdapter extends ArrayAdapter<Order> {
         total=1;
         offset=0;
         fetching=false;
+        this.allClients = new HashMap<Long, Client>();
+        new GetClientListTask(this).execute();
     }
 
     public void refresh(){
@@ -90,8 +97,8 @@ public class OrdersListAdapter extends ArrayAdapter<Order> {
 
         Date fecha = order.getDateCreated();
 
-        holder.clientName.setText("Apellido, Nombre");
-        holder.orderTotalPrice.setText(Double.toString(order.getTotalPrice()));
+        holder.clientName.setText(isContentValid(this.allClients.get(order.getClientId()).getFullName()));
+        holder.orderTotalPrice.setText(isContentValid(Double.toString(order.getTotalPrice())));
         holder.status.setText(isContentValid(order.getStatusSpanish()));
         holder.status.setTextColor(Color.parseColor(order.getColor(order.getStatus())));
 
@@ -100,6 +107,13 @@ public class OrdersListAdapter extends ArrayAdapter<Order> {
         holder.orderTime.setText(android.text.format.DateFormat.format("hh:mm", fecha));
 
         return convertView;
+    }
+
+    @Override
+    public void addClients(ClientSearchResult clientSearchResult) {
+        for(Client c : clientSearchResult.getClients()) {
+            this.allClients.put(c.getId(),c);
+        }
     }
 
     private static class ViewHolder {

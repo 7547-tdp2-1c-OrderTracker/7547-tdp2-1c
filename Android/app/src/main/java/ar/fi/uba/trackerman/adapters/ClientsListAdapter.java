@@ -21,7 +21,7 @@ import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
-public class ClientsListAdapter extends ArrayAdapter<Client> {
+public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClientListTask.ClientsListAggregator {
 
     private long total;
     private long offset;
@@ -50,7 +50,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
         }
     }
 
-    public void addClients(ClientSearchResult clientSearchResult){
+    public void addClients(ClientSearchResult clientSearchResult) {
         if(clientSearchResult!=null) {
             this.addAll(clientSearchResult.getClients());
             this.offset = this.getCount();
