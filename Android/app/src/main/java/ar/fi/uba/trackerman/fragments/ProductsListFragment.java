@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
+import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
@@ -40,11 +41,12 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 /**
  * Created by plucadei on 3/4/16.
  */
-public class ProductsListFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class ProductsListFragment extends Fragment implements AdapterView.OnItemClickListener, PostOrderItemsTask.OrderItemCreator {
 
     private String brands;
     private ProductsListAdapter productsAdapter;
     private long productId;
+    private int productStock;
     ListView productsList;
 
     @Override
@@ -60,18 +62,21 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
         productsList.setAdapter(productsAdapter);
         productsList.setOnItemClickListener(this);
 
-        /*
-        long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id), -1L);
-        if (orderId >= 0) {
+        if (isLongPressValid()) {
             registerForContextMenu(productsList);
         }
-        */
 
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
         productsList.setEmptyView(bar);
         productsAdapter.refresh();
         return fragmentView;
+    }
+
+
+    private boolean isLongPressValid() {
+        long orderId = (new MyPreferences(this.getActivity())).get(getString(R.string.shared_pref_current_order_id), -1L);
+        return (orderId >= 0);
     }
 
     public void setBrands(String brands){
@@ -93,12 +98,16 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
         Product product= (Product)productsList.getAdapter().getItem(info.position);
         menu.setHeaderTitle(product.getName());
         this.productId = product.getId();
+        this.productStock = product.getStock();
 
         inflater.inflate(R.menu.menu_products_context, menu);
     }
 
-    public void showQuantityDialog() {
+    private boolean isValidStock(String quantityRequested) {
+        return Integer.parseInt(quantityRequested) <= this.productStock;
+    }
 
+    public void showQuantityDialog() {
 
         final EditText edittext = new EditText(getContext());
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -116,19 +125,17 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
                         CoordinatorLayout cl = (CoordinatorLayout) getActivity().findViewById(R.id.cordinator_layout_products_list);
 
                         if (isValidQuantity(quantityRequested)) {
-                            /*
                             if (isValidStock(quantityRequested)) {
-                                long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id), -1L);
+                                long orderId = (new MyPreferences(ProductsListFragment.this.getActivity())).get(getString(R.string.shared_pref_current_order_id), -1L);
 
                                 if (orderId >= 0) {
-                                    new PostOrderItemsTask(this).execute(orderId, productId, quantity);
+                                    new PostOrderItemsTask(ProductsListFragment.this).execute(String.valueOf(orderId), String.valueOf(productId), String.valueOf(productStock));
                                 } else {
                                     ShowMessage.showSnackbarSimpleMessage(cl, "No hay un pedido asociado!");
                                 }
                             } else {
-                                showSnackbarSimpleMessage("Lo siento! disponemos de " + quantity + " unidades");
+                                ShowMessage.showSnackbarSimpleMessage(cl, "Lo siento! disponemos de " + productStock + " unidades");
                             }
-                            */
                         } else {
                             ShowMessage.showSnackbarSimpleMessage(cl, "El valor es inválido!");
                         }
@@ -139,6 +146,16 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void afterCreatingOrderItem(OrderItem orderItemCreated) {
+        ShowMessage.showSnackbarSimpleMessage(this.getCurrentView(),"Item/s Agregado/s al pedido!");
+    }
+
+    @Override
+    public View getCurrentView() {
+        return this.getView();
     }
 
     @Override
