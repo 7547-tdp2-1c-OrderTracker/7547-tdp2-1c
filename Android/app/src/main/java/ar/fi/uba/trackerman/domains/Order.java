@@ -11,6 +11,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.FieldValidator;
+import ar.fi.uba.trackerman.utils.OrderStatus;
 
 /**
  * Created by plucadei on 17/4/16.
@@ -83,29 +84,11 @@ public class Order {
     }
 
     public String getStatusSpanish() {
-
-        if (this.status.equals("confirm")) { return "Confirmada"; }
-        if (this.status.equals("confirmed")) { return "Confirmada"; }
-
-        if (this.status.equals("cancel")) { return "Cancelada"; }
-        if (this.status.equals("cancelled")) { return "Cancelada"; }
-
-        if (this.status.equals("draft")) { return "Borrador"; }
-
-        return status;
+        return OrderStatus.valueOf(this.status.toUpperCase()).getTranslate();
     }
 
     public String getColor(String status) {
-
-        if (this.status.equals("confirm")) { return "#558b2f"; }
-        if (this.status.equals("confirmed")) { return "#558b2f"; }
-
-        if (this.status.equals("cancel")) { return "#ff0000"; }
-        if (this.status.equals("cancelled")) { return "#ff0000"; }
-
-        if (this.status.equals("draft")) { return "#1565c0"; }
-
-        return "#000000";
+        return OrderStatus.valueOf(this.status.toUpperCase()).getColor();
     }
 
     public void setStatus(String status) {
