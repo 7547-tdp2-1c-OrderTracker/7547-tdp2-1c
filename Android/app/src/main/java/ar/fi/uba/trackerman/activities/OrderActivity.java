@@ -78,23 +78,16 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo)
-    {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-
         if (isClosedOrder()) return;
-
+        //Long press order_items
         MenuInflater inflater = getMenuInflater();
-
-            AdapterView.AdapterContextMenuInfo info =
-                    (AdapterView.AdapterContextMenuInfo)menuInfo;
-
-            OrderItem item= (OrderItem)orderItems.getAdapter().getItem(info.position);
-            menu.setHeaderTitle(item.toString());
-            this.itemId=item.getId();
-
-            inflater.inflate(R.menu.menu_orders_context, menu);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        OrderItem item = (OrderItem) orderItems.getAdapter().getItem(info.position);
+        menu.setHeaderTitle(item.toString());
+        this.itemId = item.getId();
+        inflater.inflate(R.menu.menu_orders_context, menu);
     }
 
     @Override
@@ -144,7 +137,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (isClosedOrder()) return false;
+        if (isClosedOrder()) return true;
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_order, menu);
