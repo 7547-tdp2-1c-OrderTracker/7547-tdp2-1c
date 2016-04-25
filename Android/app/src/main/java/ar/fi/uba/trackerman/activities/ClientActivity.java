@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +26,8 @@ import ar.fi.uba.trackerman.utils.AppSettings;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidPhone;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidMail;
+
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
@@ -59,6 +60,10 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        MyPreferences pref = new MyPreferences(this);
+        pref.save(getString(R.string.shared_pref_current_order_id), -1L);
+        pref.save(getString(R.string.shared_pref_current_client_id), clientId);
 
         //Preguntamos por las ordenes
         new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getVendorId()), String.valueOf(clientId) );
@@ -133,7 +138,10 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     }
 
     public void afterCreatingOrder(Order orderCreated) {
-        //TODO plucadei Reemplazar por Activity correcta
+
+        MyPreferences pref = new MyPreferences(this);
+        pref.save(getString(R.string.shared_pref_current_order_id), orderCreated.getId());
+
         Intent intent = new Intent(this, ProductsListActivity.class);
         intent.putExtra(Intent.EXTRA_UID, orderCreated.getId());
         startActivity(intent);

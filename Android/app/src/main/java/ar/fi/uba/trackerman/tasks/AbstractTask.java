@@ -24,7 +24,6 @@ import java.util.Map;
  */
 public abstract class AbstractTask<Params,Progress,Return,Reference> extends AsyncTask<Params,Process,Return>  implements RestClient.ResponseParse {
 
-    protected static final String SERVER_HOST = AppSettings.getServerHost();
     protected final RestClient restClient;
 
     protected WeakReference<Reference> weakReference;
