@@ -24,7 +24,7 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
 
     @Override
     protected OrdersSearchResult doInBackground(Long... params) {
-        String urlString = "/v1/orders?limit=10";
+        String urlString = "/v1/orders?limit=1000";
         Long offset = params[0];
         if(offset != null){
             urlString += "&offset="+offset.toString();

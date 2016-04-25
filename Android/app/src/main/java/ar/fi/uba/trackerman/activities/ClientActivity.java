@@ -61,7 +61,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         fab.setOnClickListener(this);
 
         //Preguntamos por las ordenes
-        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
+        new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getVendorId()), String.valueOf(clientId) );
     }
 
     public void showSnackbarSimpleMessage(String msg){

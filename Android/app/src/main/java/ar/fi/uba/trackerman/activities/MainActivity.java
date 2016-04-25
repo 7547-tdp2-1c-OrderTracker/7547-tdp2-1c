@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements
         GetDraftOrdersTask.DraftOrdersValidation {
 
     DrawerLayout drawerLayout;
-    private Order order;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,22 +49,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void openDetailOrder(View view) {
-        if (order != null) {
-            Intent intent = new Intent(this, OrderActivity.class);
-            intent.putExtra(Intent.EXTRA_UID,this.order.getId());
-            startActivity(intent);
-        }
+        openMyOrdersActivity(null);
     }
 
     @Override
     public void setDraftOrders(List<Order> orders) {
         TextView message = (TextView) findViewById(R.id.client_detail_address);
         if (orders.size() > 0) {
-            this.order = orders.get(0);
-            message.setText("Tienes un pedido Activo!");
+            message.setText("Tienes "+ orders.size() +" pedido/s activo!");
         } else {
-            this.order = null;
-            message.setText("No hay pedido en curso");
+            message.setText("No hay pedidos activos");
         }
     }
 

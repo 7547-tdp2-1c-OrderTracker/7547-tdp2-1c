@@ -1,33 +1,26 @@
 package ar.fi.uba.trackerman.tasks.client;
 
-import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
+import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 
-public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {
+public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,GetClientListTask.ClientsListAggregator> {
 
+    private List<Client> clients;
+
+    public GetClientListTask(ClientsListAggregator adapter) {
+        super(adapter);
+    }
 
     public GetClientListTask(ClientsListAdapter adapter) {
         super(adapter);
@@ -35,10 +28,15 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
 
     @Override
     protected ClientSearchResult doInBackground(Long... params) {
-        String urlString = "/v1/clients?limit=10";
-        Long offset = params[0];
-        if(offset != null){
-            urlString += "&offset="+offset.toString();
+        String urlString = "";
+        if (params.length > 0) {
+            urlString = "/v1/clients?limit=10";
+            Long offset = params[0];
+            if (offset != null) {
+                urlString += "&offset=" + offset.toString();
+            }
+        } else {
+            urlString = "/v1/clients?limit=1000";
         }
 
         ClientSearchResult clientSearchResult = (ClientSearchResult) restClient.get(urlString,null);
@@ -55,11 +53,16 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
 
     @Override
     protected void onPostExecute(ClientSearchResult clientSearchResult) {
-        ClientsListAdapter clientListAdapter= weakReference.get();
-        if(clientListAdapter!=null){
-            clientListAdapter.addClients(clientSearchResult);
+        ClientsListAggregator clientListAggregator= weakReference.get();
+        if(clientListAggregator!=null){
+            clientListAggregator.addClients(clientSearchResult);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
     }
+
+    public interface ClientsListAggregator {
+        public void addClients(ClientSearchResult clientSearchResult);
+    }
+
 }
