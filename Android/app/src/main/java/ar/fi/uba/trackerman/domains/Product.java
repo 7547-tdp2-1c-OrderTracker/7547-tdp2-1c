@@ -134,6 +134,14 @@ public class Product {
         return this.getCurrency() +" "+ Double.toString(this.getPrice());
     }
 
+    public String getRetailPriceWithCurrency() {
+        return this.getCurrency() +" "+ Double.toString(this.getRetailPrice());
+    }
+
+    public String getWholeSalePriceWithCurrency() {
+        return this.getCurrency() +" "+ Double.toString(this.getWholesalePrice());
+    }
+
     public static Product fromJson(JSONObject json) {
         Product product = null;
         try {
