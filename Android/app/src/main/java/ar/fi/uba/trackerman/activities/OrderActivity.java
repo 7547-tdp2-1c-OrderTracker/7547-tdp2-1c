@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -143,6 +144,8 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
 
         final EditText edittext = new EditText(this);
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter.LengthFilter filter= new InputFilter.LengthFilter(4);
+        edittext.setFilters(new InputFilter[]{filter});
 
         new AlertDialog.Builder(this)
                 .setTitle("Indicar cantidad")

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
@@ -83,6 +84,8 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         final EditText edittext = new EditText(this);
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter.LengthFilter filter= new InputFilter.LengthFilter(4);
+        edittext.setFilters(new InputFilter[] { filter});
 
         new AlertDialog.Builder(this)
                 .setTitle("Indicar cantidad")
