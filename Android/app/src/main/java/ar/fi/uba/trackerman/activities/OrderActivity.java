@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -95,6 +96,8 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
         orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, order.getOrderItems()));
         TextView total= (TextView)findViewById(R.id.order_total);
         total.setText("Total: " + order.getTotalPrice() + " $");
+        TextView cliente= (TextView)findViewById(R.id.order_client);
+        cliente.setText("Cliente: #" + order.getClientId());
     }
 
     public void afterOrderCancelled(Order order) {
@@ -143,6 +146,8 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
 
         final EditText edittext = new EditText(this);
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter.LengthFilter filter= new InputFilter.LengthFilter(4);
+        edittext.setFilters(new InputFilter[]{filter});
 
         new AlertDialog.Builder(this)
                 .setTitle("Indicar cantidad")
