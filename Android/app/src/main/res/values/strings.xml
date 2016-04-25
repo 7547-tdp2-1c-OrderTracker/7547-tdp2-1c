@@ -14,6 +14,7 @@
     <string name="orders">Pedidos</string>
     <string name="calendar">Calendario</string>
     <string name="agenda">Agenda</string>
+    <string name="brands">Marcas</string>
 
     <string name="client_id">Código</string>
     <string name="client_lastname">Apellido</string>
