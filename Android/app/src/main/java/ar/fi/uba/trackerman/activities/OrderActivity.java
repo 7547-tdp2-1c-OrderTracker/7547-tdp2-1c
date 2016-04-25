@@ -33,8 +33,8 @@ import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
+import ar.fi.uba.trackerman.utils.OrderStatus;
 import fi.uba.ar.soldme.R;
 
 public class OrderActivity extends AppCompatActivity implements GetOrderTask.OrderReceiver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
@@ -65,6 +65,16 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
         MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), orderId);
+        if (isClosedOrder()) {
+            findViewById(R.id.activity_order_add_product).setVisibility(View.INVISIBLE);
+            findViewById(R.id.activity_order_confirm).setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private boolean isClosedOrder() {
+        MyPreferences pref = new MyPreferences(this);
+        String status = pref.get(getString(R.string.shared_pref_current_order_status), "");
+        return (!status.isEmpty() && status.equalsIgnoreCase(OrderStatus.CANCELLED.getStatus()) || status.equalsIgnoreCase(OrderStatus.CONFIRMED.getStatus()));
     }
 
     @Override
@@ -72,6 +82,8 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
                                     ContextMenu.ContextMenuInfo menuInfo)
     {
         super.onCreateContextMenu(menu, v, menuInfo);
+
+        if (isClosedOrder()) return;
 
         MenuInflater inflater = getMenuInflater();
 
@@ -132,6 +144,8 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (isClosedOrder()) return false;
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_order, menu);
         return true;

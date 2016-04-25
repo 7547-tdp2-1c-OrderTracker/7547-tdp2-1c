@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.adapters.OrdersListAdapter;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -47,6 +48,11 @@ public class OrdersListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Order order= (Order)parent.getItemAtPosition(position);
+
+        MyPreferences pref = new MyPreferences(this.getActivity());
+        pref.save(getString(R.string.shared_pref_current_order_id), order.getId());
+        pref.save(getString(R.string.shared_pref_current_order_status), order.getStatus());
+
         Intent intent = new Intent(getContext(), OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID,order.getId());
         startActivity(intent);
