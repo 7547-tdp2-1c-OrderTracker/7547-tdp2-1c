@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -31,12 +32,14 @@ import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import fi.uba.ar.soldme.R;
 
-public class OrderActivity extends AppCompatActivity implements  GetOrderTask.OrderReciver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, EmptyOrderTask.OrderCleaner, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
+public class OrderActivity extends AppCompatActivity implements GetOrderTask.OrderReceiver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
 
     private long orderId=0;
     private long itemId=0;
     ListView orderItems;
     OrderActivity activity;
+    Order currentOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +54,7 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
 
         Intent intent= getIntent();
         orderId= intent.getLongExtra(Intent.EXTRA_UID, 0);
-        GetOrderTask task= new GetOrderTask(this);
+        GetOrderTask task = new GetOrderTask(this);
         task.execute(Long.toString(orderId));
         activity= this;
     }
@@ -92,10 +95,12 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
 
     @Override
     public void updateOrderInformation(Order order) {
+        this.currentOrder = order;
         ListView orderItems= (ListView)findViewById(R.id.order_items_list);
         orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, order.getOrderItems()));
         TextView total= (TextView)findViewById(R.id.order_total);
         total.setText("Total: " + order.getTotalPrice() + " $");
+        total.setBackgroundColor(Color.parseColor("#CCE0E0DB"));
         TextView cliente= (TextView)findViewById(R.id.order_client);
         cliente.setText("Cliente: #" + order.getClientId());
     }
@@ -132,8 +137,16 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
     }
 
     public void confirmOrder(View view){
-        ConfirmOrderTask task= new ConfirmOrderTask(this);
-        task.execute(Long.toString(this.orderId));
+        if (currentOrder.getOrderItems().size() > 0) {
+            ConfirmOrderTask task = new ConfirmOrderTask(this);
+            task.execute(Long.toString(this.orderId));
+        } else {
+            showSnackbarSimpleMessage("Pedido vacío, Agregue productos!");
+        }
+    }
+    public void addItem(View view) {
+        Intent intent = new Intent(this, ProductsListActivity.class);
+        startActivity(intent);
     }
 
     public boolean isValidQuantity(String txt) {

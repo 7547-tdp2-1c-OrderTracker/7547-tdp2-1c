@@ -49,15 +49,10 @@ public class EmptyOrderTask extends AbstractTask<String,Void,Order,OrderActivity
 
     @Override
     protected void onPostExecute(Order order) {
-        OrderCleaner reciver= weakReference.get();
-        if(reciver!=null){
-            reciver.updateOrderInformation(order);
+        if(order != null){
+            weakReference.get().updateOrderInformation(order);
         }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
+            weakReference.get().showSnackbarSimpleMessage("Error obteniendo el pedido, luego de vaciarlo!");
         }
-    }
-
-    public interface OrderCleaner {
-        public void updateOrderInformation(Order order);
     }
 }

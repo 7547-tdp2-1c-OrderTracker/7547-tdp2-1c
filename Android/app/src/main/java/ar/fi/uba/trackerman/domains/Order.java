@@ -146,7 +146,7 @@ public class Order {
             Date deliveryDate = null;
             if (deliveryDateStr != null && !"null".equalsIgnoreCase(deliveryDateStr)) deliveryDate = DateUtils.parseDate(deliveryDateStr);
             order.setDeliveryDate(deliveryDate);
-            
+
             if (json.toString().contains("order_items")) {
                 JSONArray itemsJson = json.getJSONArray("order_items");
                 for (int i = 0; i < itemsJson.length(); i++) {
