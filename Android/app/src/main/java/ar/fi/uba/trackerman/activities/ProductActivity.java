@@ -37,7 +37,7 @@ import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 
-public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
+public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation, PostOrderItemsTask.OrderItemCreator {
 
     private long productId;
     private int quantity;
@@ -189,5 +189,10 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID, orderItem.getOrderId());
         startActivity(intent);
+    }
+
+    @Override
+    public View getCurrentView() {
+        return this.getCurrentFocus();
     }
 }

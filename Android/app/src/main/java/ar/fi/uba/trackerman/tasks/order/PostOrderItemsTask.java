@@ -1,6 +1,8 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,10 +25,11 @@ import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
-public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,ProductActivity> {
+public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostOrderItemsTask.OrderItemCreator> {
 
-    public PostOrderItemsTask(ProductActivity activity) {
+    public PostOrderItemsTask(OrderItemCreator activity) {
         super(activity);
     }
 
@@ -52,10 +55,15 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,Produ
     @Override
     protected void onPostExecute(OrderItem orderItem) {
         super.onPostExecute(orderItem);
-        if (orderItem==null) {
-            weakReference.get().showSnackbarSimpleMessage("Cáspitas! Tenemos un problema!");
+        if (orderItem == null) {
+            ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Cáspitas! Tenemos un problema!");
         } else {
             weakReference.get().afterCreatingOrderItem(orderItem);
         }
+    }
+
+    public interface OrderItemCreator {
+        public void afterCreatingOrderItem(OrderItem orderItemCreated);
+        public View getCurrentView();
     }
 }
