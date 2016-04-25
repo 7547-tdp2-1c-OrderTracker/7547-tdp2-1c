@@ -24,6 +24,9 @@ import ar.fi.uba.trackerman.tasks.client.GetClientTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidPhone;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidMail;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
@@ -46,7 +49,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent= getIntent();
-        clientId= intent.getLongExtra(Intent.EXTRA_UID, 0);
+        clientId = intent.getLongExtra(Intent.EXTRA_UID, 0);
         new GetClientTask(this).execute(Long.toString(clientId));
 
         findViewById(R.id.client_detail_phone).setOnClickListener(this);
@@ -95,36 +98,26 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         }
     }
 
-    private boolean isValidMail(CharSequence expectedMail) {
-        String trimmedMail = expectedMail.toString().trim();
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(trimmedMail).matches();
-    }
-
-    private boolean isValidPhone(CharSequence expectedPhone) {
-        String trimmedPhone = expectedPhone.toString().trim();
-        return PhoneNumberUtils.isGlobalPhoneNumber(trimmedPhone);
-    }
-
     public void updateClientInformation(Client client){
         ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle(client.getFullName());
         Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
 
-        ((TextView)findViewById(R.id.client_detail_id)).setText(Long.toString(client.getId()));
-        ((TextView)findViewById(R.id.client_detail_name)).setText(client.getFullName());
-        ((TextView)findViewById(R.id.client_detail_cuil)).setText(client.getCuil());
-        ((TextView)findViewById(R.id.client_detail_address)).setText(client.getAddress());
+        ((TextView)findViewById(R.id.client_detail_id)).setText(isContentValid(Long.toString(client.getId())));
+        ((TextView)findViewById(R.id.client_detail_name)).setText(isContentValid(client.getFullName()));
+        ((TextView)findViewById(R.id.client_detail_cuil)).setText(isContentValid(client.getCuil()));
+        ((TextView) findViewById(R.id.client_detail_address)).setText(isContentValid(client.getAddress()));
 
         int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
 
         TextView phoneField = ((TextView)findViewById(R.id.client_detail_phone));
-        phoneField.setText(client.getPhoneNumber());
+        phoneField.setText(isContentValid(client.getPhoneNumber()));
         if (isValidPhone(phoneField.getText())) {
             ((ImageView)findViewById(R.id.client_detail_phone_number_icon)).setColorFilter(colorAccent);
             phoneField.setTextColor(colorAccent);
         }
 
         TextView mailField = ((TextView)findViewById(R.id.client_detail_email));
-        mailField.setText(client.getEmail());
+        mailField.setText(isContentValid(client.getEmail()));
         if (isValidMail(mailField.getText())) {
             ((ImageView)findViewById(R.id.client_detail_email_icon)).setColorFilter(colorAccent);
             mailField.setTextColor(colorAccent);

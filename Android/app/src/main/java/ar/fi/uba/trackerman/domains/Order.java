@@ -10,6 +10,7 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
 import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.FieldValidator;
 
 /**
  * Created by plucadei on 17/4/16.
@@ -135,7 +136,7 @@ public class Order {
             long clientId = json.getLong("client_id");
             String dateCreatedStr = json.getString("date_created");
             Date dateCreated = null;
-            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+            if (FieldValidator.isValid(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
             String status = json.getString("status");
             double totalPrice = json.getDouble("total_price");
             String currency = json.getString("currency");
@@ -145,8 +146,7 @@ public class Order {
             Date deliveryDate = null;
             if (deliveryDateStr != null && !"null".equalsIgnoreCase(deliveryDateStr)) deliveryDate = DateUtils.parseDate(deliveryDateStr);
             order.setDeliveryDate(deliveryDate);
-
-            //PROBLEMA, error leyendo order_items
+            
             if (json.toString().contains("order_items")) {
                 JSONArray itemsJson = json.getJSONArray("order_items");
                 for (int i = 0; i < itemsJson.length(); i++) {

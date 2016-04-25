@@ -15,6 +15,8 @@ import ar.fi.uba.trackerman.domains.OrdersSearchResult;
 import ar.fi.uba.trackerman.tasks.order.GetOrdersListTask;
 import fi.uba.ar.soldme.R;
 
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+
 public class OrdersListAdapter extends ArrayAdapter<Order> {
 
     private long total;
@@ -76,10 +78,8 @@ public class OrdersListAdapter extends ArrayAdapter<Order> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        // holder.clientName.setText(client.getLastName()+", "+client.getName());
-        // holder.orderTotalPrice.setText(client.getAddress());
-        holder.clientName.setText("# "+ Long.toString(order.getId()));
-        holder.orderTotalPrice.setText(order.getStatus());
+        holder.clientName.setText("# "+ isContentValid(Long.toString(order.getId())));
+        holder.orderTotalPrice.setText(isContentValid(order.getStatus()));
 
         return convertView;
     }
