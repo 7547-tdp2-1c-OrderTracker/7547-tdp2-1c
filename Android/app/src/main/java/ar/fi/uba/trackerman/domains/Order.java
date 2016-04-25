@@ -82,6 +82,22 @@ public class Order {
         return status;
     }
 
+    public String getStatusSpanish() {
+
+        if (this.status.equals("confirm")) { return "Confirmada"; }
+        if (this.status.equals("cancelled")) { return "Cancelada"; }
+        if (this.status.equals("draft")) { return "Borrador"; }
+        return status;
+    }
+
+    public String getColor(String status) {
+
+        if (this.status.equals("confirm")) { return "#558b2f"; }
+        if (this.status.equals("cancelled")) { return "#ff0000"; }
+        if (this.status.equals("draft")) { return "#1565c0"; }
+        return status;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }

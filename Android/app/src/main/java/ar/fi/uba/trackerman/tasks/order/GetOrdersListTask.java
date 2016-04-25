@@ -53,7 +53,8 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
             if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
 
             //order = new Order(row.getLong("id"));
-            order = new Order(row.getLong("id"), row.getLong("client_id"), row.getLong("vendor_id"), dateCreated, row.getString("status"), 11.21, row.getString("currency"));
+            Double totalPrice = row.getDouble("total_price");
+            order = new Order(row.getLong("id"), row.getLong("client_id"), row.getLong("vendor_id"), dateCreated, row.getString("status"), totalPrice, row.getString("currency"));
             order.setStatus(row.getString("status"));
 
             ordersSearchResult.addOrder(order);
