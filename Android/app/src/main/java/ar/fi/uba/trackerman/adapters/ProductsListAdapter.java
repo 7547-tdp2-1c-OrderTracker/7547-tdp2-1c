@@ -22,6 +22,8 @@ import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
 import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
 import fi.uba.ar.soldme.R;
 
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+
 public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBrandsListTask.BrandsListAggregator {
 
     private long total;
@@ -87,8 +89,8 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(product.getName());
-        holder.brand.setText(this.allBrands.get(product.getBrandId()).getName());
+        holder.name.setText(isContentValid(product.getName()));
+        holder.brand.setText(isContentValid(this.allBrands.get(product.getBrandId()).getName()));
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;

@@ -29,6 +29,7 @@ import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
@@ -141,23 +142,21 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((CollapsingToolbarLayout) findViewById(R.id.product_detail_collapsing_toolbar)).setTitle(product.getName());
         Picasso.with(this).load(product.getPicture()).into(((ImageView) findViewById(R.id.product_detail_image)));
 
-        ((TextView) findViewById(R.id.product_detail_id)).setText(Long.toString(product.getId()));
-        ((TextView) findViewById(R.id.product_detail_name)).setText(product.getName());
+        ((TextView) findViewById(R.id.product_detail_id)).setText(isContentValid(Long.toString(product.getId())));
+        ((TextView) findViewById(R.id.product_detail_name)).setText(isContentValid(product.getName()));
 
         Long brandId = product.getBrandId();
         new GetBrandTask(this).execute(String.valueOf(brandId));
 
-        ((TextView) findViewById(R.id.product_detail_brand)).setText(String.valueOf(brandId));
-        ((TextView) findViewById(R.id.product_detail_stock)).setText(Long.toString(product.getStock()));
-        ((TextView) findViewById(R.id.product_detail_price)).setText(product.getPriceWithCurrency());
+        ((TextView) findViewById(R.id.product_detail_brand)).setText(isContentValid(String.valueOf(brandId)));
+        ((TextView) findViewById(R.id.product_detail_stock)).setText(isContentValid(Long.toString(product.getStock())));
+        ((TextView) findViewById(R.id.product_detail_price)).setText(isContentValid(product.getPriceWithCurrency()));
 
-        String description = product.getDescription();
-        TextView descriptionField = ((TextView)findViewById(R.id.product_detail_description));
-        descriptionField.setText((description != null && !"null".equalsIgnoreCase(description))? product.getDescription(): "");
+        ((TextView)findViewById(R.id.product_detail_description)).setText(isContentValid(product.getDescription()));
     }
 
     public void afterBrandResolve(Brand brand){
-        ((TextView) findViewById(R.id.product_detail_brand)).setText(brand.getName());
+        ((TextView) findViewById(R.id.product_detail_brand)).setText(isContentValid(brand.getName()));
     }
 
     @Override

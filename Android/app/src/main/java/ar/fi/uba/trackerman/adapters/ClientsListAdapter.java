@@ -19,6 +19,8 @@ import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+
 public class ClientsListAdapter extends ArrayAdapter<Client> {
 
     private long total;
@@ -81,8 +83,8 @@ public class ClientsListAdapter extends ArrayAdapter<Client> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(client.getLastName()+", "+client.getName());
-        holder.address.setText(client.getAddress());
+        holder.name.setText(isContentValid(client.getLastName())+", "+isContentValid(client.getName()));
+        holder.address.setText(isContentValid(client.getAddress()));
         Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
 
         return convertView;

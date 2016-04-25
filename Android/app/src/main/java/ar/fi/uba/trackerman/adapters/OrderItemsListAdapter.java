@@ -15,6 +15,8 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import fi.uba.ar.soldme.R;
 
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+
 public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {
 
     public OrderItemsListAdapter(Context context, int resource,
@@ -47,15 +49,15 @@ public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {
         }
 
         Picasso.with(this.getContext()).load(orderItem.getThumbnail()).into(holder.image);
-        holder.name.setText(orderItem.getName());
-        holder.brand.setText(orderItem.getBrandName());
-        holder.quantity.setText(Integer.toString(orderItem.getQuantity()));
-        holder.price.setText(Double.toString(orderItem.getUnitPrice()));
+        holder.name.setText(isContentValid(orderItem.getName()));
+        holder.brand.setText(isContentValid(orderItem.getBrandName()));
+        holder.quantity.setText(isContentValid(Integer.toString(orderItem.getQuantity())));
+        holder.price.setText(isContentValid(Double.toString(orderItem.getUnitPrice())));
 
-        holder.total.setText(Double.toString(orderItem.getTotalPrice()));
+        holder.total.setText(isContentValid(Double.toString(orderItem.getTotalPrice())));
 
-        holder.itemCurrency.setText(orderItem.getCurrency());
-        holder.totalCurrency.setText(orderItem.getCurrency());
+        holder.itemCurrency.setText(isContentValid(orderItem.getCurrency()));
+        holder.totalCurrency.setText(isContentValid(orderItem.getCurrency()));
 
         return convertView;
     }

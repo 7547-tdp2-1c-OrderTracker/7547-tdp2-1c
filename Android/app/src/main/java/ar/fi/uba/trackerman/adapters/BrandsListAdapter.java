@@ -17,6 +17,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -69,7 +70,7 @@ public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterVie
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(brand.getName());
+        holder.name.setText(isContentValid(brand.getName()));
         Picasso.with(this.getContext()).load(brand.getPicture()).transform(new CircleTransform()).into(holder.image);
         if(selected.contains(brand.getId())){
             convertView.setBackgroundResource(R.color.colorAccent);
