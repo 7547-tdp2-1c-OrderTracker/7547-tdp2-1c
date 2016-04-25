@@ -50,4 +50,9 @@
 
     <string name="navigation_drawer_open">Drawer abierto</string>
     <string name="navigation_drawer_close">Drawer cerrado</string>
+
+    <string name="menu_login">Ingresa</string>
+    <string name="menu_logout">Salir</string>
+    <string name="nav_header_main_vendor_name_default">Nombre Vendedor</string>
+    <string name="fragment_main_vendor_name_default">Vendedor #1</string>
 </resources>

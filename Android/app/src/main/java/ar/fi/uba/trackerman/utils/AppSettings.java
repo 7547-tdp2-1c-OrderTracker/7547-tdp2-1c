@@ -1,10 +1,14 @@
 package ar.fi.uba.trackerman.utils;
 
+/**
+ * Created by smpiano on 4/22/16.
+ */
 public class AppSettings {
 
     private static final String SERVER_HOST = "https://trackerman-api.herokuapp.com";
 
     private static final long VENDOR_ID = 1;
+    private static long CURRENT_VENDOR = VENDOR_ID;
 
     private static final int SERVER_TIMEOUT = 15000; //15seg
 
@@ -13,7 +17,11 @@ public class AppSettings {
     }
 
     public static long getVendorId() {
-        return VENDOR_ID;
+        return CURRENT_VENDOR;
+    }
+
+    public static void setVendorId(long vendor) {
+        CURRENT_VENDOR = vendor;
     }
 
     public static int getServerTimeout() { return SERVER_TIMEOUT; }
