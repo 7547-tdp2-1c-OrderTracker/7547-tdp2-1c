@@ -91,7 +91,7 @@ public class Order {
         if (this.status.equals("cancelled")) { return "Cancelada"; }
 
         if (this.status.equals("draft")) { return "Borrador"; }
-        
+
         return status;
     }
 
@@ -105,7 +105,7 @@ public class Order {
 
         if (this.status.equals("draft")) { return "#1565c0"; }
 
-        return "#F0F0F0";
+        return "#000000";
     }
 
     public void setStatus(String status) {
