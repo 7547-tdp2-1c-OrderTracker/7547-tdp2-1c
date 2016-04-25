@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ar.fi.uba.trackerman.adapters.OrderItemsListAdapter;
 import ar.fi.uba.trackerman.domains.Order;
@@ -112,9 +113,10 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     }
 
     public void afterOrderConfirmed(Order order) {
-        showSnackbarSimpleMessage("Su pedido ha sido confirmado");
-        try {Thread.sleep(5000);} catch (Exception e) {}
-        Intent intent = new Intent(this, MyClientsActivity.class);
+        Toast.makeText(getApplicationContext(), "Su pedido ha sido confirmado", Toast.LENGTH_LONG).show();
+        // showSnackbarSimpleMessage("Su pedido ha sido confirmado");
+        try {Thread.sleep(2500);} catch (Exception e) { }
+        Intent intent = new Intent(this, MyOrdersActivity.class);
         startActivity(intent);
     }
 
