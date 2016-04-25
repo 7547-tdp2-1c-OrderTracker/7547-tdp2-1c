@@ -81,7 +81,9 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
             convertView = mInflater.inflate(R.layout.products_list_item, null);
 
             holder = new ViewHolder();
+            holder.idProduct = (TextView) convertView.findViewById(R.id.product_row_product_id);
             holder.name = (TextView) convertView.findViewById(R.id.product_row_name);
+            holder.stock = (TextView) convertView.findViewById(R.id.product_row_product_stock);
             holder.brand= (TextView) convertView.findViewById(R.id.product_row_brand);
             holder.image = (ImageView) convertView.findViewById(R.id.product_row_picture);
             convertView.setTag(holder);
@@ -89,7 +91,9 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.idProduct.setText("# "+ isContentValid(Long.toString(product.getId())));
         holder.name.setText(isContentValid(product.getName()));
+        holder.stock.setText("# "+ isContentValid(Integer.toString(product.getStock())));
         holder.brand.setText(isContentValid(this.allBrands.get(product.getBrandId()).getName()));
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
@@ -108,7 +112,9 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
     }
 
     private static class ViewHolder {
+        public TextView idProduct;
         public TextView name;
+        public TextView stock;
         public TextView brand;
         public ImageView image;
     }
