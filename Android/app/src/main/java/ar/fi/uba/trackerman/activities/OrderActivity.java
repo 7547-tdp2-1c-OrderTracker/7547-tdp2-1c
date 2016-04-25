@@ -96,6 +96,8 @@ public class OrderActivity extends AppCompatActivity implements  GetOrderTask.Or
         orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, order.getOrderItems()));
         TextView total= (TextView)findViewById(R.id.order_total);
         total.setText("Total: " + order.getTotalPrice() + " $");
+        TextView cliente= (TextView)findViewById(R.id.order_client);
+        cliente.setText("Cliente: #" + order.getClientId());
     }
 
     public void afterOrderCancelled(Order order) {
