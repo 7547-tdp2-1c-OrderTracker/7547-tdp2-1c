@@ -65,12 +65,12 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         fab.setOnClickListener(this);
 
         long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id),-1L);
-        // FIXME smpiano No pude testear
-        //if(orderId == -1){
-        //    fab.hide();
-        //} else {
-        //    fab.show();
-        //}
+
+        if(orderId == -1){
+            fab.hide();
+        } else {
+            fab.show();
+        }
 
         //Preguntamos por las ordenes
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
