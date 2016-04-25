@@ -12,7 +12,7 @@ public class FieldValidator {
     }
 
     public static String isContentValid(String content) {
-        return (isValid(content))? content : "";
+        return (isValid(content)) ? content : "";
     }
 
     public static boolean isValidMail(CharSequence expectedMail) {
@@ -23,5 +23,20 @@ public class FieldValidator {
     public static boolean isValidPhone(CharSequence expectedPhone) {
         String trimmedPhone = expectedPhone.toString().trim();
         return PhoneNumberUtils.isGlobalPhoneNumber(trimmedPhone);
+    }
+
+    public static boolean isValidQuantity(String txt) {
+        if (txt.isEmpty()) return false;
+        if (isValidNumber(txt) && Integer.parseInt(txt) == 0) return false;
+        return isValidNumber(txt);
+    }
+
+    public static boolean isValidNumber(String txt) {
+        try {
+            Integer.parseInt(txt.toString());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

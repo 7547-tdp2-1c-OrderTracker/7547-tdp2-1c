@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         setupNavigationDrawerContent(navigationView);
-
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getVendorId());
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
     }
 
@@ -80,6 +81,17 @@ public class MainActivity extends AppCompatActivity implements
     public void openProductsActivity(View view) {
         Intent intent = new Intent(this, ProductsListActivity.class);
         startActivity(intent);
+    }
+
+    public void openLoginActivity(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void openLogoutActivity(View view) {
+        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+        //Intent intent = new Intent(this, LoginActivity.class);
+        //startActivity(intent);
     }
 
     public void openOrdersActivity(View view) {
@@ -126,6 +138,16 @@ public class MainActivity extends AppCompatActivity implements
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyAgendaActivity(null);
+                                return true;
+                            case R.id.nav_login:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openLoginActivity(null);
+                                return true;
+                            case R.id.nav_logout:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openLogoutActivity(null);
                                 return true;
                         }
                         return true;

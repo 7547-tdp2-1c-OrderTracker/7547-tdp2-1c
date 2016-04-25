@@ -30,6 +30,7 @@ import ar.fi.uba.trackerman.tasks.order.EmptyOrderTask;
 import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 import fi.uba.ar.soldme.R;
 
 public class OrderActivity extends AppCompatActivity implements GetOrderTask.OrderReceiver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
@@ -147,12 +148,6 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     public void addItem(View view) {
         Intent intent = new Intent(this, ProductsListActivity.class);
         startActivity(intent);
-    }
-
-    public boolean isValidQuantity(String txt) {
-        if (txt.isEmpty()) return false;
-        if (Integer.parseInt(txt.toString()) == 0) return false;
-        return true;
     }
 
     public void showQuantityDialog() {
