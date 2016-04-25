@@ -21,23 +21,18 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/activity_order">
-        <LinearLayout
+    <LinearLayout
             android:orientation="vertical"
+            android:layout_weight="1"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/order_items_list"
-                android:layout_margin="10dp">
+                android:layout_margin="10dp"
+                android:layout_weight="99">
             </ListView>
             <TextView
                 android:layout_width="wrap_content"
@@ -47,13 +42,15 @@
                 android:text="Total: "
                 android:textStyle="normal|bold"
                 android:textSize="20dp"
-                android:textColor="#ff0000" />
+                android:textColor="#ff0000"
+                android:layout_weight="1"
+                />
             <Button
+                android:layout_weight="0"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="confirmOrder"
                 android:text="@string/confirm_order"/>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
