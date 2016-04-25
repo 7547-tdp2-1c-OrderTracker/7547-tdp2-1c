@@ -32,6 +32,7 @@ import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
+
 import fi.uba.ar.soldme.R;
 
 public class OrderActivity extends AppCompatActivity implements GetOrderTask.OrderReceiver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
@@ -98,6 +99,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     @Override
     public void updateOrderInformation(Order order) {
         this.currentOrder = order;
+
         ListView orderItems= (ListView)findViewById(R.id.order_items_list);
         orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, order.getOrderItems()));
         TextView total= (TextView)findViewById(R.id.order_total);

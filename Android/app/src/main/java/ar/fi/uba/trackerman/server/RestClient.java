@@ -106,7 +106,7 @@ public class RestClient {
         } catch (SocketTimeoutException e) {
             throw new ServerErrorException("El server no pudo responder antes del timeout ["+AppSettings.getServerTimeout()+"]");
         } catch (IOException e) {
-            throw new ServerErrorException(url);
+            throw new ServerErrorException(method,url,body,headers);
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();

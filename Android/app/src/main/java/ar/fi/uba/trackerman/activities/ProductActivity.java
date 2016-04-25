@@ -31,6 +31,8 @@ import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
@@ -61,6 +63,14 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id),-1L);
+        // FIXME smpiano No pude testear
+        //if(orderId == -1){
+        //    fab.hide();
+        //} else {
+        //    fab.show();
+        //}
 
         //Preguntamos por las ordenes
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
@@ -97,9 +107,16 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
                         if (isValidQuantity(quantityRequested)) {
                             if (isValidStock(quantityRequested)) {
-                                addingItemsToOrder(String.valueOf(draftOrders.get(0).getId()), String.valueOf(productId), quantityRequested);
+
+                                long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id), -1L);
+
+                                if (orderId >= 0) {
+                                    addingItemsToOrder(String.valueOf(orderId), String.valueOf(productId), quantityRequested);
+                                } else {
+                                    showSnackbarSimpleMessage("No hay un pedido asociado!");
+                                }
                             } else {
-                                showSnackbarSimpleMessage("Lo siento! disponemos de "+quantity+" unidades");
+                                showSnackbarSimpleMessage("Lo siento! disponemos de " + quantity + " unidades");
                             }
                         } else {
                             showSnackbarSimpleMessage("El valor es inválido!");

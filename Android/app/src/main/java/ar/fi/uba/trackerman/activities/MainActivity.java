@@ -18,6 +18,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -43,6 +44,11 @@ public class MainActivity extends AppCompatActivity implements
         if (navigationView != null) {
             setupNavigationDrawerContent(navigationView);
         }
+
+        MyPreferences pref = new MyPreferences(this);
+        pref.save(getString(R.string.shared_pref_current_vendor_id), AppSettings.getVendorId());
+        pref.save(getString(R.string.shared_pref_current_order_id), -1L);
+        pref.save(getString(R.string.shared_pref_current_client_id), -1L);
 
         setupNavigationDrawerContent(navigationView);
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getVendorId());
