@@ -63,6 +63,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
 
         MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), -1L);
+        pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_client_id), clientId);
 
         //Preguntamos por las ordenes
@@ -141,6 +142,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
 
         MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), orderCreated.getId());
+        pref.save(getString(R.string.shared_pref_current_order_status), orderCreated.getStatus());
 
         Intent intent = new Intent(this, ProductsListActivity.class);
         intent.putExtra(Intent.EXTRA_UID, orderCreated.getId());

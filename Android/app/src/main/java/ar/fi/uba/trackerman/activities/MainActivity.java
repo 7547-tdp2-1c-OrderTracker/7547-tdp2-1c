@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements
         MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_vendor_id), AppSettings.getVendorId());
         pref.save(getString(R.string.shared_pref_current_order_id), -1L);
+        pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_client_id), -1L);
 
         setupNavigationDrawerContent(navigationView);
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements
     public void setDraftOrders(List<Order> orders) {
         TextView message = (TextView) findViewById(R.id.client_detail_address);
         if (orders.size() > 0) {
-            message.setText("Tienes "+ orders.size() +" pedido/s activo!");
+            if (orders.size() == 1) message.setText("Tienes un pedido activo!");
+            else message.setText("Tienes "+ orders.size() +" pedidos activos!");
         } else {
             message.setText("No hay pedidos activos");
         }
