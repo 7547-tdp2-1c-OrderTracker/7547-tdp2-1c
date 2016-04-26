@@ -91,9 +91,9 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.idProduct.setText("# "+ isContentValid(Long.toString(product.getId())));
+        holder.idProduct.setText(isContentValid(Long.toString(product.getId())));
         holder.name.setText(isContentValid(product.getName()));
-        holder.stock.setText("# "+ isContentValid(Integer.toString(product.getStock())));
+        holder.stock.setText(isContentValid(Integer.toString(product.getStock())));
         holder.brand.setText(isContentValid(this.allBrands.get(product.getBrandId()).getName()));
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
