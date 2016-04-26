@@ -72,7 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             card_view:cardCornerRadius="2dp"
-            card_view:contentPadding="10dp">
+            card_view:contentPadding="10dp"
+            android:onClick="openDetailOrder">
             <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
@@ -88,7 +89,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/client_detail_address"
-                    android:onClick="openDetailOrder"
                     android:layout_margin="16dp"
                     android:text="@string/pedido_activo"
                     android:textSize="18sp"
