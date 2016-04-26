@@ -3,7 +3,7 @@ package ar.fi.uba.trackerman.domains;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 
 public class OrderItem {
 
@@ -162,7 +162,7 @@ public class OrderItem {
             orderItem = new OrderItem(orderItemId,product_id,name,quantity,price,currencyItem,brand,picture);
             orderItem.setOrderId(json.getLong("order_id"));
         } catch (JSONException e) {
-            throw new OrderTrackerException("Error parsing OrderItem", e);
+            throw new BusinessException("Error parsing OrderItem", e);
         }
         return orderItem;
     }

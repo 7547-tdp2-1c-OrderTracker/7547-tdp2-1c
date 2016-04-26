@@ -3,6 +3,7 @@ package ar.fi.uba.trackerman.exceptions;
 import android.util.Log;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.utils.AppSettings;
@@ -17,8 +18,7 @@ public class ServerErrorException extends RuntimeException {
         if (logError) Log.e("server_io_error", msg, this);
     }
 
-    public ServerErrorException(String method, URL url, String body, Map<String, String> headers) {
-        this("Error en servidor [curl -X" + method + " '" + AppSettings.getServerHost() + url.getPath() + "']", true);
+    private static String getHeaders(Map<String, String> headers) {
         String headersStr="";
         if (headers != null){
             headersStr = "-H '";
@@ -27,11 +27,22 @@ public class ServerErrorException extends RuntimeException {
             }
             headersStr += "' ";
         }
+        return headersStr;
+    }
+    private static String getBody(String body){
         String bodyStr = "";
         if (body != null) {
             bodyStr = "-d '" + body + "' ";
         }
-        Log.e("server_io_error", "Error en servidor [" + bodyStr + headersStr + "]",this);
+        return bodyStr;
+    }
+
+    public ServerErrorException(String method, URL url, String body, Map<String, String> headers, Integer status, String msg) {
+        this("Error en servidor, request [curl -X" + method + " '" + AppSettings.getServerHost() + url.getPath() + "' " + getBody(body) + getHeaders(headers) + "] -> response ["+status+" - "+msg+"]", true);
+    }
+
+    public ServerErrorException(String method, URL url, String body, Map<String, String> headers) {
+        this("Error en servidor [curl -X" + method + " '" + AppSettings.getServerHost() + url.getPath() + "' " + getBody(body) + getHeaders(headers) + "]", true);
     }
 
     public ServerErrorException(URL url, Integer status) {

@@ -22,6 +22,8 @@ import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.exceptions.NoStockException;
+import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
@@ -49,15 +51,18 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
 
     @Override
     protected OrderItem doInBackground(String... params) {
-        return this.createOrderItem(params[0], params[1], params[2]);
+        try {
+            return this.createOrderItem(params[0], params[1], params[2]);
+        } catch (NoStockException e) {
+            ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Nos quedamos sin stock!");
+        }
+        return null;
     }
 
     @Override
     protected void onPostExecute(OrderItem orderItem) {
         super.onPostExecute(orderItem);
-        if (orderItem == null) {
-            ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Cáspitas! Tenemos un problema!");
-        } else {
+        if (orderItem != null) {
             weakReference.get().afterCreatingOrderItem(orderItem);
         }
     }

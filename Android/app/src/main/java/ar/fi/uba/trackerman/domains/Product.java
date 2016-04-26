@@ -3,7 +3,7 @@ package ar.fi.uba.trackerman.domains;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 
 /**
  * Created by plucadei on 3/4/16.
@@ -161,7 +161,7 @@ public class Product {
             product.setPicture(json.getString("picture"));
             product.setThumbnail(json.getString("thumbnail"));
         } catch(JSONException e) {
-            throw new OrderTrackerException("Error parsing Product.",e);
+            throw new BusinessException("Error parsing Product.",e);
         }
         return product;
     }

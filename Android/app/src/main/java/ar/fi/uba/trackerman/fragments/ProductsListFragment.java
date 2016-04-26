@@ -150,6 +150,7 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void afterCreatingOrderItem(OrderItem orderItemCreated) {
+        //FIXME descontar los items cargados al carrito!
         ShowMessage.showSnackbarSimpleMessage(this.getCurrentView(),"Item/s Agregado/s al pedido!");
     }
 

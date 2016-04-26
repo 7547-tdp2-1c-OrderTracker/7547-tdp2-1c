@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.FieldValidator;
 import ar.fi.uba.trackerman.utils.OrderStatus;
@@ -163,7 +163,7 @@ public class Order {
                 }
             }
         } catch (JSONException e) {
-            throw new OrderTrackerException("Error parsing Order.",e);
+            throw new BusinessException("Error parsing Order.",e);
         }
         return order;
     }

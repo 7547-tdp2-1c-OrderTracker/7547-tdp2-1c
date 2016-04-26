@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 
 /**
  * Created by plucadei on 2/4/16.
@@ -64,7 +64,7 @@ public class ClientSearchResult {
                 clientSearchResult.addClient(Client.fromJson(resultJSON.getJSONObject(i)));
             }
         } catch (JSONException e) {
-            throw new OrderTrackerException("Error parsing ClientSearchResult",e);
+            throw new BusinessException("Error parsing ClientSearchResult",e);
         }
         return clientSearchResult;
     }
