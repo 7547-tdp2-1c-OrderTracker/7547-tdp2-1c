@@ -3,7 +3,7 @@ package ar.fi.uba.trackerman.domains;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 
 /**
  * Created by plucadei on 10/4/16.
@@ -55,7 +55,7 @@ public class Brand {
         try {
             return new Brand(json.getLong("id"),json.getString("name"),json.getString("code"),json.getString("picture"));
         } catch (JSONException e) {
-            throw new OrderTrackerException("Error parsing Brand.",e);
+            throw new BusinessException("Error parsing Brand.",e);
         }
     }
 }

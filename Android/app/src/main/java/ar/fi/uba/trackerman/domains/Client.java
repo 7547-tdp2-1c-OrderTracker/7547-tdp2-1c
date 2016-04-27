@@ -3,7 +3,7 @@ package ar.fi.uba.trackerman.domains;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 
 /**
  * Created by plucadei on 29/3/16.
@@ -126,7 +126,7 @@ public class Client {
             client.setAvatar(json.getString("avatar"));
             client.setPhoneNumber(json.getString("phone_number"));
         } catch (JSONException e) {
-            throw new OrderTrackerException("Error parsing Client.",e);
+            throw new BusinessException("Error parsing Client.",e);
         }
         return client;
     }

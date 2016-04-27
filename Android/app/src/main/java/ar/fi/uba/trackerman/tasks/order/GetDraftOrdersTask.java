@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Order;
-import ar.fi.uba.trackerman.exceptions.OrderTrackerException;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 
@@ -38,7 +38,7 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
             for (int i = 0; i < resultsJson.length(); i++) {
                 list.add(Order.fromJson(resultsJson.getJSONObject(i)));
             }
-        } catch (OrderTrackerException e) {
+        } catch (BusinessException e) {
             Log.e("business_error","lalalaalal",e);
         }
         return list;

@@ -3,6 +3,7 @@ package ar.fi.uba.trackerman.server;
 import android.util.Log;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,6 +57,10 @@ public class RestClient {
         String json;
         Object expectedReturn = null;
         URL url = null;
+        int responseStatus = 0;
+        InputStream inputStream = null;
+        String errorMsg = null;
+        Boolean isError = false;
         try {
             url = new URL(AppSettings.getServerHost() + endpoint);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -84,7 +89,15 @@ public class RestClient {
             urlConnection.connect();
 
             //reading the response
-            InputStream inputStream = urlConnection.getInputStream();
+            responseStatus = urlConnection.getResponseCode();
+            errorMsg = urlConnection.getResponseMessage();
+            isError = responseStatus >= HttpURLConnection.HTTP_INTERNAL_ERROR;
+            if (isError) {
+                inputStream = urlConnection.getErrorStream();
+            } else {
+                inputStream = urlConnection.getInputStream();
+            }
+
             StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 return expectedReturn;
@@ -99,14 +112,18 @@ public class RestClient {
             }
             json = buffer.toString();
             try {
-                expectedReturn = parser.readResponse(json);
+                if (isError) {
+                    readErrorResponse(json);
+                } else {
+                    expectedReturn = parser.readResponse(json);
+                }
             } catch (JSONException e) {
                 Log.e("parse_response_error", "Error al leer el response de " + url.getPath(), e);
             }
         } catch (SocketTimeoutException e) {
             throw new ServerErrorException("El server no pudo responder antes del timeout ["+AppSettings.getServerTimeout()+"]");
         } catch (IOException e) {
-            throw new ServerErrorException(method,url,body,headers);
+            throw new ServerErrorException(method,url,body,headers,responseStatus,errorMsg);
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -120,6 +137,22 @@ public class RestClient {
             }
         }
         return expectedReturn;
+    }
+
+    private void readErrorResponse(String json) throws ServerErrorException {
+        String errorKey = "";
+        try {
+            JSONObject error = new JSONObject(json);
+            errorKey = error.getString("error");
+
+            //tiro exception de regla de negocio
+            //FIXME smpiano cambiar lalalala por value
+            throw ErrorMatcher.valueOf(errorKey).getThrowable("lalalala");
+        } catch (JSONException e) {
+            throw new ServerErrorException("Error parseando server errorJson",e);
+        } catch (IllegalArgumentException e) {
+            throw new ServerErrorException("Falta agregar "+errorKey+" en clase ErrorMatcher",e);
+        }
     }
 
     public interface ResponseParse {
