@@ -88,7 +88,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/client_detail_address"
+                    android:id="@+id/dashboard_draft_orders"
                     android:layout_margin="16dp"
                     android:text="@string/pedido_activo"
                     android:textSize="18sp"
