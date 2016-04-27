@@ -141,7 +141,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
         Date fecha = order.getDateCreated();
         ((TextView) findViewById(R.id.order_detail_client_name)).setText(""); //TODO: completar aca con el nombre del cliente
-        ((TextView) findViewById(R.id.order_detail_order_total_price)).setText(isContentValid(Double.toString(order.getTotalPrice())));
+        ((TextView) findViewById(R.id.order_detail_order_total_price)).setText(isContentValid(order.getCurrency() +" "+ Double.toString(order.getTotalPrice())));
         ((TextView) findViewById(R.id.order_detail_order_status)).setText(isContentValid(order.getStatusSpanish()));
         ((TextView) findViewById(R.id.order_detail_order_status)).setTextColor(Color.parseColor(order.getColor(order.getStatus())));
 
