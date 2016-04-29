@@ -70,7 +70,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         this.startCleanUpUI();
 
         //Preguntamos por las ordenes
-        new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getVendorId()), String.valueOf(clientId) );
+        new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getSellerId()), String.valueOf(clientId) );
     }
 
     private void startCleanUpUI() {
@@ -100,7 +100,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
                 ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
             } else {
                 // si no hay orden, crear una nueva
-                new PostOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()), Long.toString(clientId));
+                new PostOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()), Long.toString(clientId));
             }
         } else if((view.getId() == R.id.client_detail_phone || view.getId() == R.id.client_detail_phone_number_icon)
                 && isValidPhone(((TextView)findViewById(R.id.client_detail_phone)).getText())){
