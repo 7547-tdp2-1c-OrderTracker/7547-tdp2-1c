@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.adapters.OrdersListAdapter;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -34,7 +35,7 @@ public class OrdersListFragment extends Fragment implements AdapterView.OnItemCl
         View fragmentView= inflater.inflate(R.layout.fragment_orders_list, container, false);
         ListView ordersList= (ListView)fragmentView.findViewById(R.id.orderListView);
 
-        OrdersListAdapter ordersAdapter = new OrdersListAdapter( getContext(), R.layout.list_order_item, new ArrayList<Order>());
+        OrdersListAdapter ordersAdapter = new OrdersListAdapter( getContext(), R.layout.list_order_item, new ArrayList<OrderWrapper>());
         ordersList.setAdapter(ordersAdapter);
         ordersList.setOnItemClickListener(this);
 
@@ -47,11 +48,13 @@ public class OrdersListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Order order= (Order)parent.getItemAtPosition(position);
+        OrderWrapper orderWrapper = (OrderWrapper)parent.getItemAtPosition(position);
+        Order order = orderWrapper.getOrder();
 
         MyPreferences pref = new MyPreferences(this.getActivity());
         pref.save(getString(R.string.shared_pref_current_order_id), order.getId());
         pref.save(getString(R.string.shared_pref_current_order_status), order.getStatus());
+        pref.save(getString(R.string.shared_pref_current_client_id), orderWrapper.getClient().getId());
 
         Intent intent = new Intent(getContext(), OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID,order.getId());

@@ -14,7 +14,12 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(String msg) {
         super(msg);
-        Log.e("business_error",msg,this);
+        Log.d("business_error", msg, this);
+    }
+
+    public BusinessException(String msg, Integer status) {
+        super("[status:"+status+"] - "+msg);
+        Log.d("business_error", msg, this);
     }
 
     public BusinessException(String msg, Throwable e) {

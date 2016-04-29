@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
-import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
@@ -17,10 +16,6 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
 public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,GetClientListTask.ClientsListAggregator> {
 
     private List<Client> clients;
-
-    public GetClientListTask(ClientsListAggregator adapter) {
-        super(adapter);
-    }
 
     public GetClientListTask(ClientsListAdapter adapter) {
         super(adapter);

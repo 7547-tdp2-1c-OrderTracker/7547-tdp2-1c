@@ -3,7 +3,6 @@ package ar.fi.uba.trackerman.exceptions;
 import android.util.Log;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.utils.AppSettings;

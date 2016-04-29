@@ -6,13 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-
 import ar.fi.uba.trackerman.adapters.OrdersListAdapter;
-import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.DateUtils;
 
 
 public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult,OrdersListAdapter> {
@@ -44,20 +41,10 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
         ordersSearchResult.setTotal(pagingJSON.getLong("total"));
         ordersSearchResult.setOffset(pagingJSON.getLong("offset"));
         JSONArray resultJSON = (JSONArray) ordersList.get("results");
-        Order order;
+        OrderWrapper orderWrapper;
         for (int i = 0; i < resultJSON.length(); i++) {
-            JSONObject row = resultJSON.getJSONObject(i);
-
-            String dateCreatedStr = row.getString("date_created");
-            Date dateCreated = null;
-            if (dateCreatedStr != null && !"null".equalsIgnoreCase(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
-
-            //order = new Order(row.getLong("id"));
-            Double totalPrice = row.getDouble("total_price");
-            order = new Order(row.getLong("id"), row.getLong("client_id"), row.getLong("vendor_id"), dateCreated, row.getString("status"), totalPrice, row.getString("currency"));
-            order.setStatus(row.getString("status"));
-
-            ordersSearchResult.addOrder(order);
+            orderWrapper = OrderWrapper.fromJson(resultJSON.getJSONObject(i));
+            ordersSearchResult.addOrder(orderWrapper);
         }
         return ordersSearchResult;
     }

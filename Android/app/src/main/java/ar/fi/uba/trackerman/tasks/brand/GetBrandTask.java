@@ -1,13 +1,10 @@
 package ar.fi.uba.trackerman.tasks.brand;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Brand;
-import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 /**

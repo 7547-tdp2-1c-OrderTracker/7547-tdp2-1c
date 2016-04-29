@@ -14,11 +14,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
 /**
  * Created by plucadei on 10/4/16.

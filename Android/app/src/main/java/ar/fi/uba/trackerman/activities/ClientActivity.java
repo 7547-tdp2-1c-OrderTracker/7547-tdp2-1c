@@ -23,13 +23,13 @@ import ar.fi.uba.trackerman.tasks.client.GetClientTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isValidPhone;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isValidMail;
-
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidMail;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidPhone;
 
 public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 

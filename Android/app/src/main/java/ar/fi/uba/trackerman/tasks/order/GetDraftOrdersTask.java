@@ -21,11 +21,11 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<Order>,Get
     }
 
     public List<Order> getDraftOrders(String vendorId) {
-        return (List<Order>) restClient.get("/v1/orders?status=draft&vendor_id="+vendorId);
+        return (List<Order>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId);
     }
 
     public List<Order> getDraftOrders(String vendorId, String clientId) {
-        return (List<Order>) restClient.get("/v1/orders?status=draft&vendor_id="+vendorId+"&client_id="+clientId);
+        return (List<Order>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId+"&client_id="+clientId);
     }
 
     @Override

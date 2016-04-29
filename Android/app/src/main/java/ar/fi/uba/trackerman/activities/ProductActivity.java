@@ -1,13 +1,13 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.DialogInterface;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.squareup.picasso.Picasso;
 
@@ -27,14 +26,14 @@ import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
-import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
+import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
-
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
 
 public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation, PostOrderItemsTask.OrderItemCreator {
@@ -131,7 +130,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
                                     showSnackbarSimpleMessage("No hay un pedido asociado!");
                                 }
                             } else {
-                                showSnackbarSimpleMessage("Lo siento! disponemos de " + quantity + " unidades");
+                                showSnackbarSimpleMessage("Lo siento! "+ ((quantity>0)? "disponemos de " + quantity + " unidades." : "no disponemos de unidades."));
                             }
                         } else {
                             showSnackbarSimpleMessage("El valor es inválido!");
@@ -208,6 +207,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     @Override
     public View getCurrentView() {
-        return this.getCurrentFocus();
+        return this.getWindow().getDecorView();
     }
 }

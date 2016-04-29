@@ -1,22 +1,11 @@
 package ar.fi.uba.trackerman.tasks.product;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
-import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 

@@ -6,7 +6,7 @@ import java.util.List;
 public class OrdersSearchResult {
     long offset;
     long total;
-    List<Order> orders;
+    List<OrderWrapper> orders;
 
     public OrdersSearchResult(){
         offset=0;
@@ -14,7 +14,7 @@ public class OrdersSearchResult {
         orders= new ArrayList<>();
     }
 
-    public void addOrder(Order order){
+    public void addOrder(OrderWrapper order){
         orders.add(order);
     }
 
@@ -34,7 +34,7 @@ public class OrdersSearchResult {
         return offset;
     }
 
-    public List<Order> getOrders() {
+    public List<OrderWrapper> getOrders() {
         return orders;
     }
 }

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.exceptions.ApiCallException;
+import ar.fi.uba.trackerman.exceptions.ErrorMatcher;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.utils.AppSettings;
 
@@ -91,7 +92,7 @@ public class RestClient {
             //reading the response
             responseStatus = urlConnection.getResponseCode();
             errorMsg = urlConnection.getResponseMessage();
-            isError = responseStatus >= HttpURLConnection.HTTP_INTERNAL_ERROR;
+            isError = responseStatus >= HttpURLConnection.HTTP_BAD_REQUEST;
             if (isError) {
                 inputStream = urlConnection.getErrorStream();
             } else {
@@ -141,17 +142,19 @@ public class RestClient {
 
     private void readErrorResponse(String json) throws ServerErrorException {
         String errorKey = "";
+        String errorValue = "";
+        Integer status = null;
         try {
-            JSONObject error = new JSONObject(json);
-            errorKey = error.getString("error");
-
-            //tiro exception de regla de negocio
-            //FIXME smpiano cambiar lalalala por value
-            throw ErrorMatcher.valueOf(errorKey).getThrowable("lalalala");
+            JSONObject errorObj = new JSONObject(json);
+            JSONObject error = errorObj.getJSONObject("error");
+            status = errorObj.getInt("status");
+            errorKey = error.getString("key");
+            errorValue = error.getString("value");
+            throw ErrorMatcher.valueOf(errorKey).getThrowable(errorValue,status);
         } catch (JSONException e) {
             throw new ServerErrorException("Error parseando server errorJson",e);
         } catch (IllegalArgumentException e) {
-            throw new ServerErrorException("Falta agregar "+errorKey+" en clase ErrorMatcher",e);
+            throw ErrorMatcher.DEFAULT_ERROR.getThrowable(errorValue, status);
         }
     }
 

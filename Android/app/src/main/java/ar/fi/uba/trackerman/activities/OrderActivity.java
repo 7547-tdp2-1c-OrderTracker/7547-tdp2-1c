@@ -3,12 +3,11 @@ package ar.fi.uba.trackerman.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -29,19 +28,19 @@ import java.util.Date;
 import ar.fi.uba.trackerman.adapters.OrderItemsListAdapter;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.tasks.order.CancellOrderTask;
 import ar.fi.uba.trackerman.tasks.order.ConfirmOrderTask;
 import ar.fi.uba.trackerman.tasks.order.EmptyOrderTask;
 import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
-
-import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
-
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.OrderStatus;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
 public class OrderActivity extends AppCompatActivity implements GetOrderTask.OrderReceiver, CancellOrderTask.OrderCanceller, ConfirmOrderTask.OrderConfirmer, RemoveOrderItemTask.OrderItemRemover, UpdateOrderItemTask.OrderItemModifier{
 
@@ -126,26 +125,26 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     }
 
     @Override
-    public void updateOrderInformation(Order order) {
-        this.currentOrder = order;
+    public void updateOrderInformation(OrderWrapper orderWrapper) {
+        this.currentOrder = orderWrapper.getOrder();
 
         MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_client_id), currentOrder.getClientId());
 
         ListView orderItems= (ListView)findViewById(R.id.order_items_list);
-        orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, order.getOrderItems()));
+        orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, currentOrder.getOrderItems()));
 
         Button btn = (Button) findViewById(R.id.activity_order_confirm);
-        btn.setText("Total: "+ order.getCurrency() +" "+ order.getTotalPrice() +"\n\n Confirmar Pedido");
+        btn.setText("Total: "+ currentOrder.getCurrency() +" "+ currentOrder.getTotalPrice() +"\n\n Confirmar Pedido");
 
 
-        Date fecha = order.getDateCreated();
-        ((TextView) findViewById(R.id.order_detail_client_name)).setText(""); //TODO: completar aca con el nombre del cliente
-        ((TextView) findViewById(R.id.order_detail_order_total_price)).setText(isContentValid(order.getCurrency() +" "+ Double.toString(order.getTotalPrice())));
-        ((TextView) findViewById(R.id.order_detail_order_status)).setText(isContentValid(order.getStatusSpanish()));
-        ((TextView) findViewById(R.id.order_detail_order_status)).setTextColor(Color.parseColor(order.getColor(order.getStatus())));
+        Date fecha = currentOrder.getDateCreated();
+        ((TextView) findViewById(R.id.order_detail_client_name)).setText(isContentValid(orderWrapper.getClient().getFullName()));
+        ((TextView) findViewById(R.id.order_detail_order_total_price)).setText(isContentValid(currentOrder.getCurrency() +" "+ Double.toString(currentOrder.getTotalPrice())));
+        ((TextView) findViewById(R.id.order_detail_order_status)).setText(isContentValid(currentOrder.getStatusSpanish()));
+        ((TextView) findViewById(R.id.order_detail_order_status)).setTextColor(Color.parseColor(currentOrder.getColor(currentOrder.getStatus())));
 
-        ((TextView) findViewById(R.id.order_detail_order_id)).setText("# "+ isContentValid(Long.toString(order.getId())));
+        ((TextView) findViewById(R.id.order_detail_order_id)).setText("# " + isContentValid(Long.toString(currentOrder.getId())));
         ((TextView) findViewById(R.id.order_detail_date)).setText(android.text.format.DateFormat.format("yyyy-MM-dd", fecha));
         ((TextView) findViewById(R.id.order_detail_time)).setText(android.text.format.DateFormat.format("hh:mm", fecha));
     }

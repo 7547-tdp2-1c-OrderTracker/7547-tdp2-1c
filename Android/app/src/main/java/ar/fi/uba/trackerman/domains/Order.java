@@ -20,18 +20,19 @@ public class Order {
 
     private long id;
     private long clientId;
-    private long vendorId;
+    private long sellerId;
     private Date deliveryDate;
     private Date dateCreated;
+    private Date lastModified;
     private String status;
     private double totalPrice;
     private String currency;
     private List<OrderItem> orderItems;
 
-    public Order(long id, long clientId, long vendorId, Date dateCreated, String status, double totalPrice, String currency){
+    public Order(long id, long clientId, long sellerId, Date dateCreated, String status, double totalPrice, String currency){
         this.id=id;
         this.clientId= clientId;
-        this.vendorId= vendorId;
+        this.sellerId = sellerId;
         this.dateCreated = dateCreated;
         this.status= status;
         this.totalPrice= totalPrice;
@@ -55,12 +56,12 @@ public class Order {
         this.clientId = clientId;
     }
 
-    public long getVendorId() {
-        return vendorId;
+    public long getSellerId() {
+        return sellerId;
     }
 
-    public void setVendorId(long vendorId) {
-        this.vendorId = vendorId;
+    public void setSellerId(long sellerId) {
+        this.sellerId = sellerId;
     }
 
     public Date getDeliveryDate() {
@@ -77,6 +78,14 @@ public class Order {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
     public String getStatus() {
@@ -141,7 +150,7 @@ public class Order {
         Order order = null;
         try {
             long id = json.getLong("id");
-            long vendorId = json.getLong("vendor_id");
+            long vendorId = json.getLong("seller_id");
             long clientId = json.getLong("client_id");
             String dateCreatedStr = json.getString("date_created");
             Date dateCreated = null;
@@ -155,6 +164,11 @@ public class Order {
             Date deliveryDate = null;
             if (deliveryDateStr != null && !"null".equalsIgnoreCase(deliveryDateStr)) deliveryDate = DateUtils.parseDate(deliveryDateStr);
             order.setDeliveryDate(deliveryDate);
+
+            String lastModifiedStr = json.getString("last_modified");
+            Date lastModified = null;
+            if (FieldValidator.isValid(lastModifiedStr)) lastModified = DateUtils.parseDate(lastModifiedStr);
+            order.setLastModified(lastModified);
 
             if (json.toString().contains("order_items")) {
                 JSONArray itemsJson = json.getJSONArray("order_items");

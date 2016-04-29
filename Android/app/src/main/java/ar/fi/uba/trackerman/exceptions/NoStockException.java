@@ -9,7 +9,7 @@ public class NoStockException extends BusinessException {
         super("No hay stock", e);
     }
 
-    public NoStockException(String msg) {
-        super("No hay stock - " + msg);
+    public NoStockException(String msg, Integer status) {
+        super("No hay stock [status:"+status+"] - " + msg);
     }
 }
