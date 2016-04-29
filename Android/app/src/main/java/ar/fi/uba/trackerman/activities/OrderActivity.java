@@ -170,15 +170,32 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.action_cancel) {
-            CancellOrderTask task= new CancellOrderTask(this);
-            task.execute(Long.toString(this.orderId));
-        }
-        if(item.getItemId()==R.id.action_empty) {
-            EmptyOrderTask task= new EmptyOrderTask(this);
-            task.execute(Long.toString(this.orderId));
-        }
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        if(item.getItemId()==R.id.action_cancel) {
+                            CancellOrderTask task= new CancellOrderTask(OrderActivity.this);
+                            task.execute(Long.toString(OrderActivity.this.orderId));
+                        }
+                        if(item.getItemId()==R.id.action_empty) {
+                            EmptyOrderTask task= new EmptyOrderTask(OrderActivity.this);
+                            task.execute(Long.toString(OrderActivity.this.orderId));
+                        }
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Estás seguro?").setPositiveButton("Si", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
         return false;
     }
 
