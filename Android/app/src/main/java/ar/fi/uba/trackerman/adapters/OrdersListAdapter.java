@@ -98,7 +98,7 @@ public class OrdersListAdapter extends ArrayAdapter<Order> implements GetClientL
         Date fecha = order.getDateCreated();
 
         holder.clientName.setText(isContentValid(this.allClients.get(order.getClientId()).getFullName()));
-        holder.orderTotalPrice.setText(isContentValid(Double.toString(order.getTotalPrice())));
+        holder.orderTotalPrice.setText(isContentValid(order.getCurrency() +" "+ Double.toString(order.getTotalPrice())));
         holder.status.setText(isContentValid(order.getStatusSpanish()));
         holder.status.setTextColor(Color.parseColor(order.getColor(order.getStatus())));
 

@@ -66,8 +66,21 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_client_id), clientId);
 
+        this.startCleanUpUI();
+
         //Preguntamos por las ordenes
         new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getVendorId()), String.valueOf(clientId) );
+    }
+
+    private void startCleanUpUI() {
+        ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle("");
+
+        ((TextView)findViewById(R.id.client_detail_id)).setText("");
+        ((TextView)findViewById(R.id.client_detail_name)).setText("");
+        ((TextView)findViewById(R.id.client_detail_cuil)).setText("");
+        ((TextView) findViewById(R.id.client_detail_address)).setText("");
+        ((TextView) findViewById(R.id.client_detail_phone)).setText("");
+        ((TextView) findViewById(R.id.client_detail_email)).setText("");
     }
 
     public void showSnackbarSimpleMessage(String msg){

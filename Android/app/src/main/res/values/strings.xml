@@ -44,6 +44,9 @@
     <string name="precio_del_producto">Precio del producto</string>
     <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
 
+    <string name="codigo_del_pedido">Código del pedido</string>
+    <string name="estado_del_pedido">Estado del pedido</string>
+
     <string name="pedido_activo">No hay pedido en curso</string>
 
     <string name="estados_confirmadas">Confirmadas</string>

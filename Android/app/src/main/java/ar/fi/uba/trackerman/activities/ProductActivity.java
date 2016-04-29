@@ -72,8 +72,23 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
             fab.show();
         }
 
+        this.startCleanUpUI();
+
         //Preguntamos por las ordenes
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
+    }
+
+
+    private void startCleanUpUI() {
+        ((CollapsingToolbarLayout) findViewById(R.id.product_detail_collapsing_toolbar)).setTitle("");
+
+        ((TextView) findViewById(R.id.product_detail_id)).setText("");
+        ((TextView) findViewById(R.id.product_detail_name)).setText("");
+        ((TextView) findViewById(R.id.product_detail_brand)).setText("");
+        ((TextView) findViewById(R.id.product_detail_stock)).setText("");
+        ((TextView) findViewById(R.id.product_detail_price1)).setText("");
+        ((TextView) findViewById(R.id.product_detail_price2)).setText("");
+        ((TextView)findViewById(R.id.product_detail_description)).setText("");
     }
 
     public void showSnackbarSimpleMessage(String msg){

@@ -52,8 +52,15 @@ public class MainActivity extends AppCompatActivity implements
         pref.save(getString(R.string.shared_pref_current_client_id), -1L);
 
         setupNavigationDrawerContent(navigationView);
+
+        this.startCleanUpUI();
+
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getVendorId());
         new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
+    }
+
+    private void startCleanUpUI() {
+        ((TextView)findViewById(R.id.dashboard_draft_orders)).setText("");
     }
 
     public void openDetailOrder(View view) {
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void setDraftOrders(List<Order> orders) {
-        TextView message = (TextView) findViewById(R.id.client_detail_address);
+        TextView message = (TextView) findViewById(R.id.dashboard_draft_orders);
         if (orders.size() > 0) {
             if (orders.size() == 1) message.setText("Tienes un pedido activo!");
             else message.setText("Tienes "+ orders.size() +" pedidos activos!");

@@ -52,6 +52,7 @@ public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {
         holder.name.setText(isContentValid(orderItem.getName()));
         holder.brand.setText(isContentValid(orderItem.getBrandName()));
         holder.quantity.setText(isContentValid(Integer.toString(orderItem.getQuantity())));
+//        holder.price.setText(isContentValid(orderItem.getCurrency() +" "+ Double.toString(orderItem.getUnitPrice())));
         holder.price.setText(isContentValid(Double.toString(orderItem.getUnitPrice())));
 
         holder.total.setText(isContentValid(Double.toString(orderItem.getTotalPrice())));
