@@ -8,6 +8,8 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivity> {
@@ -23,7 +25,13 @@ public class PostOrdersTask extends AbstractTask<String,Void,Order,ClientActivit
         String body = "{\"client_id\": "+clientId+",\"seller_id\":"+vendorId+"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
-        return (Order) restClient.post("/v1/orders", body, headers);
+        Order order = null;
+        try {
+            order = (Order) restClient.post("/v1/orders", body, headers);
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
+        return order;
     }
 
     @Override

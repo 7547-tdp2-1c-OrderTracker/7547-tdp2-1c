@@ -9,6 +9,7 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -27,7 +28,13 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,Brands
 
     @Override
     protected List<Brand> doInBackground(Long... params) {
-        return (List<Brand>) restClient.get("/v1/brands?limit=999",null);
+        List<Brand> brands = null;
+        try{
+            brands = (List<Brand>) restClient.get("/v1/brands?limit=999");
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(), e.getMessage());
+        }
+        return brands;
     }
 
     @Override

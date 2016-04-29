@@ -10,10 +10,12 @@ import java.util.List;
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
-public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,GetClientListTask.ClientsListAggregator> {
+public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {
 
     private List<Client> clients;
 
@@ -34,8 +36,13 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
             urlString = "/v1/clients?limit=1000";
         }
 
-        ClientSearchResult clientSearchResult = (ClientSearchResult) restClient.get(urlString,null);
-        //TODO testear caso particular, solo en la exception devuelve null
+        ClientSearchResult clientSearchResult = null;
+        try{
+            clientSearchResult = (ClientSearchResult) restClient.get(urlString);
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+        }
+
         if (clientSearchResult==null) clientSearchResult = new ClientSearchResult();
         return clientSearchResult;
     }

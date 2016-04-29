@@ -5,7 +5,9 @@ import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by plucadei on 31/3/16.
@@ -19,7 +21,13 @@ public class GetOrderTask extends AbstractTask<String,Void,OrderWrapper,OrderAct
     @Override
     protected OrderWrapper doInBackground(String... params) {
         String orderId= params[0];
-        return (OrderWrapper) restClient.get("/v1/orders/"+orderId);
+        OrderWrapper orderWrapper = null;
+        try {
+            orderWrapper = (OrderWrapper) restClient.get("/v1/orders/"+orderId);
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
+        return orderWrapper;
     }
 
     @Override

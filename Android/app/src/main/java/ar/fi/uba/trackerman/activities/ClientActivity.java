@@ -19,6 +19,7 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.tasks.client.GetClientTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
@@ -34,7 +35,7 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.isValidPhone;
 public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
 
     private long clientId;
-    private List<Order> draftOrders;
+    private List<OrderWrapper> draftOrders;
 
     public ClientActivity(){
         super();
@@ -147,7 +148,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     }
 
     @Override
-    public void setDraftOrders(List<Order> orders) {
+    public void setDraftOrders(List<OrderWrapper> orders) {
         this.draftOrders = orders;
     }
 

@@ -149,15 +149,14 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         ((TextView) findViewById(R.id.order_detail_time)).setText(android.text.format.DateFormat.format("hh:mm", fecha));
     }
 
-    public void afterOrderCancelled(Order order) {
+    public void afterOrderCancelled(OrderWrapper orderWrapper) {
+        Toast.makeText(getApplicationContext(), "El pedido se ha cancelado", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MyClientsActivity.class);
         startActivity(intent);
     }
 
-    public void afterOrderConfirmed(Order order) {
+    public void afterOrderConfirmed(OrderWrapper orderWrapper) {
         Toast.makeText(getApplicationContext(), "Su pedido ha sido confirmado", Toast.LENGTH_LONG).show();
-        // showSnackbarSimpleMessage("Su pedido ha sido confirmado");
-        try {Thread.sleep(2500);} catch (Exception e) { }
         Intent intent = new Intent(this, MyOrdersActivity.class);
         startActivity(intent);
     }

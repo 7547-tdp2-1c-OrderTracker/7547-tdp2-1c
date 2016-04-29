@@ -6,10 +6,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import ar.fi.uba.trackerman.adapters.OrdersListAdapter;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
 public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult,OrdersListAdapter> {
@@ -27,9 +31,13 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
             urlString += "&offset="+offset.toString();
         }
 
-        OrdersSearchResult ordersSearchResult = (OrdersSearchResult) restClient.get(urlString,null);
-        //TODO testear caso particular, solo en la exception devuelve null
-        if (ordersSearchResult==null) ordersSearchResult = new OrdersSearchResult();
+        OrdersSearchResult ordersSearchResult = null;
+        try {
+            ordersSearchResult = (OrdersSearchResult) restClient.get(urlString);
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+            ordersSearchResult = new OrdersSearchResult();
+        }
         return ordersSearchResult;
     }
 

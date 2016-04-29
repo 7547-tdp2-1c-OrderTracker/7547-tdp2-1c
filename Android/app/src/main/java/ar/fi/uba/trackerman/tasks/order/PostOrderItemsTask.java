@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
@@ -39,6 +40,8 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
             return this.createOrderItem(params[0], params[1], params[2]);
         } catch (NoStockException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Nos quedamos sin stock!");
+        } catch (BusinessException e) {
+            ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(),e.getMessage());
         }
         return null;
     }

@@ -8,7 +8,9 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by plucadei on 31/3/16.
@@ -24,7 +26,13 @@ public class EmptyOrderTask extends AbstractTask<String,Void,OrderWrapper,OrderA
         String orderId = params[0];
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
-        return (OrderWrapper) restClient.put("/v1/orders/"+orderId+"/empty",null,headers);
+        OrderWrapper orderWrapper = null;
+        try{
+            orderWrapper = (OrderWrapper) restClient.put("/v1/orders/"+orderId+"/empty",null,headers);
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
+        return orderWrapper;
     }
 
     @Override

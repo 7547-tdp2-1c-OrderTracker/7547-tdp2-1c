@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
@@ -32,6 +33,8 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderAc
             resp = (String) restClient.put(url,body,headers);
         } catch (NoStockException e) {
             weakReference.get().showSnackbarSimpleMessage("No tenemos stock del producto!");
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         }
         return resp;
     }

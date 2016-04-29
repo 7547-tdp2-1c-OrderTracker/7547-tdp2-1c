@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
@@ -26,8 +27,10 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
         String resp = null;
         String url = "/v1/orders/" + orderId + "/order_items/" + itemId;
         try {
-            resp = (String) restClient.delete(url, null,headers);
+            resp = (String) restClient.delete(url, null, headers);
             if (resp == null) resp = "OK";
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         } catch (ServerErrorException e) {
             resp = "FAIL";
         }
@@ -41,7 +44,7 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected void onPostExecute(String result) {
-        Log.e(this.getClass().getCanonicalName(),"el resultado "+ result);
+        Log.d(this.getClass().getCanonicalName(),"el resultado "+ result);
         OrderItemRemover modifier= weakReference.get();
         if(modifier!=null){
             modifier.updateOrderItem(result);

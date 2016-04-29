@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.domains.Brand;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 /**
@@ -19,7 +20,13 @@ public class GetBrandTask extends AbstractTask<String,Void,Brand,ProductActivity
     @Override
     protected Brand doInBackground(String... params) {
         String brandId= params[0];
-        return (Brand) restClient.get("/v1/brands/"+brandId);
+        Brand brand = null;
+        try {
+            brand = (Brand) restClient.get("/v1/brands/"+brandId);
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
+        return brand;
     }
 
     @Override

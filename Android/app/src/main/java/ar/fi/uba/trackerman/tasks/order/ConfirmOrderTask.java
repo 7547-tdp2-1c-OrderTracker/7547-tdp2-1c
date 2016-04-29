@@ -10,44 +10,53 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 /**
  * Created by plucadei on 31/3/16.
  */
-public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivity> {
+public class ConfirmOrderTask extends AbstractTask<String,Void,OrderWrapper,OrderActivity> {
 
     public ConfirmOrderTask(OrderActivity activity) {
         super(activity);
     }
 
     @Override
-    protected Order doInBackground(String... params) {
+    protected OrderWrapper doInBackground(String... params) {
         String orderId= params[0];
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/orders/"+orderId;
         String body = "{\"status\": \"confirmed\"}";
-        return (Order) restClient.put(url,body,headers);
+
+        OrderWrapper orderWrapper = null;
+        try {
+            orderWrapper = (OrderWrapper) restClient.put(url,body,headers);
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
+        return orderWrapper;
     }
 
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject orderJson = new JSONObject(json);
-        return Order.fromJson(orderJson);
+        return OrderWrapper.fromJson(orderJson);
     }
 
     @Override
-    protected void onPostExecute(Order order) {
+    protected void onPostExecute(OrderWrapper orderWrapper) {
         OrderConfirmer reciver= weakReference.get();
         if(reciver!=null){
-            reciver.afterOrderConfirmed(order);
+            reciver.afterOrderConfirmed(orderWrapper);
         }else{
             Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
         }
     }
 
     public interface OrderConfirmer {
-        public void afterOrderConfirmed(Order order);
+        public void afterOrderConfirmed(OrderWrapper orderWrapper);
     }
 }

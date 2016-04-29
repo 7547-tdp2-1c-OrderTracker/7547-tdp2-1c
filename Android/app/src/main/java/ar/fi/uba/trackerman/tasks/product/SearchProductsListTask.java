@@ -6,8 +6,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
+import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearchResult,ProductsListAdapter> {
 
@@ -25,11 +28,17 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
         if(offset != null){
             urlString += "&offset="+offset.toString();
         }
-        if(brandFilter!=null){
-            urlString+="&brand_id="+brandFilter;
+        if(brandFilter!=null) {
+            urlString += "&brand_id=" + brandFilter;
         }
-        ProductsSearchResult productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
-        if (productsSearchResult == null) productsSearchResult = new ProductsSearchResult();
+
+        ProductsSearchResult productsSearchResult = null;
+        try{
+            productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+            if (productsSearchResult == null) productsSearchResult = new ProductsSearchResult();
+        }
         return productsSearchResult;
     }
 

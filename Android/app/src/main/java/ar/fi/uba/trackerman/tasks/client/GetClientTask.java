@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.activities.ClientActivity;
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
@@ -20,7 +21,13 @@ public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivit
     @Override
     protected Client doInBackground(String... params) {
         String clientId = params[0];
-        return (Client) restClient.get("/v1/clients/"+clientId);
+        Client client = null;
+        try {
+            client = (Client) restClient.get("/v1/clients/"+clientId);
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
+        return client;
     }
 
     @Override

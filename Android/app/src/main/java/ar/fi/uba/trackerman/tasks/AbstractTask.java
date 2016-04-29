@@ -9,7 +9,7 @@ import ar.fi.uba.trackerman.server.RestClient;
 /**
  * Created by smpiano on 17/04/16.
  */
-public abstract class AbstractTask<Params,Progress,Return,Reference> extends AsyncTask<Params,Process,Return>  implements RestClient.ResponseParse {
+public abstract class AbstractTask<Params,Process,Return,Reference> extends AsyncTask<Params,Process,Return>  implements RestClient.ResponseParse {
 
     protected final RestClient restClient;
 
