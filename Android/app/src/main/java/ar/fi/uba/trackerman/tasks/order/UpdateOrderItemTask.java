@@ -46,12 +46,7 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected void onPostExecute(String result) {
-        OrderItemModifier modifier= weakReference.get();
-        if(modifier!=null){
-            modifier.afterUpdateOrderItem(result);
-        }else{
-            Log.e(this.getClass().getCanonicalName(), "Adapter no longer available!");
-        }
+        weakReference.get().afterUpdateOrderItem(result);
     }
 
     public interface OrderItemModifier {

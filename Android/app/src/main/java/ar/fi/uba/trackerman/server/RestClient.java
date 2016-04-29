@@ -86,6 +86,9 @@ public class RestClient {
                 throw new ApiCallException(url.getPath());
             }
 
+            //debug
+            Log.d("rest_client","[curl -X" + method + " '" + AppSettings.getServerHost() + url.getPath() + "' " + getBody(body) + getHeaders(headers) + "]");
+
             //makes the connection
             urlConnection.connect();
 
@@ -156,6 +159,25 @@ public class RestClient {
         } catch (IllegalArgumentException e) {
             throw ErrorMatcher.DEFAULT_ERROR.getThrowable(errorValue, status);
         }
+    }
+
+    private static String getHeaders(Map<String, String> headers) {
+        String headersStr="";
+        if (headers != null){
+            headersStr = "-H '";
+            for(String k : headers.keySet()){
+                headersStr+=k+":"+headers.get(k);
+            }
+            headersStr += "' ";
+        }
+        return headersStr;
+    }
+    private static String getBody(String body){
+        String bodyStr = "";
+        if (body != null) {
+            bodyStr = "-d '" + body + "' ";
+        }
+        return bodyStr;
     }
 
     public interface ResponseParse {

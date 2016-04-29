@@ -44,12 +44,11 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected void onPostExecute(String result) {
-        Log.d(this.getClass().getCanonicalName(),"el resultado "+ result);
-        OrderItemRemover modifier= weakReference.get();
-        if(modifier!=null){
-            modifier.updateOrderItem(result);
+        Log.d(this.getClass().getCanonicalName(), "el resultado " + result);
+        if(result!=null){
+            weakReference.get().updateOrderItem(result);
         }else{
-            Log.e(this.getClass().getCanonicalName(), "Adapter no longer available!");
+            weakReference.get().showSnackbarSimpleMessage("No se pudo quitar el item del pedido!");
         }
     }
 

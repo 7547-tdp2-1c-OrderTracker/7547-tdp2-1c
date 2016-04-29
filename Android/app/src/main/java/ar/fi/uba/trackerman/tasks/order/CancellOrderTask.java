@@ -17,45 +17,44 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
 /**
  * Created by plucadei on 31/3/16.
  */
-public class CancellOrderTask extends AbstractTask<String,Void,OrderWrapper,OrderActivity> {
+public class CancellOrderTask extends AbstractTask<String,Void,Order,OrderActivity> {
 
     public CancellOrderTask(OrderActivity activity) {
         super(activity);
     }
 
     @Override
-    protected OrderWrapper doInBackground(String... params) {
+    protected Order doInBackground(String... params) {
         String orderId= params[0];
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/orders/"+orderId;
         String body = "{\"status\": \"cancelled\"}";
-        OrderWrapper orderWrapper = null;
+        Order order = null;
         try {
-            orderWrapper = (OrderWrapper) restClient.put(url,body,headers);
+            order = (Order) restClient.put(url,body,headers);
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         }
-        return orderWrapper;
+        return order;
     }
 
     @Override
     public Object readResponse(String json) throws JSONException {
         JSONObject orderJson = new JSONObject(json);
-        return OrderWrapper.fromJson(orderJson);
+        return Order.fromJson(orderJson);
     }
 
     @Override
-    protected void onPostExecute(OrderWrapper orderWrapper) {
-        OrderCanceller reciver = weakReference.get();
-        if(reciver != null){
-            reciver.afterOrderCancelled(orderWrapper);
+    protected void onPostExecute(Order order) {
+        if(order != null){
+            weakReference.get().afterOrderCancelled(order);
         }else{
-            Log.w(this.getClass().getCanonicalName(), "Adapter no longer available!");
+            weakReference.get().showSnackbarSimpleMessage("No se pudo cancelar el pedido.");
         }
     }
 
     public interface OrderCanceller{
-        public void afterOrderCancelled(OrderWrapper orderWrapper);
+        public void afterOrderCancelled(Order order);
     }
 }

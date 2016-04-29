@@ -36,7 +36,6 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
             ordersSearchResult = (OrdersSearchResult) restClient.get(urlString);
         } catch (BusinessException e) {
             ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
-            ordersSearchResult = new OrdersSearchResult();
         }
         return ordersSearchResult;
     }
@@ -59,11 +58,6 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
 
     @Override
     protected void onPostExecute(OrdersSearchResult ordersSearchResult) {
-        OrdersListAdapter ordersListAdapter= weakReference.get();
-        if(ordersListAdapter!=null){
-            ordersListAdapter.addOrders(ordersSearchResult);
-        }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
-        }
+        weakReference.get().addOrders((ordersSearchResult != null) ? ordersSearchResult : new OrdersSearchResult());
     }
 }

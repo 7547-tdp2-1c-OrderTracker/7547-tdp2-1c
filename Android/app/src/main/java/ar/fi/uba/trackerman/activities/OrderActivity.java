@@ -149,13 +149,13 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         ((TextView) findViewById(R.id.order_detail_time)).setText(android.text.format.DateFormat.format("hh:mm", fecha));
     }
 
-    public void afterOrderCancelled(OrderWrapper orderWrapper) {
+    public void afterOrderCancelled(Order order) {
         Toast.makeText(getApplicationContext(), "El pedido se ha cancelado", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MyClientsActivity.class);
         startActivity(intent);
     }
 
-    public void afterOrderConfirmed(OrderWrapper orderWrapper) {
+    public void afterOrderConfirmed(Order order) {
         Toast.makeText(getApplicationContext(), "Su pedido ha sido confirmado", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MyOrdersActivity.class);
         startActivity(intent);
@@ -224,9 +224,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     }
 
     public void afterUpdateOrderItem(String result){
-        if("FAIL".equals(result)){
-            showSnackbarSimpleMessage("Fallo al modificar la cantidad.");
-        }else{
+        if("OK".equals(result)){
             showSnackbarSimpleMessage("Cantidad modificada.");
             GetOrderTask task= new GetOrderTask(activity);
             task.execute(Long.toString(orderId));
@@ -235,9 +233,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
     @Override
     public void updateOrderItem(String result) {
-        if("FAIL".equals(result)){
-            showSnackbarSimpleMessage("Fallo al eliminar el producto.");
-        }else {
+        if("OK".equals(result)){
             showSnackbarSimpleMessage("Producto eliminado.");
             GetOrderTask task = new GetOrderTask(activity);
             task.execute(Long.toString(orderId));

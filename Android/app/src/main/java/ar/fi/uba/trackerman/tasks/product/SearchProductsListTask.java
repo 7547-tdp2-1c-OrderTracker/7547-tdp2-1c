@@ -37,7 +37,6 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
             productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
         } catch (BusinessException e) {
             ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
-            if (productsSearchResult == null) productsSearchResult = new ProductsSearchResult();
         }
         return productsSearchResult;
     }
@@ -50,11 +49,6 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
 
     @Override
     protected void onPostExecute(ProductsSearchResult productsSearchResult) {
-        ProductsListAdapter productsListAdapter= weakReference.get();
-        if(productsListAdapter!=null){
-            productsListAdapter.addProducts(productsSearchResult);
-        }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
-        }
+        weakReference.get().addProducts((productsSearchResult!=null)?productsSearchResult:new ProductsSearchResult());
     }
 }

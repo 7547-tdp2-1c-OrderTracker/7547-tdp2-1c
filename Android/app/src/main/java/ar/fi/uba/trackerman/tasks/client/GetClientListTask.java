@@ -42,8 +42,6 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
         } catch (BusinessException e) {
             ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
         }
-
-        if (clientSearchResult==null) clientSearchResult = new ClientSearchResult();
         return clientSearchResult;
     }
 
@@ -55,12 +53,7 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
 
     @Override
     protected void onPostExecute(ClientSearchResult clientSearchResult) {
-        ClientsListAggregator clientListAggregator= weakReference.get();
-        if(clientListAggregator!=null){
-            clientListAggregator.addClients(clientSearchResult);
-        }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
-        }
+        weakReference.get().addClients((clientSearchResult!=null)?clientSearchResult:new ClientSearchResult());
     }
 
     public interface ClientsListAggregator {
