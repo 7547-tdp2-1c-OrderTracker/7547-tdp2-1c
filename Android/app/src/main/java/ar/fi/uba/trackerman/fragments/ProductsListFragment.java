@@ -27,6 +27,7 @@ import ar.fi.uba.trackerman.activities.ProductActivity;
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
@@ -125,7 +126,7 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
                                 long orderId = (new MyPreferences(ProductsListFragment.this.getActivity())).get(getString(R.string.shared_pref_current_order_id), -1L);
 
                                 if (orderId >= 0) {
-                                    new PostOrderItemsTask(ProductsListFragment.this).execute(String.valueOf(orderId), String.valueOf(productId), String.valueOf(quantityRequested));
+                                    if (RestClient.isOnline(getContext())) new PostOrderItemsTask(ProductsListFragment.this).execute(String.valueOf(orderId), String.valueOf(productId), String.valueOf(quantityRequested));
                                 } else {
                                     ShowMessage.showSnackbarSimpleMessage(cl, "No hay un pedido asociado!");
                                 }

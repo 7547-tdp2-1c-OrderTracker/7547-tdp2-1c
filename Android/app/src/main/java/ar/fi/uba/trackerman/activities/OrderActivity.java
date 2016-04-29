@@ -29,6 +29,7 @@ import ar.fi.uba.trackerman.adapters.OrderItemsListAdapter;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.CancellOrderTask;
 import ar.fi.uba.trackerman.tasks.order.ConfirmOrderTask;
 import ar.fi.uba.trackerman.tasks.order.EmptyOrderTask;
@@ -64,8 +65,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
         Intent intent= getIntent();
         orderId= intent.getLongExtra(Intent.EXTRA_UID, 0);
-        GetOrderTask task = new GetOrderTask(this);
-        task.execute(Long.toString(orderId));
+        if (RestClient.isOnline(this)) new GetOrderTask(this).execute(Long.toString(orderId));
         activity= this;
 
         this.startCleanUpUI();
@@ -113,8 +113,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
         switch (item.getItemId()) {
             case R.id.remove_order_item:
-                RemoveOrderItemTask task= new RemoveOrderItemTask(this);
-                task.execute(Long.toString(orderId),Long.toString(itemId));
+                if (RestClient.isOnline(this)) new RemoveOrderItemTask(this).execute(Long.toString(orderId),Long.toString(itemId));
                 return true;
             case R.id.modify_item_quantity:
                 showQuantityDialog();
@@ -172,20 +171,17 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.action_cancel) {
-            CancellOrderTask task= new CancellOrderTask(this);
-            task.execute(Long.toString(this.orderId));
+            if (RestClient.isOnline(this)) new CancellOrderTask(this).execute(Long.toString(this.orderId));
         }
         if(item.getItemId()==R.id.action_empty) {
-            EmptyOrderTask task= new EmptyOrderTask(this);
-            task.execute(Long.toString(this.orderId));
+            if (RestClient.isOnline(this)) new EmptyOrderTask(this).execute(Long.toString(this.orderId));
         }
         return false;
     }
 
     public void confirmOrder(View view){
         if (currentOrder.getOrderItems().size() > 0) {
-            ConfirmOrderTask task = new ConfirmOrderTask(this);
-            task.execute(Long.toString(this.orderId));
+            if (RestClient.isOnline(this)) new ConfirmOrderTask(this).execute(Long.toString(this.orderId));
         } else {
             showSnackbarSimpleMessage("Pedido vacío, Agregue productos!");
         }
@@ -210,8 +206,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String editTextValue = edittext.getText().toString();
                         if (isValidQuantity(editTextValue)) {
-                            UpdateOrderItemTask task = new UpdateOrderItemTask(OrderActivity.this);
-                            task.execute(Long.toString(orderId),Long.toString(itemId),editTextValue);
+                            if (RestClient.isOnline(OrderActivity.this)) new UpdateOrderItemTask(OrderActivity.this).execute(Long.toString(orderId),Long.toString(itemId),editTextValue);
                         } else {
                             showSnackbarSimpleMessage("Valor inválido");
                         }
@@ -226,8 +221,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     public void afterUpdateOrderItem(String result){
         if("OK".equals(result)){
             showSnackbarSimpleMessage("Cantidad modificada.");
-            GetOrderTask task= new GetOrderTask(activity);
-            task.execute(Long.toString(orderId));
+            if (RestClient.isOnline(this)) new GetOrderTask(activity).execute(Long.toString(orderId));
         }
     }
 
@@ -235,8 +229,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     public void updateOrderItem(String result) {
         if("OK".equals(result)){
             showSnackbarSimpleMessage("Producto eliminado.");
-            GetOrderTask task = new GetOrderTask(activity);
-            task.execute(Long.toString(orderId));
+            if (RestClient.isOnline(this)) new GetOrderTask(activity).execute(Long.toString(orderId));
         }
     }
 

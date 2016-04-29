@@ -25,6 +25,7 @@ import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
@@ -58,7 +59,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
         Intent intent = getIntent();
         productId = intent.getLongExtra(Intent.EXTRA_UID, 0);
-        new GetProductTask(this).execute(Long.toString(productId));
+        if (RestClient.isOnline(this)) new GetProductTask(this).execute(Long.toString(productId));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -145,7 +146,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
 
     private void addingItemsToOrder(String orderId, String productId, String quantity) {
-        new PostOrderItemsTask(this).execute(orderId, productId, quantity);
+        if (RestClient.isOnline(this)) new PostOrderItemsTask(this).execute(orderId, productId, quantity);
     }
 
     @Override
@@ -170,7 +171,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_name)).setText(isContentValid(product.getName()));
 
         Long brandId = product.getBrandId();
-        new GetBrandTask(this).execute(String.valueOf(brandId));
+        if (RestClient.isOnline(this)) new GetBrandTask(this).execute(String.valueOf(brandId));
 
         ((TextView) findViewById(R.id.product_detail_brand)).setText(isContentValid(String.valueOf(brandId)));
         ((TextView) findViewById(R.id.product_detail_stock)).setText(isContentValid(Long.toString(product.getStock())));

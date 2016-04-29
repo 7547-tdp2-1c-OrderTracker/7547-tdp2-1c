@@ -1,5 +1,8 @@
 package ar.fi.uba.trackerman.server;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -19,6 +22,7 @@ import ar.fi.uba.trackerman.exceptions.ApiCallException;
 import ar.fi.uba.trackerman.exceptions.ErrorMatcher;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by smpiano on 4/19/16.
@@ -159,6 +163,20 @@ public class RestClient {
         } catch (IllegalArgumentException e) {
             throw ErrorMatcher.DEFAULT_ERROR.getThrowable(errorValue, status);
         }
+    }
+
+
+    // ------ COSAS BIZZARRAS MIAS
+    public static boolean isOnline(Context ctx) {
+        ConnectivityManager cm =
+                (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        boolean isOnline = netInfo != null && netInfo.isConnectedOrConnecting();
+        if (!isOnline) {
+            ShowMessage.toastMessage(ctx, "Estás desconectado!");
+        }
+        return isOnline;
+
     }
 
     private static String getHeaders(Map<String, String> headers) {

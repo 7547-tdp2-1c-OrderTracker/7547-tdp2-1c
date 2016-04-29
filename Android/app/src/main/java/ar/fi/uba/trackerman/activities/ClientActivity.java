@@ -20,6 +20,7 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
@@ -52,7 +53,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
 
         Intent intent= getIntent();
         clientId = intent.getLongExtra(Intent.EXTRA_UID, 0);
-        new GetClientTask(this).execute(Long.toString(clientId));
+        if (RestClient.isOnline(this)) new GetClientTask(this).execute(Long.toString(clientId));
 
         findViewById(R.id.client_detail_phone).setOnClickListener(this);
         findViewById(R.id.client_detail_phone_number_icon).setOnClickListener(this);
@@ -70,7 +71,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         this.startCleanUpUI();
 
         //Preguntamos por las ordenes
-        new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getSellerId()), String.valueOf(clientId) );
+        if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getSellerId()), String.valueOf(clientId) );
     }
 
     private void startCleanUpUI() {
@@ -100,7 +101,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
                 ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
             } else {
                 // si no hay orden, crear una nueva
-                new PostOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()), Long.toString(clientId));
+                if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()), Long.toString(clientId));
             }
         } else if((view.getId() == R.id.client_detail_phone || view.getId() == R.id.client_detail_phone_number_icon)
                 && isValidPhone(((TextView)findViewById(R.id.client_detail_phone)).getText())){

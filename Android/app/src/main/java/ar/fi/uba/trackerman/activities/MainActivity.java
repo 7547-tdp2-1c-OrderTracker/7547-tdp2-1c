@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
@@ -55,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements
 
         this.startCleanUpUI();
 
-        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
-        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId()+". Inter="+ RestClient.isOnline(this));
+
+        if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
     }
 
     private void startCleanUpUI() {
