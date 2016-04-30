@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
@@ -56,7 +58,14 @@ public class MainActivity extends AppCompatActivity implements
 
         this.startCleanUpUI();
 
-        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId()+". Inter="+ RestClient.isOnline(this));
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(this));
+        LocationService ls = new LocationService(this);
+        ls.config(new LocationService.MyLocation() {
+            @Override
+            public void processLocation(Location loc) {
+                ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(MainActivity.this) + ". POS lat=" + loc.getLatitude()+" lon=" + loc.getLongitude());
+            }
+        });
 
         if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
     }
