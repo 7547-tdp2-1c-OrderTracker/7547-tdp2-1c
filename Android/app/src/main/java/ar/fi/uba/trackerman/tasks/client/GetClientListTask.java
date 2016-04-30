@@ -15,7 +15,7 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
-public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {
+public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResult,ClientsListAdapter> {
 
     private List<Client> clients;
 
@@ -24,13 +24,15 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
     }
 
     @Override
-    protected ClientSearchResult doInBackground(Long... params) {
+    protected ClientSearchResult doInBackground(String... params) {
         String urlString = "";
         if (params.length > 0) {
-            urlString = "/v1/clients?limit=10";
-            Long offset = params[0];
+            String offset = params[0];
+            String lat = params[1];
+            String lon = params[2];
+            urlString = "/v1/clients?limit=10&lat="+lat+"&lon="+lon+"&order=distance";
             if (offset != null) {
-                urlString += "&offset=" + offset.toString();
+                urlString += "&offset=" + offset;
             }
         } else {
             urlString = "/v1/clients?limit=1000";

@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.adapters;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,11 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
+import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
+import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
@@ -46,12 +50,21 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            if (RestClient.isOnline(getContext())) new GetClientListTask(this).execute(offset);
+            if (RestClient.isOnline(getContext())) new GetClientListTask(ClientsListAdapter.this).execute(String.valueOf(offset));
+            LocationService ls = new LocationService(this.getContext());
+            ls.config(new LocationService.MyLocation() {
+                @Override
+                public void processLocation(Location loc) {
+                    if (RestClient.isOnline(getContext())) new GetClientListTask(ClientsListAdapter.this).execute(String.valueOf(offset),String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
+                }
+            });
+
         }
     }
 
     public void addClients(ClientSearchResult clientSearchResult) {
         if(clientSearchResult!=null) {
+            this.clear();
             this.addAll(clientSearchResult.getClients());
             this.offset = this.getCount();
             this.total = clientSearchResult.getTotal();
