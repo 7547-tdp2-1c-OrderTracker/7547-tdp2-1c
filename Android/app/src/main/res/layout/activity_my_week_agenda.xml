@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="ar.fi.uba.trackerman.activities.MyAgendaActivity">
+        tools:context="ar.fi.uba.trackerman.activities.MyWeekAgendaActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="ar.fi.uba.trackerman.activities.MyAgendaActivity">
+            tools:context="ar.fi.uba.trackerman.activities.MyWeekAgendaActivity">
 
             <TextView
                 android:id="@+id/textView"
@@ -44,7 +44,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="68dp"
-                android:text="Agenda del vendedor"
+                android:text="Agenda semanal del vendedor"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </RelativeLayout>
 

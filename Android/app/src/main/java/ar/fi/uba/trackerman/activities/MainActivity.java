@@ -99,8 +99,13 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    public void openMyAgendaActivity(View view) {
-        Intent intent = new Intent(this, MyAgendaActivity.class);
+    public void openMyDayAgendaActivity(View view) {
+        Intent intent = new Intent(this, MyDayAgendaActivity.class);
+        startActivity(intent);
+    }
+
+    public void openMyWeekAgendaActivity(View view) {
+        Intent intent = new Intent(this, MyWeekAgendaActivity.class);
         startActivity(intent);
     }
 
@@ -160,10 +165,15 @@ public class MainActivity extends AppCompatActivity implements
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyOrdersActivity(null);
                                 return true;
-                            case R.id.nav_calendar_day:
+                            case R.id.nav_day_agenda:
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                openMyAgendaActivity(null);
+                                openMyDayAgendaActivity(null);
+                                return true;
+                            case R.id.nav_week_agenda:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openMyWeekAgendaActivity(null);
                                 return true;
                             case R.id.nav_login:
                                 menuItem.setChecked(true);

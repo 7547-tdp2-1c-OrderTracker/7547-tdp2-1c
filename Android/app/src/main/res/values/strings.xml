@@ -8,6 +8,7 @@
     <string name="menu_products">Productos</string>
     <string name="menu_orders">Pedidos</string>
     <string name="menu_agenda_del_dia">Agenda del día</string>
+    <string name="menu_agenda_semanal">Agenda semanal</string>
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
