@@ -4,22 +4,13 @@ import android.util.Log;
 
 import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
-import ar.fi.uba.trackerman.domains.Order;
-
+import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 
 public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
 
@@ -37,8 +28,14 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderAc
         String body = "{\"quantity\": " + quantity + "}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
-        String resp = (String) restClient.put(url,body,headers);
-        if (resp == null) resp = "FAIL";
+        String resp = "FAIL";
+        try {
+            resp = (String) restClient.put(url,body,headers);
+        } catch (NoStockException e) {
+            weakReference.get().showSnackbarSimpleMessage("No tenemos stock del producto!");
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        }
         return resp;
     }
 
@@ -49,12 +46,7 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected void onPostExecute(String result) {
-        OrderItemModifier modifier= weakReference.get();
-        if(modifier!=null){
-            modifier.afterUpdateOrderItem(result);
-        }else{
-            Log.e(this.getClass().getCanonicalName(), "Adapter no longer available!");
-        }
+        weakReference.get().afterUpdateOrderItem(result);
     }
 
     public interface OrderItemModifier {

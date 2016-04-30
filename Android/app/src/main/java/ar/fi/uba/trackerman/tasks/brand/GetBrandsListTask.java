@@ -1,7 +1,5 @@
 package ar.fi.uba.trackerman.tasks.brand;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,14 +7,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
-public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,GetBrandsListTask.BrandsListAggregator> {
+public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,BrandsListAdapter> {
 
     private List<Brand> brands;
 
-    public GetBrandsListTask(BrandsListAggregator adapter) {
+    public GetBrandsListTask(BrandsListAdapter adapter) {
         super(adapter);
     }
 
@@ -27,7 +28,13 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,GetBra
 
     @Override
     protected List<Brand> doInBackground(Long... params) {
-        return (List<Brand>) restClient.get("/v1/brands?limit=999",null);
+        List<Brand> brands = null;
+        try{
+            brands = (List<Brand>) restClient.get("/v1/brands?limit=999");
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(), e.getMessage());
+        }
+        return brands;
     }
 
     @Override
@@ -43,11 +50,10 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,GetBra
 
     @Override
     protected void onPostExecute(List<Brand> brands) {
-        BrandsListAggregator aggregator = weakReference.get();
-        if(aggregator != null){
-            aggregator.addBrands(brands);
+        if(brands != null){
+            weakReference.get().addBrands(brands);
         }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
+            ShowMessage.toastMessage(weakReference.get().getContext(),"No se puede obtener Marcas.");
         }
     }
 

@@ -11,26 +11,21 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
-import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
 import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
-public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBrandsListTask.BrandsListAggregator {
+public class ProductsListAdapter extends ArrayAdapter<Product> {
 
     private long total;
     private long offset;
     private boolean fetching;
     private String brands; // utlizado para filtrar
-    private Map<Long, Brand> allBrands; // todas las marcas
 
     public ProductsListAdapter(Context context, int resource,
                                List<Product> products) {
@@ -38,8 +33,6 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
         total=1;
         offset=0;
         fetching=false;
-        this.allBrands = new HashMap<Long, Brand>();
-        new GetBrandsListTask(this).execute();
     }
     public void refresh(){
         this.clear();
@@ -94,17 +87,10 @@ public class ProductsListAdapter extends ArrayAdapter<Product> implements GetBra
         holder.idProduct.setText(isContentValid(Long.toString(product.getId())));
         holder.name.setText(isContentValid(product.getName()));
         holder.stock.setText(isContentValid(Integer.toString(product.getStock())));
-        holder.brand.setText(isContentValid(this.allBrands.get(product.getBrandId()).getName()));
+        holder.brand.setText(isContentValid(product.getBrandName()));
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;
-    }
-
-    @Override
-    public void addBrands(List<Brand> brands) {
-        for(Brand b : brands) {
-            this.allBrands.put(b.getId(),b);
-        }
     }
 
     public void setBrands(String brands) {

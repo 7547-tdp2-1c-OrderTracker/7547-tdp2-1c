@@ -10,36 +10,29 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
-
-import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
 import ar.fi.uba.trackerman.tasks.order.GetOrdersListTask;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
-public class OrdersListAdapter extends ArrayAdapter<Order> implements GetClientListTask.ClientsListAggregator {
+public class OrdersListAdapter extends ArrayAdapter<OrderWrapper> {
 
     private long total;
     private long offset;
     private boolean fetching;
-    private Map<Long, Client> allClients; // todos los clientes
 
     public OrdersListAdapter(Context context, int resource,
-                             List<Order> orders) {
+                             List<OrderWrapper> orders) {
         super(context, resource, orders);
         total=1;
         offset=0;
         fetching=false;
-        this.allClients = new HashMap<Long, Client>();
-        new GetClientListTask(this).execute();
     }
 
     public void refresh(){
@@ -70,7 +63,7 @@ public class OrdersListAdapter extends ArrayAdapter<Order> implements GetClientL
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Order order = this.getItem(position);
+        OrderWrapper orderWrapper = this.getItem(position);
         ViewHolder holder;
         if(position==this.getCount()-1){
             // fetchMore();
@@ -94,10 +87,11 @@ public class OrdersListAdapter extends ArrayAdapter<Order> implements GetClientL
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        Order order = orderWrapper.getOrder();
+        Client client = orderWrapper.getClient();
         Date fecha = order.getDateCreated();
 
-        holder.clientName.setText(isContentValid(this.allClients.get(order.getClientId()).getFullName()));
+        holder.clientName.setText(isContentValid(client.getFullName()));
         holder.orderTotalPrice.setText(isContentValid(order.getCurrency() +" "+ Double.toString(order.getTotalPrice())));
         holder.status.setText(isContentValid(order.getStatusSpanish()));
         holder.status.setTextColor(Color.parseColor(order.getColor(order.getStatus())));
@@ -107,13 +101,6 @@ public class OrdersListAdapter extends ArrayAdapter<Order> implements GetClientL
         holder.orderTime.setText(android.text.format.DateFormat.format("hh:mm", fecha));
 
         return convertView;
-    }
-
-    @Override
-    public void addClients(ClientSearchResult clientSearchResult) {
-        for(Client c : clientSearchResult.getClients()) {
-            this.allClients.put(c.getId(),c);
-        }
     }
 
     private static class ViewHolder {

@@ -2,19 +2,13 @@ package ar.fi.uba.trackerman.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import ar.fi.uba.trackerman.domains.OrderItem;
-import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.fragments.ProductsListFragment;
 import fi.uba.ar.soldme.R;
 

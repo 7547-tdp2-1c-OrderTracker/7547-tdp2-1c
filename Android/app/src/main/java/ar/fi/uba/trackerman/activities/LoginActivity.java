@@ -1,6 +1,5 @@
 package ar.fi.uba.trackerman.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ar.fi.uba.trackerman.utils.AppSettings;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
 
 public class LoginActivity extends AppCompatActivity {

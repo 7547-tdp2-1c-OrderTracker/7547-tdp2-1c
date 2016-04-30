@@ -4,22 +4,13 @@ import android.util.Log;
 
 import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.OrderActivity;
-import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 
 public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
 
@@ -36,8 +27,10 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
         String resp = null;
         String url = "/v1/orders/" + orderId + "/order_items/" + itemId;
         try {
-            resp = (String) restClient.delete(url, null,headers);
+            resp = (String) restClient.delete(url, null, headers);
             if (resp == null) resp = "OK";
+        } catch (BusinessException e) {
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         } catch (ServerErrorException e) {
             resp = "FAIL";
         }
@@ -51,12 +44,11 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected void onPostExecute(String result) {
-        Log.e(this.getClass().getCanonicalName(),"el resultado "+ result);
-        OrderItemRemover modifier= weakReference.get();
-        if(modifier!=null){
-            modifier.updateOrderItem(result);
+        Log.d(this.getClass().getCanonicalName(), "el resultado " + result);
+        if(result!=null){
+            weakReference.get().updateOrderItem(result);
         }else{
-            Log.e(this.getClass().getCanonicalName(), "Adapter no longer available!");
+            weakReference.get().showSnackbarSimpleMessage("No se pudo quitar el item del pedido!");
         }
     }
 

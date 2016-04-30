@@ -8,19 +8,16 @@ import org.json.JSONObject;
 import java.util.List;
 
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
-import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
-public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,GetClientListTask.ClientsListAggregator> {
+public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult,ClientsListAdapter> {
 
     private List<Client> clients;
-
-    public GetClientListTask(ClientsListAggregator adapter) {
-        super(adapter);
-    }
 
     public GetClientListTask(ClientsListAdapter adapter) {
         super(adapter);
@@ -39,9 +36,12 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
             urlString = "/v1/clients?limit=1000";
         }
 
-        ClientSearchResult clientSearchResult = (ClientSearchResult) restClient.get(urlString,null);
-        //TODO testear caso particular, solo en la exception devuelve null
-        if (clientSearchResult==null) clientSearchResult = new ClientSearchResult();
+        ClientSearchResult clientSearchResult = null;
+        try{
+            clientSearchResult = (ClientSearchResult) restClient.get(urlString);
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+        }
         return clientSearchResult;
     }
 
@@ -53,12 +53,7 @@ public class GetClientListTask extends AbstractTask<Long,Void,ClientSearchResult
 
     @Override
     protected void onPostExecute(ClientSearchResult clientSearchResult) {
-        ClientsListAggregator clientListAggregator= weakReference.get();
-        if(clientListAggregator!=null){
-            clientListAggregator.addClients(clientSearchResult);
-        }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
-        }
+        weakReference.get().addClients((clientSearchResult!=null)?clientSearchResult:new ClientSearchResult());
     }
 
     public interface ClientsListAggregator {

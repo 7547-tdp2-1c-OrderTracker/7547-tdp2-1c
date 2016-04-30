@@ -12,6 +12,7 @@ public class Product {
     private long id;
     private String name;
     private long brandId;
+    private String brandName;
     private int stock;
     private String code;
     private String status;
@@ -48,6 +49,14 @@ public class Product {
 
     public long getBrandId() {
         return brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public void setStock(int stock) {
@@ -148,6 +157,7 @@ public class Product {
             product = new Product(json.getLong("id"));
             product.setName(json.getString("name"));
             product.setBrandId(json.getLong("brand_id"));
+            product.setBrandName(json.getString("brand_name"));
             product.setStock(json.getInt("stock"));
 
             product.setCode(json.getString("code"));

@@ -1,13 +1,13 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.DialogInterface;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,24 +23,24 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Brand;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
-import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
+import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
-import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
-
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
-public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation, PostOrderItemsTask.OrderItemCreator {
+
+public class ProductActivity extends AppCompatActivity implements GetProductTask.ProductReceiver, View.OnClickListener, PostOrderItemsTask.OrderItemCreator {
 
     private long productId;
     private int quantity;
-    private List<Order> draftOrders;
 
     public ProductActivity(){
         super();
@@ -73,9 +72,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         }
 
         this.startCleanUpUI();
-
-        //Preguntamos por las ordenes
-        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
     }
 
 
@@ -131,7 +127,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
                                     showSnackbarSimpleMessage("No hay un pedido asociado!");
                                 }
                             } else {
-                                showSnackbarSimpleMessage("Lo siento! disponemos de " + quantity + " unidades");
+                                showSnackbarSimpleMessage("Lo siento! "+ ((quantity>0)? "disponemos de " + quantity + " unidades." : "no disponemos de unidades."));
                             }
                         } else {
                             showSnackbarSimpleMessage("El valor es inválido!");
@@ -155,17 +151,10 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
     @Override
     public void onClick(View view) {
         if (view.getId()==R.id.fab) {
-            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
-            if (this.draftOrders == null) {
-                ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
-            } else if (this.draftOrders.size() == 0) {
-                // si no hay orden, Avisar
-                ShowMessage.showSnackbarSimpleMessage(cl, "No hay pedido en curso. Cree uno desde el cliente!");
-            } else if (this.quantity == 0) {
+            if (this.quantity == 0) {
                 // si no hay stock
-                ShowMessage.showSnackbarSimpleMessage(cl, "No tenemos stock del producto!");
+                ShowMessage.showSnackbarSimpleMessage(findViewById(R.id.product_detail_coordinatorLayout), "No tenemos stock del producto!");
             } else {
-                // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
                 showQuantityDialog();
             }
         }
@@ -195,11 +184,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_brand)).setText(isContentValid(brand.getName()));
     }
 
-    @Override
-    public void setDraftOrders(List<Order> orders) {
-        this.draftOrders = orders;
-    }
-
     public void afterCreatingOrderItem(OrderItem orderItem) {
         Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID, orderItem.getOrderId());
@@ -208,6 +192,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     @Override
     public View getCurrentView() {
-        return this.getCurrentFocus();
+        return this.getWindow().getDecorView();
     }
 }

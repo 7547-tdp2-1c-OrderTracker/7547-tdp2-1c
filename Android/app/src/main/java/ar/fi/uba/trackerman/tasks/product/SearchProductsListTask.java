@@ -1,24 +1,16 @@
 package ar.fi.uba.trackerman.tasks.product;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearchResult,ProductsListAdapter> {
 
@@ -36,11 +28,16 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
         if(offset != null){
             urlString += "&offset="+offset.toString();
         }
-        if(brandFilter!=null){
-            urlString+="&brand_id="+brandFilter;
+        if(brandFilter!=null) {
+            urlString += "&brand_id=" + brandFilter;
         }
-        ProductsSearchResult productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
-        if (productsSearchResult == null) productsSearchResult = new ProductsSearchResult();
+
+        ProductsSearchResult productsSearchResult = null;
+        try{
+            productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
+        } catch (BusinessException e) {
+            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+        }
         return productsSearchResult;
     }
 
@@ -52,11 +49,6 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
 
     @Override
     protected void onPostExecute(ProductsSearchResult productsSearchResult) {
-        ProductsListAdapter productsListAdapter= weakReference.get();
-        if(productsListAdapter!=null){
-            productsListAdapter.addProducts(productsSearchResult);
-        }else{
-            Log.w(this.getClass().getCanonicalName(),"Adapter no longer available!");
-        }
+        weakReference.get().addProducts((productsSearchResult!=null)?productsSearchResult:new ProductsSearchResult());
     }
 }

@@ -2,10 +2,8 @@ package ar.fi.uba.trackerman.fragments;
 
 
 import android.app.Activity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -30,8 +28,6 @@ import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
-import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
-import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -129,12 +125,12 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
                                 long orderId = (new MyPreferences(ProductsListFragment.this.getActivity())).get(getString(R.string.shared_pref_current_order_id), -1L);
 
                                 if (orderId >= 0) {
-                                    new PostOrderItemsTask(ProductsListFragment.this).execute(String.valueOf(orderId), String.valueOf(productId), String.valueOf(productStock));
+                                    new PostOrderItemsTask(ProductsListFragment.this).execute(String.valueOf(orderId), String.valueOf(productId), String.valueOf(quantityRequested));
                                 } else {
                                     ShowMessage.showSnackbarSimpleMessage(cl, "No hay un pedido asociado!");
                                 }
                             } else {
-                                ShowMessage.showSnackbarSimpleMessage(cl, "Lo siento! disponemos de " + productStock + " unidades");
+                                ShowMessage.showSnackbarSimpleMessage(cl, "Lo siento! "+((productStock>0)? "disponemos de " + productStock + " unidades." : "no disponemos de unidades."));
                             }
                         } else {
                             ShowMessage.showSnackbarSimpleMessage(cl, "El valor es inválido!");

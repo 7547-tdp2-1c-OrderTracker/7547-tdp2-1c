@@ -1,33 +1,27 @@
-package ar.fi.uba.trackerman.server;
+package ar.fi.uba.trackerman.exceptions;
 
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 
-import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.NoStockException;
-
 /**
  * Created by smpiano on 4/26/16.
  */
 public enum ErrorMatcher {
-    NO_STOCK("no_stock", NoStockException.class);
+    ALREADY_CONFIRMED(AlreadyConfirmedException.class),
+    DEFAULT_ERROR(BusinessException.class),
+    NO_STOCK(NoStockException.class),
+    UNKNOWN(UnknownException.class);
 
-    private String errorKey;
     private Class<? extends BusinessException> throwable;
 
-    private ErrorMatcher(String key, Class<? extends BusinessException> throwable) {
-        this.errorKey = key;
+    private ErrorMatcher(Class<? extends BusinessException> throwable) {
         this.throwable = throwable;
     }
 
-    public String getErrorKey() {
-        return errorKey;
-    }
-
-    public BusinessException getThrowable(String msg) {
+    public BusinessException getThrowable(String msg, Integer status) {
         try {
-            return throwable.getDeclaredConstructor(String.class).newInstance(msg);
+            return throwable.getDeclaredConstructor(String.class, Integer.class).newInstance(msg, status);
         } catch (InstantiationException e) {
             Log.e("error_matcher","No se encuentra constructor por defecto para "+throwable.getName(),e);
         } catch (IllegalAccessException e) {

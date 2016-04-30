@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Order;
+import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setDraftOrders(List<Order> orders) {
+    public void setDraftOrders(List<OrderWrapper> orders) {
         TextView message = (TextView) findViewById(R.id.dashboard_draft_orders);
         if (orders.size() > 0) {
             if (orders.size() == 1) message.setText("Tienes un pedido activo!");
