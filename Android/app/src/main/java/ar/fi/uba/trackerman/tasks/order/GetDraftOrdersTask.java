@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,12 +13,13 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 
-public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapper>,GetDraftOrdersTask.DraftOrdersValidation> {
+public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapper>,AppCompatActivity> {
 
-    public GetDraftOrdersTask(DraftOrdersValidation validation) {
+    public GetDraftOrdersTask(AppCompatActivity validation) {
         super(validation);
     }
 
@@ -65,7 +67,8 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
     @Override
     protected void onPostExecute(List<OrderWrapper> ordersWrapper) {
         super.onPostExecute(ordersWrapper);
-        weakReference.get().setDraftOrders(ordersWrapper);
+        ((DraftOrdersValidation) weakReference.get()).setDraftOrders(ordersWrapper);
+        ((DraftOrdersValidation) weakReference.get()).setDraftOrders(ordersWrapper);
     }
 
     public interface DraftOrdersValidation {

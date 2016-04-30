@@ -15,6 +15,7 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
 import fi.uba.ar.soldme.R;
 
@@ -44,8 +45,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            SearchProductsListTask asyncTask= new SearchProductsListTask(this,brands);
-            asyncTask.execute(offset);
+            if (RestClient.isOnline(getContext())) new SearchProductsListTask(this,brands).execute(offset);
         }
     }
 

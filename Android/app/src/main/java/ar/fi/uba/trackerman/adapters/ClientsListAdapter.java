@@ -15,6 +15,7 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
@@ -45,8 +46,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            GetClientListTask asyncTask= new GetClientListTask(this);
-            asyncTask.execute(offset);
+            if (RestClient.isOnline(getContext())) new GetClientListTask(this).execute(offset);
         }
     }
 

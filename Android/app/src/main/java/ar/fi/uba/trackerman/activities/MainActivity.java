@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         MyPreferences pref = new MyPreferences(this);
-        pref.save(getString(R.string.shared_pref_current_vendor_id), AppSettings.getVendorId());
+        pref.save(getString(R.string.shared_pref_current_vendor_id), AppSettings.getSellerId());
         pref.save(getString(R.string.shared_pref_current_order_id), -1L);
         pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_client_id), -1L);
@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements
 
         this.startCleanUpUI();
 
-        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getVendorId());
-        new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getVendorId()));
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId()+". Inter="+ RestClient.isOnline(this));
+
+        if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
     }
 
     private void startCleanUpUI() {

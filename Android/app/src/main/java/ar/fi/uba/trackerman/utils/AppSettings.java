@@ -9,8 +9,8 @@ public class AppSettings {
     private static final String SERVER_HOST = "https://powerful-hollows-15939.herokuapp.com";
 
 
-    private static final long VENDOR_ID = 1;
-    private static long CURRENT_VENDOR = VENDOR_ID;
+    private static final long SELLER_ID = 1;
+    private static long CURRENT_SELLER = SELLER_ID;
 
     private static final int SERVER_TIMEOUT = 15000; //15seg
 
@@ -18,12 +18,12 @@ public class AppSettings {
         return SERVER_HOST;
     }
 
-    public static long getVendorId() {
-        return CURRENT_VENDOR;
+    public static long getSellerId() {
+        return CURRENT_SELLER;
     }
 
-    public static void setVendorId(long vendor) {
-        CURRENT_VENDOR = vendor;
+    public static void setSellerId(long seller) {
+        CURRENT_SELLER = seller;
     }
 
     public static int getServerTimeout() { return SERVER_TIMEOUT; }

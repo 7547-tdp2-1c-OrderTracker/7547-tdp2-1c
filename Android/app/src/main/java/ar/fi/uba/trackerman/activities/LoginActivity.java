@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         //                progressDialog.dismiss();
         //            }
         //        }, 3000);
-        AppSettings.setVendorId(Long.valueOf(email));
+        AppSettings.setSellerId(Long.valueOf(email));
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -119,8 +119,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean validate() {
-        String vendor = ((TextView)findViewById(R.id.activity_login_input_email)).getText().toString();
-        return isValidQuantity(vendor) && vendor.length()<=1;
+        String seller = ((TextView)findViewById(R.id.activity_login_input_email)).getText().toString();
+        return isValidQuantity(seller) && seller.length()<=1;
         //boolean valid = true;
 
         //String email = emailText.getText().toString();

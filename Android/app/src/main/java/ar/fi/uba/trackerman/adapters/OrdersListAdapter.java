@@ -16,6 +16,7 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetOrdersListTask;
 import fi.uba.ar.soldme.R;
 
@@ -45,8 +46,7 @@ public class OrdersListAdapter extends ArrayAdapter<OrderWrapper> {
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            GetOrdersListTask asyncTask= new GetOrdersListTask(this);
-            asyncTask.execute(offset);
+            if (RestClient.isOnline(getContext())) new GetOrdersListTask(this).execute(offset);
         }
     }
 

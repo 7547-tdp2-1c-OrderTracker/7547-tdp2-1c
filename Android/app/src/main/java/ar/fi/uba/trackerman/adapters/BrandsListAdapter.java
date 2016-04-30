@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Brand;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandsListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
@@ -41,8 +42,7 @@ public class BrandsListAdapter extends ArrayAdapter<Brand> implements AdapterVie
     }
 
     public void fetch(){
-        GetBrandsListTask asyncTask= new GetBrandsListTask(this);
-        asyncTask.execute();
+        if (RestClient.isOnline(getContext())) new GetBrandsListTask(this).execute();
     }
 
     @Override
