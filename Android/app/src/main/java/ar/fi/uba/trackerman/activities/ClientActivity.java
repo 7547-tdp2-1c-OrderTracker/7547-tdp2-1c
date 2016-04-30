@@ -86,8 +86,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     }
 
     public void showSnackbarSimpleMessage(String msg){
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.product_detail_coordinatorLayout);
-        ShowMessage.showSnackbarSimpleMessage(coordinatorLayout, msg);
+        ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
     }
 
     @Override

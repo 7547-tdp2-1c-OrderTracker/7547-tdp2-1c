@@ -12,6 +12,7 @@ import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 /**
@@ -34,6 +35,8 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivi
         Order order = null;
         try {
             order = (Order) restClient.put(url,body,headers);
+        } catch (NoStockException e) {
+            weakReference.get().showSnackbarSimpleMessage("Nos quedamos sin stock! Actualice sus items.");
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         }
@@ -50,8 +53,6 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivi
     protected void onPostExecute(Order order) {
         if(order!=null){
             weakReference.get().afterOrderConfirmed(order);
-        }else{
-            weakReference.get().showSnackbarSimpleMessage("No se pudo confirmar el pedido!");
         }
     }
 

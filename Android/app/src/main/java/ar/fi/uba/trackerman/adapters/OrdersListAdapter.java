@@ -92,7 +92,7 @@ public class OrdersListAdapter extends ArrayAdapter<OrderWrapper> {
         Date fecha = order.getDateCreated();
 
         holder.clientName.setText(isContentValid(client.getFullName()));
-        holder.orderTotalPrice.setText(isContentValid(order.getCurrency() +" "+ Double.toString(order.getTotalPrice())));
+        holder.orderTotalPrice.setText(isContentValid(order.getCurrency()) +" "+ isContentValid(Double.toString(order.getTotalPrice())));
         holder.status.setText(isContentValid(order.getStatusSpanish()));
         holder.status.setTextColor(Color.parseColor(order.getColor(order.getStatus())));
 

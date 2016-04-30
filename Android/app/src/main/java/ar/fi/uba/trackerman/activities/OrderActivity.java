@@ -36,6 +36,7 @@ import ar.fi.uba.trackerman.tasks.order.EmptyOrderTask;
 import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
+import ar.fi.uba.trackerman.utils.ConfirmDialog;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.OrderStatus;
 import fi.uba.ar.soldme.R;
@@ -69,7 +70,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         activity= this;
 
         this.startCleanUpUI();
-        getSupportActionBar().setTitle("Pedido #"+ orderId);
+        getSupportActionBar().setTitle("Pedido #" + orderId);
 
         MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), orderId);
@@ -134,12 +135,12 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         orderItems.setAdapter(new OrderItemsListAdapter(this, R.layout.order_item_list_item, currentOrder.getOrderItems()));
 
         Button btn = (Button) findViewById(R.id.activity_order_confirm);
-        btn.setText("Total: "+ currentOrder.getCurrency() +" "+ currentOrder.getTotalPrice() +"\n\n Confirmar Pedido");
+        btn.setText("Total: "+ isContentValid(currentOrder.getCurrency()) +" "+ currentOrder.getTotalPrice() +"\n\n Confirmar Pedido");
 
 
         Date fecha = currentOrder.getDateCreated();
         ((TextView) findViewById(R.id.order_detail_client_name)).setText(isContentValid(orderWrapper.getClient().getFullName()));
-        ((TextView) findViewById(R.id.order_detail_order_total_price)).setText(isContentValid(currentOrder.getCurrency() +" "+ Double.toString(currentOrder.getTotalPrice())));
+        ((TextView) findViewById(R.id.order_detail_order_total_price)).setText(isContentValid(currentOrder.getCurrency()) +" "+ isContentValid(Double.toString(currentOrder.getTotalPrice())));
         ((TextView) findViewById(R.id.order_detail_order_status)).setText(isContentValid(currentOrder.getStatusSpanish()));
         ((TextView) findViewById(R.id.order_detail_order_status)).setTextColor(Color.parseColor(currentOrder.getColor(currentOrder.getStatus())));
 
@@ -171,27 +172,23 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        if(item.getItemId()==R.id.action_cancel) {
-                            if (RestClient.isOnline(OrderActivity.this)) new CancellOrderTask(OrderActivity.this).execute(Long.toString(OrderActivity.this.orderId));
-                        }
-                        if(item.getItemId()==R.id.action_empty) {
-                            if (RestClient.isOnline(OrderActivity.this)) new EmptyOrderTask(OrderActivity.this).execute(Long.toString(OrderActivity.this.orderId));
-                        }
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
+        if(item.getItemId()==R.id.action_cancel) {
+            new ConfirmDialog(this) {
+                @Override
+                public void onConfirm() {
+                    if (RestClient.isOnline(OrderActivity.this)) new CancellOrderTask(OrderActivity.this).execute(Long.toString(OrderActivity.this.orderId));
                 }
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Estás seguro?").setPositiveButton("Si", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+            };
+        }
+        if(item.getItemId()==R.id.action_empty) {
+            new ConfirmDialog(this) {
+                @Override
+                public void onConfirm() {
+                    if (RestClient.isOnline(OrderActivity.this)) new EmptyOrderTask(OrderActivity.this).execute(Long.toString(OrderActivity.this.orderId));
+                }
+            };
+        }
+
 
         return false;
     }

@@ -121,7 +121,7 @@ public class RestClient {
             json = buffer.toString();
             try {
                 if (isError) {
-                    readErrorResponse(json);
+                    readErrorResponse(json, urlConnection.getResponseCode());
                 } else {
                     expectedReturn = parser.readResponse(json);
                 }
@@ -147,14 +147,12 @@ public class RestClient {
         return expectedReturn;
     }
 
-    private void readErrorResponse(String json) throws ServerErrorException {
+    private void readErrorResponse(String json, Integer status) throws ServerErrorException {
         String errorKey = "";
         String errorValue = "";
-        Integer status = null;
         try {
             JSONObject errorObj = new JSONObject(json);
             JSONObject error = errorObj.getJSONObject("error");
-            status = errorObj.getInt("status");
             errorKey = error.getString("key");
             errorValue = error.getString("value");
             throw ErrorMatcher.valueOf(errorKey).getThrowable(errorValue,status);
