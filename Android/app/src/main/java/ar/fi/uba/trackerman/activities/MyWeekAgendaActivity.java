@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import ar.fi.uba.trackerman.utils.DateUtils;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
 public class MyWeekAgendaActivity extends AppCompatActivity {
 
@@ -17,6 +21,17 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        clearAllSemaphore();
+
+        setSemaphore(1,"red",0);
+        setSemaphore(1,"green",32);
+        setSemaphore(1,"yellow",18);
+
+        setSemaphore(2,"red",15);
+        setSemaphore(2,"green",3);
+        setSemaphore(2,"yellow",0);
+
     }
 
     @Override
@@ -32,6 +47,27 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setSemaphore(int day_of_week,String color, int ammount) {
+
+        // identifier sample: semaphore_green_monday_text
+        String identifier = "";
+        String datOfWeekStr = DateUtils.dayOfWeekToText(day_of_week).toLowerCase();
+        identifier = "semaphore_" + color +"_"+ datOfWeekStr +"_text";
+        int resID = getResources().getIdentifier(identifier, "id", getPackageName());
+
+        ((TextView)findViewById(resID)).setText(isContentValid(Integer.toString(ammount)));
+
+    }
+
+    public void clearAllSemaphore() {
+        setSemaphore(1,"red",0);
+        setSemaphore(1,"green",0);
+        setSemaphore(1,"yellow",0);
+        setSemaphore(2,"red",0);
+        setSemaphore(2,"green",0);
+        setSemaphore(2,"yellow",0);
     }
 
 }

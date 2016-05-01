@@ -39,7 +39,6 @@
             tools:context="ar.fi.uba.trackerman.activities.MyWeekAgendaActivity">
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -88,7 +87,8 @@
                                 android:textSize="60sp" />
 
                             <ImageView
-                                android:layout_width="28dp"
+                                android:id="@+id/semaphore_red_monday_image"
+                                android:layout_width="36dp"
                                 android:layout_height="28dp"
                                 android:layout_weight="1"
                                 android:layout_gravity="bottom|right"
@@ -97,34 +97,60 @@
                                 android:background="#bc5757" />
 
                             <ImageView
-                                android:layout_width="28dp"
+                                android:id="@+id/semaphore_yellow_monday_image"
+                                android:layout_width="36dp"
                                 android:layout_height="28dp"
-                                android:background="#ffd600"
+                                android:background="#cddc39"
                                 android:layout_weight="1"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginRight="60dp"
                                 android:layout_marginBottom="20dp" />
 
                             <ImageView
-                                android:layout_width="28dp"
+                                android:id="@+id/semaphore_green_monday_image"
+                                android:layout_width="36dp"
                                 android:layout_height="28dp"
-                                android:background="#81c784"
+                                android:background="#43a047"
                                 android:layout_weight="1"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginRight="100dp"
                                 android:layout_marginBottom="20dp" />
 
                             <TextView
+                                android:id="@+id/semaphore_red_monday_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12"
+                                android:text="XXX"
                                 android:textColor="#ffffff"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginRight="24dp"
-                                android:layout_marginBottom="24dp"
+                                android:layout_marginBottom="25dp"
                                 android:textSize="14sp" />
 
+                            <TextView
+                                android:id="@+id/semaphore_yellow_monday_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="64dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_green_monday_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="104dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
 
                         </FrameLayout>
 
@@ -153,6 +179,72 @@
                                 android:text="@string/martes_shorttag"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:textSize="60sp" />
+
+                            <ImageView
+                                android:id="@+id/semaphore_red_tuesday_image"
+                                android:layout_width="36dp"
+                                android:layout_height="28dp"
+                                android:layout_weight="1"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="20dp"
+                                android:background="#bc5757" />
+
+                            <ImageView
+                                android:id="@+id/semaphore_yellow_tuesday_image"
+                                android:layout_width="36dp"
+                                android:layout_height="28dp"
+                                android:background="#cddc39"
+                                android:layout_weight="1"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="60dp"
+                                android:layout_marginBottom="20dp" />
+
+                            <ImageView
+                                android:id="@+id/semaphore_green_tuesday_image"
+                                android:layout_width="36dp"
+                                android:layout_height="28dp"
+                                android:background="#43a047"
+                                android:layout_weight="1"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="100dp"
+                                android:layout_marginBottom="20dp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_red_tuesday_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="24dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_yellow_tuesday_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="64dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_green_tuesday_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="104dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
 
                         </FrameLayout>
 
