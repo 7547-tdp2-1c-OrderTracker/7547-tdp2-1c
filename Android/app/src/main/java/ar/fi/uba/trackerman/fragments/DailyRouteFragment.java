@@ -5,8 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
+import ar.fi.uba.trackerman.domains.Client;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -28,11 +34,28 @@ public class DailyRouteFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         Bundle args = getArguments();
-        day= args.getString(DAY_ARG);
+        day = args.getString(DAY_ARG);
         View fragmentView= inflater.inflate(R.layout.fragment_daily_route, container, false);
+
         TextView text= (TextView)fragmentView.findViewById(R.id.daily_route_day);
         text.setText(day);
+
+
+
+/*
+        ListView clientsList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
+
+        ClientsListAdapter clientsAdapter = new ClientsListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
+        clientsList.setAdapter(clientsAdapter);
+        clientsList.setOnItemClickListener(this);
+
+        ProgressBar bar= new ProgressBar(getContext());
+        bar.setIndeterminate(true);
+        clientsList.setEmptyView(bar);
+        clientsAdapter.refresh();
+*/
         return fragmentView;
     }
 }
