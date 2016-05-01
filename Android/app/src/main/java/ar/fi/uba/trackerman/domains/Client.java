@@ -3,12 +3,28 @@ package ar.fi.uba.trackerman.domains;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.FieldValidator;
 
 /**
  * Created by plucadei on 29/3/16.
  */
 public class Client {
+
+    /*
+    "location": {
+    "type": "Point",
+    "coordinates": [
+    -34.5649,
+    -58.4592
+    ]
+    },
+    "distance": 7.862451261787
+     */
+
     private long id;
     private String name;
     private String lastName;
@@ -22,6 +38,12 @@ public class Client {
     private double lat;
     private String thumbnail;
     private String avatar;
+
+
+    private Date dateCreated;
+    private Date lastModified;
+    private double distance;
+    private Date visited;
 
     public Client(long id) {
         super();
@@ -110,6 +132,38 @@ public class Client {
         return this.lastName +", "+ this.name;
     }
 
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public Date getVisited() {
+        return visited;
+    }
+
+    public void setVisited(Date visited) {
+        this.visited = visited;
+    }
+
     public static Client fromJson(JSONObject json) {
         Client client = null;
         try {
@@ -125,6 +179,24 @@ public class Client {
             client.setEmail(json.getString("email"));
             client.setAvatar(json.getString("avatar"));
             client.setPhoneNumber(json.getString("phone_number"));
+
+            String dateCreatedStr = json.getString("date_created");
+            Date dateCreated = null;
+            if (FieldValidator.isValid(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+            client.setDateCreated(dateCreated);
+            String lastModifiedStr = json.getString("last_modified");
+            Date lastModified = null;
+            if (FieldValidator.isValid(lastModifiedStr)) lastModified = DateUtils.parseDate(lastModifiedStr);
+            client.setLastModified(lastModified);
+            if (json.toString().contains("distance")) client.setDistance(json.getDouble("distance"));
+            if (json.toString().contains("visited")){
+                String visitedStr = json.getString("visited");
+                Date visited = null;
+                if (FieldValidator.isValid(visitedStr)) visited = DateUtils.parseDate(visitedStr);
+                client.setVisited(visited);
+            }
+
+
         } catch (JSONException e) {
             throw new BusinessException("Error parsing Client.",e);
         }
