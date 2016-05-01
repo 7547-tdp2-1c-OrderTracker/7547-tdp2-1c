@@ -20,6 +20,7 @@ import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
@@ -74,7 +75,11 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
             if (loc != null) {
                 listClients.execute(String.valueOf(offset), String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
             } else {
-                listClients.execute(String.valueOf(offset));
+                MyPreferences pref = new MyPreferences(getContext());
+                String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
+                String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
+                if (lat.isEmpty() && lon.isEmpty()) listClients.execute(String.valueOf(offset));
+                else listClients.execute(String.valueOf(offset), lat, lon);
             }
         }
     }

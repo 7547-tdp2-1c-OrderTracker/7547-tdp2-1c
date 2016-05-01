@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements
             setupNavigationDrawerContent(navigationView);
         }
 
-        MyPreferences pref = new MyPreferences(this);
+        final MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_vendor_id), AppSettings.getSellerId());
         pref.save(getString(R.string.shared_pref_current_order_id), -1L);
         pref.save(getString(R.string.shared_pref_current_order_status), "");
@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void processLocation(Location loc) {
                 ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(MainActivity.this) + ". POS lat=" + loc.getLatitude()+" lon=" + loc.getLongitude());
+                pref.save(getString(R.string.shared_pref_current_location_lat), String.valueOf(loc.getLatitude()));
+                pref.save(getString(R.string.shared_pref_current_location_lon), String.valueOf(loc.getLongitude()));
             }
         });
 
