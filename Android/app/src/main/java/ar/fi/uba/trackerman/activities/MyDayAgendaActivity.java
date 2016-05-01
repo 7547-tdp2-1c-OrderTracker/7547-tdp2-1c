@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+import java.util.concurrent.RecursiveTask;
+
 import ar.fi.uba.trackerman.fragments.DailyRouteFragment;
 import fi.uba.ar.soldme.R;
 
@@ -28,7 +31,17 @@ public class MyDayAgendaActivity extends AppCompatActivity {
 
         pagerAdapter = new DailyViewPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setCurrentItem(getCurrentDay());
         mViewPager.setAdapter(pagerAdapter);
+    }
+
+    private int getCurrentDay(){
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK)-2;
+        if (day<0){
+            day=0;
+        }
+        return day;
     }
 
     @Override
@@ -55,9 +68,27 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         public Fragment getItem(int i) {
             DailyRouteFragment fragment = new DailyRouteFragment();
             Bundle args = new Bundle();
-            args.putString(DailyRouteFragment.DAY_ARG,Integer.toString(i));
+            args.putString(DailyRouteFragment.DAY_ARG,getCurrentDay(i));
             fragment.setArguments(args);
             return fragment;
+        }
+
+        private String getCurrentDay(int day){
+
+            switch (day){
+                case 0:
+                    return "MONDAY";
+                case 1:
+                    return "THURSDAY";
+                case 2:
+                    return "WEDNESDAY";
+                case 3:
+                    return "TUESDAY";
+                case 4:
+                    return "FRIDAY";
+                default:
+                    return "UNKNOWS";
+            }
         }
 
         @Override
