@@ -68,7 +68,6 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
     protected void onPostExecute(List<OrderWrapper> ordersWrapper) {
         super.onPostExecute(ordersWrapper);
         ((DraftOrdersValidation) weakReference.get()).setDraftOrders(ordersWrapper);
-        ((DraftOrdersValidation) weakReference.get()).setDraftOrders(ordersWrapper);
     }
 
     public interface DraftOrdersValidation {

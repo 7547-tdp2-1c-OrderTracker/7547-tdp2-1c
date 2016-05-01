@@ -2,11 +2,14 @@ package ar.fi.uba.trackerman.utils;
 
 import android.telephony.PhoneNumberUtils;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by smpiano on 4/24/16.
  */
 public class FieldValidator {
 
+    private static DecimalFormat TWO_DECIMALS = new DecimalFormat("####0.00");
     public static boolean isValid(String content) {
         return content != null && !"null".equalsIgnoreCase(content);
     }
@@ -38,5 +41,9 @@ public class FieldValidator {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public static String showCoolDistance(double dist) {
+        return TWO_DECIMALS.format(dist);
     }
 }

@@ -26,16 +26,15 @@ public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResu
     @Override
     protected ClientSearchResult doInBackground(String... params) {
         String urlString = "";
-        if (params.length > 0) {
+        if (params.length == 0) {
+            urlString = "/v1/clients?limit=1000";
+        } else if (params.length == 1) {
+            urlString = "/v1/clients?limit=10&offset=" + params[0];
+        } else {
             String offset = params[0];
             String lat = params[1];
             String lon = params[2];
-            urlString = "/v1/clients?limit=10&lat="+lat+"&lon="+lon+"&order=distance";
-            if (offset != null) {
-                urlString += "&offset=" + offset;
-            }
-        } else {
-            urlString = "/v1/clients?limit=1000";
+            urlString = "/v1/clients?limit=10&offset="+offset+"&lat="+lat+"&lon="+lon+"&order=distance";
         }
 
         ClientSearchResult clientSearchResult = null;

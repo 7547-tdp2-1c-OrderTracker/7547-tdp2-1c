@@ -91,7 +91,7 @@ public class RestClient {
             }
 
             //debug
-            Log.d("rest_client","[curl -X" + method + " '" + AppSettings.getServerHost() + url.getPath() + "' " + getBody(body) + getHeaders(headers) + "]");
+            Log.d("rest_client","["+getCurl(method,url,body,headers)+"]");
 
             //makes the connection
             urlConnection.connect();
@@ -175,6 +175,17 @@ public class RestClient {
         }
         return isOnline;
 
+    }
+
+    public static String getCurl(String method, URL url, String body, Map<String, String> headers) {
+        return "curl -X" + method + " '" + AppSettings.getServerHost() + getUrl(url)+ "' " + getBody(body) + getHeaders(headers);
+    }
+
+    private static String getUrl(URL url) {
+        String res = url.getPath();
+        String q = url.getQuery();
+        if (q!=null) res+="?"+q;
+        return res;
     }
 
     private static String getHeaders(Map<String, String> headers) {

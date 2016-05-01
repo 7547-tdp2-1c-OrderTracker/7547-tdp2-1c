@@ -14,17 +14,26 @@ import fi.uba.ar.soldme.R;
 public class DateUtils {
 
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static final SimpleDateFormat SHORT_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static Date parseDate(String dateStr) {
+    private static Date parseDate(String dateStr, SimpleDateFormat format) {
         Date d = null;
         try {
             if (dateStr != null) {
-                d = FORMATTER.parse(dateStr);
+                d = format.parse(dateStr);
             }
         } catch (ParseException pe) {
             Log.e("parse_date_error","Error tratando de parsear fecha "+dateStr,pe);
         }
         return d;
+    }
+
+    public static Date parseDate(String dateStr) {
+        return parseDate(dateStr,FORMATTER);
+    }
+
+    public static Date parseShortDate(String dateStr) {
+        return parseDate(dateStr,SHORT_FORMATTER);
     }
 
     public static String dayOfWeekToText(int day_of_week) {
