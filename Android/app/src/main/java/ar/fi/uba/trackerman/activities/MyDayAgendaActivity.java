@@ -7,12 +7,12 @@ import android.view.MenuItem;
 
 import fi.uba.ar.soldme.R;
 
-public class MyAgendaActivity extends AppCompatActivity {
+public class MyDayAgendaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_agenda);
+        setContentView(R.layout.activity_my_day_agenda);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

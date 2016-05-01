@@ -8,6 +8,7 @@
     <string name="menu_products">Productos</string>
     <string name="menu_orders">Pedidos</string>
     <string name="menu_agenda_del_dia">Agenda del día</string>
+    <string name="menu_agenda_semanal">Agenda semanal</string>
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
@@ -65,4 +66,11 @@
     <string name="shared_pref_current_order_id">order_id</string>
     <string name="shared_pref_current_client_id">client_id</string>
     <string name="shared_pref_current_order_status">status</string>
+
+    <string name="lunes_shorttag">Lun</string>
+    <string name="martes_shorttag">Mar</string>
+    <string name="miercoles_shorttag">Mie</string>
+    <string name="jueves_shorttag">Jue</string>
+    <string name="viernes_shorttag">Vie</string>
+    <string name="fueraruta_shorttag">FR</string>
 </resources>
