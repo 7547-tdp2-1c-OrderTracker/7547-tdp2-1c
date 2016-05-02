@@ -94,11 +94,15 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void setDraftOrders(List<OrderWrapper> orders) {
         TextView message = (TextView) findViewById(R.id.dashboard_draft_orders);
-        if (orders.size() > 0) {
-            if (orders.size() == 1) message.setText("Tienes un pedido activo!");
-            else message.setText("Tienes "+ orders.size() +" pedidos activos!");
+        if (orders == null) {
+            message.setText("Carámbas! Server durmiendo -.-");
         } else {
-            message.setText("No hay pedidos activos");
+            if (orders.size() > 0) {
+                if (orders.size() == 1) message.setText("Tienes un pedido activo!");
+                else message.setText("Tienes "+ orders.size() +" pedidos activos!");
+            } else {
+                message.setText("No hay pedidos activos");
+            }
         }
     }
 
