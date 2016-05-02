@@ -568,12 +568,13 @@
                         android:layout_weight="1"
                         card_view:cardCornerRadius="2dp"
                         card_view:cardBackgroundColor="#aaa"
-                        >
+                        android:onClick="clickCardFR">
 
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="4dp">
+                            android:layout_margin="4dp"
+                            android:nestedScrollingEnabled="true">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -582,6 +583,73 @@
                                 android:text="@string/fueraruta_shorttag"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:textSize="60sp" />
+
+                            <ImageView
+                                android:id="@+id/semaphore_red_outofroute_image"
+                                android:layout_width="36dp"
+                                android:layout_height="28dp"
+                                android:layout_weight="1"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="20dp"
+                                android:background="#bc5757" />
+
+                            <ImageView
+                                android:id="@+id/semaphore_yellow_outofroute_image"
+                                android:layout_width="36dp"
+                                android:layout_height="28dp"
+                                android:background="#cddc39"
+                                android:layout_weight="1"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="60dp"
+                                android:layout_marginBottom="20dp" />
+
+                            <ImageView
+                                android:id="@+id/semaphore_green_outofroute_image"
+                                android:layout_width="36dp"
+                                android:layout_height="28dp"
+                                android:background="#43a047"
+                                android:layout_weight="1"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="100dp"
+                                android:layout_marginBottom="20dp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_red_outofroute_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="24dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_yellow_outofroute_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="64dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/semaphore_green_outofroute_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="XXX"
+                                android:textColor="#ffffff"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginRight="104dp"
+                                android:layout_marginBottom="25dp"
+                                android:textSize="14sp" />
+
 
                         </FrameLayout>
 
