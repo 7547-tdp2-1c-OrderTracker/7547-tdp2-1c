@@ -26,7 +26,6 @@ public class PostVisitTask extends AbstractTask<String,Void,Visit,DailyRouteFrag
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/visits";
-        Visit visit = null;
         return (Visit) restClient.post(url, body, headers);
     }
 
@@ -39,9 +38,7 @@ public class PostVisitTask extends AbstractTask<String,Void,Visit,DailyRouteFrag
     @Override
     protected Visit doInBackground(String... params) {
         try {
-            return this.createVisit(params[0], params[1], params[2]);
-        } catch (NoStockException e) {
-            ShowMessage.showSnackbarSimpleMessage(weakReference.get().getView(), "Nos quedamos sin stock!");
+            return this.createVisit(params[0], params[1], params[2], params[3]);
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getView(),e.getMessage());
         }
