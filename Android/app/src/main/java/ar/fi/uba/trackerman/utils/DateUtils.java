@@ -39,4 +39,8 @@ public class DateUtils {
     public static String formatShortDate(Date date) {
         return SHORT_FORMATTER.format(date);
     }
+
+    public static String formatDate(Date date) {
+        return FORMATTER.format(date);
+    }
 }

@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import java.util.Calendar;
 import java.util.concurrent.RecursiveTask;
@@ -35,17 +36,23 @@ public class MyDayAgendaActivity extends AppCompatActivity {
 
         pagerAdapter = new DailyViewPagerAdapter(getSupportFragmentManager(), this.getApplicationContext());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setCurrentItem(getCurrentDay());
+        //mViewPager.setCurrentItem(getCurrentDay());
         mViewPager.setAdapter(pagerAdapter);
+        mViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                mViewPager.setCurrentItem(getCurrentDay());
+            }
+        });
     }
 
     private int getCurrentDay(){
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK)-2;
-        if (day<0){
-            day=0;
-        }
-        return day;
+        MyPreferences pref = new MyPreferences(this.getApplicationContext());
+        String currentDate = pref.get(getString(R.string.shared_pref_current_schedule_date), "");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(DateUtils.parseShortDate(currentDate));
+        Integer position = cal.get(Calendar.DAY_OF_WEEK)-2;
+        return position;
     }
 
     @Override
@@ -65,6 +72,7 @@ public class MyDayAgendaActivity extends AppCompatActivity {
 
     public static class DailyViewPagerAdapter extends FragmentPagerAdapter {
         private final Context context;
+        private int prev=0;
         public DailyViewPagerAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
@@ -78,30 +86,19 @@ public class MyDayAgendaActivity extends AppCompatActivity {
             String currentDate = pref.get(context.getString(R.string.shared_pref_current_schedule_date), "");
             Calendar cal = Calendar.getInstance();
             cal.setTime(DateUtils.parseShortDate(currentDate));
+            int diff = i-prev;
+            //cal.set(Calendar.DATE,cal.get(Calendar.DATE)+diff);
 
-            args.putString(DailyRouteFragment.DAY_ARG, DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK)-1).toEsp());
+            args.putString(DailyRouteFragment.DAY_ARG, DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp());
+            args.putInt(DailyRouteFragment.ITEM_POSITION, i);
             fragment.setArguments(args);
+            prev = i;
             return fragment;
         }
 
         @Override
         public int getCount() {
             return 5;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Section " + (position + 1);
-        }
-
-        @Override
-        public int getItemPosition(Object object) {
-            MyPreferences pref = new MyPreferences(context);
-            String currentDate = pref.get(context.getString(R.string.shared_pref_current_schedule_date), "");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(DateUtils.parseShortDate(currentDate));
-
-            return cal.get(Calendar.DAY_OF_WEEK)-2;
         }
     }
 
