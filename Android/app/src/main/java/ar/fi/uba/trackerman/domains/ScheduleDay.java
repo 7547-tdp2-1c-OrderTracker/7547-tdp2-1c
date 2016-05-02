@@ -54,7 +54,7 @@ public class ScheduleDay {
             if (FieldValidator.isValid(dateStr)) date = DateUtils.parseShortDate(dateStr);
 
             scheduleDay = new ScheduleDay(json.getLong("seller_id"),date);
-            JSONArray resultJSON = (JSONArray) json.get("results");
+            JSONArray resultJSON = (JSONArray) json.get("clients");
             for (int i = 0; i < resultJSON.length(); i++) {
                 scheduleDay.getClients().add(Client.fromJson(resultJSON.getJSONObject(i)));
             }
