@@ -9,7 +9,9 @@ import java.text.DecimalFormat;
  */
 public class FieldValidator {
 
+    private static DecimalFormat THREE_DECIMALS = new DecimalFormat("####0.000");
     private static DecimalFormat TWO_DECIMALS = new DecimalFormat("####0.00");
+    private static DecimalFormat NO_DECIMALS = new DecimalFormat("####0");
     public static boolean isValid(String content) {
         return content != null && !"null".equalsIgnoreCase(content);
     }
@@ -44,6 +46,15 @@ public class FieldValidator {
     }
 
     public static String showCoolDistance(double dist) {
-        return TWO_DECIMALS.format(dist);
+        String expected = THREE_DECIMALS.format(dist);
+        if (expected=="0.000") expected = "";
+        String unit = "kms";
+        if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(1D) < 0)) {
+            expected = expected.substring(expected.indexOf(".")+1);
+            unit = "mts";
+        } else if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(100D) >= 0)) {
+            expected = NO_DECIMALS.format(dist);
+        }
+        return expected+unit;
     }
 }

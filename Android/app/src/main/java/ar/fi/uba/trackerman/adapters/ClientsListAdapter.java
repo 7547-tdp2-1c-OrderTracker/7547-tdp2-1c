@@ -84,6 +84,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
         }
     }
 
+    @Override
     public void addClients(ClientSearchResult clientSearchResult) {
         if(clientSearchResult!=null) {
             //this.clear();
@@ -120,11 +121,22 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
             holder = (ViewHolder) convertView.getTag();
         }
 
+
+
+
         holder.client_id.setText("# "+ isContentValid(Long.toString(client.getId())));
         holder.name.setText(isContentValid(client.getLastName())+", "+isContentValid(client.getName()));
-        holder.distance.setText(isContentValid(showCoolDistance(client.getDistance())) +" kms");
+        holder.distance.setText(showCoolDistance(client.getDistance()));
+
+
+
+
         holder.address.setText(isContentValid(client.getAddress()));
-        Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
+        if (client.getThumbnail().isEmpty()) {
+            Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
+        } else {
+            Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
+        }
 
         return convertView;
     }
