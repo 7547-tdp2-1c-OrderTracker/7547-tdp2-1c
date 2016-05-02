@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:padding="10dp"
-    android:layout_gravity="center">
+    android:padding="28dp"
+    android:layout_gravity="top|center">
 
     <ImageView
         android:id="@+id/menu_header_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:src="@drawable/icon" />
     <!--
     <TextView
