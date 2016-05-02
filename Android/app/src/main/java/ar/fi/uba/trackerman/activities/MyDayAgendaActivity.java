@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +14,9 @@ import java.util.Calendar;
 import java.util.concurrent.RecursiveTask;
 
 import ar.fi.uba.trackerman.fragments.DailyRouteFragment;
+import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 public class MyDayAgendaActivity extends AppCompatActivity {
@@ -30,7 +33,7 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        pagerAdapter = new DailyViewPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new DailyViewPagerAdapter(getSupportFragmentManager(), this.getApplicationContext());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setCurrentItem(getCurrentDay());
         mViewPager.setAdapter(pagerAdapter);
@@ -61,15 +64,22 @@ public class MyDayAgendaActivity extends AppCompatActivity {
     }
 
     public static class DailyViewPagerAdapter extends FragmentPagerAdapter {
-        public DailyViewPagerAdapter(FragmentManager fm) {
+        private final Context context;
+        public DailyViewPagerAdapter(FragmentManager fm, Context context) {
             super(fm);
+            this.context = context;
         }
 
         @Override
         public Fragment getItem(int i) {
             DailyRouteFragment fragment = new DailyRouteFragment();
             Bundle args = new Bundle();
-            args.putString(DailyRouteFragment.DAY_ARG, DayOfWeek.byReference(i).toEsp());
+            MyPreferences pref = new MyPreferences(context);
+            String currentDate = pref.get(context.getString(R.string.shared_pref_current_schedule_date), "");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(DateUtils.parseShortDate(currentDate));
+
+            args.putString(DailyRouteFragment.DAY_ARG, DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK)-1).toEsp());
             fragment.setArguments(args);
             return fragment;
         }
@@ -82,6 +92,16 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return "Section " + (position + 1);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            MyPreferences pref = new MyPreferences(context);
+            String currentDate = pref.get(context.getString(R.string.shared_pref_current_schedule_date), "");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(DateUtils.parseShortDate(currentDate));
+
+            return cal.get(Calendar.DAY_OF_WEEK)-2;
         }
     }
 

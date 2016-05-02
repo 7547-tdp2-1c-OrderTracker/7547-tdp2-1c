@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 
 import ar.fi.uba.trackerman.domains.ScheduleWeekView;
 import ar.fi.uba.trackerman.domains.Semaphore;
@@ -20,11 +21,14 @@ import ar.fi.uba.trackerman.tasks.schedule.GetScheduleWeekTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
 public class MyWeekAgendaActivity extends AppCompatActivity {
+
+    private List<Semaphore> semaphores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +80,11 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
     }
 
     public void clearAllSemaphore() {
-        for(int i = 0; i<5; i++) {
-            setSemaphore(i,"red",0);
-            setSemaphore(i,"green",0);
-            setSemaphore(i,"yellow",0);
+        for(DayOfWeek d : DayOfWeek.values()) {
+            if (!d.isWorkingDay(d.getReference())) break;
+            setSemaphore(d.getReference(),"red",0);
+            setSemaphore(d.getReference(),"green",0);
+            setSemaphore(d.getReference(),"yellow",0);
         }
         setSemaphoreFR("red",0);
         setSemaphoreFR("green",0);
@@ -88,9 +93,8 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
 
     public void highlightToday() {
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        //dia 1 para el Calendar.DAY_OF_WEEK es domingo, por eso el -1
-        if (dayOfWeek == 1) dayOfWeek = 6; //nuestro domingo
-        else dayOfWeek -= 2; //de lunes a sabado
+        //dia 1 para el Calendar.DAY_OF_WEEK es domingo, por eso el -1. En nuestro DayOfWeek es 0
+        dayOfWeek -= 1;
         if (DayOfWeek.isWorkingDay(dayOfWeek)) {
             String identifier = "";
             identifier = "agenda_week_" + DayOfWeek.byReference(dayOfWeek).toEng().toLowerCase() +"_card";
@@ -100,23 +104,22 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
     }
 
     public void fillWeek(ScheduleWeekView week) {
-
+        this.semaphores = week.getSemaphores();
         int totalRed = 0;
         int totalYellow = 0;
         int totalGreen = 0;
-
         for(Semaphore semaphore : week.getSemaphores()) {
-            if(!DayOfWeek.isWorkingDay(semaphore.getDayOfWeek())) break;
-
-            int redDay = semaphore.getRed();
-            int yellowDay = semaphore.getYellow();
-            int greenDay = semaphore.getGreen();
-            totalRed += redDay;
-            totalYellow += yellowDay;
-            totalGreen += greenDay;
-            setSemaphore(semaphore.getDayOfWeek(),"red",redDay);
-            setSemaphore(semaphore.getDayOfWeek(),"yellow",yellowDay);
-            setSemaphore(semaphore.getDayOfWeek(),"green",greenDay);
+            if(DayOfWeek.isWorkingDay(semaphore.getDayOfWeek()))  {
+                int redDay = semaphore.getRed();
+                int yellowDay = semaphore.getYellow();
+                int greenDay = semaphore.getGreen();
+                totalRed += redDay;
+                totalYellow += yellowDay;
+                totalGreen += greenDay;
+                setSemaphore(semaphore.getDayOfWeek(),"red",redDay);
+                setSemaphore(semaphore.getDayOfWeek(),"yellow",yellowDay);
+                setSemaphore(semaphore.getDayOfWeek(),"green",greenDay);
+            }
         }
 
         setSemaphoreFR("red",totalRed);
@@ -125,13 +128,22 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
 
     }
 
-    public void openMyClientsActivity(View view) {
+    public void clickCardFR(View v) {
         Intent intent = new Intent(this, MyClientsActivity.class);
         startActivity(intent);
     }
 
-    public void clickCardFR(View v) {
-        openMyClientsActivity(v);
+    public void onClickDayOfWeek(View view) {
+        for (DayOfWeek day : DayOfWeek.values()) {
+            if (day.isWorkingDay(day.getReference())) {
+                String id = "agenda_week_" + day.toEng().toLowerCase() +"_card";
+                if (view.getId() == getResources().getIdentifier(id, "id", getPackageName())) {
+                    MyPreferences pref = new MyPreferences(this);
+                    pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(this.semaphores.get(day.getReference()).getDate()));
+                    Intent intent = new Intent(this, MyDayAgendaActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
     }
-
 }

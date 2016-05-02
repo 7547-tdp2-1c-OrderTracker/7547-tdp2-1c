@@ -72,7 +72,8 @@
                         android:layout_rowWeight="1"
                         android:layout_weight="1"
                         card_view:cardCornerRadius="2dp"
-                        card_view:contentPadding="0dp">
+                        card_view:contentPadding="0dp"
+                        android:onClick="onClickDayOfWeek">
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -167,7 +168,7 @@
                         android:layout_rowWeight="1"
                         android:layout_weight="1"
                         card_view:cardCornerRadius="2dp"
->
+                        android:onClick="onClickDayOfWeek">
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -271,7 +272,7 @@
                         android:layout_rowWeight="1"
                         android:layout_weight="1"
                         card_view:cardCornerRadius="2dp"
-                        >
+                        android:onClick="onClickDayOfWeek">
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -367,7 +368,7 @@
                         android:layout_rowWeight="1"
                         android:layout_weight="1"
                         card_view:cardCornerRadius="2dp"
-                        >
+                        android:onClick="onClickDayOfWeek">
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -472,7 +473,7 @@
                         android:layout_rowWeight="1"
                         android:layout_weight="1"
                         card_view:cardCornerRadius="2dp"
-                        >
+                        android:onClick="onClickDayOfWeek">
 
                         <FrameLayout
                             android:layout_width="match_parent"

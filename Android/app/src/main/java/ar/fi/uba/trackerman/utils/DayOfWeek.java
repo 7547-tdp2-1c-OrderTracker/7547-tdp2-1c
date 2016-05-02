@@ -4,13 +4,13 @@ package ar.fi.uba.trackerman.utils;
  * Created by smpiano on 5/2/16.
  */
 public enum DayOfWeek {
-    MONDAY(0, "Monday", "Lunes"),
-    TUESDAY(1, "Tuesday", "Martes"),
-    WEDNESDAY(2 ,"Wednesday", "Miércoles"),
-    THURSDAY(3, "Thursday", "Jueves"),
-    FRIDAY(4, "Friday", "Viernes"),
-    SATURDAY(5, "Saturday", "Sábado"),
-    SUNDAY(6, "Sunday", "Domingo");
+    SUNDAY(0, "Sunday", "Domingo"),
+    MONDAY(1, "Monday", "Lunes"),
+    TUESDAY(2, "Tuesday", "Martes"),
+    WEDNESDAY(3 ,"Wednesday", "Miércoles"),
+    THURSDAY(4, "Thursday", "Jueves"),
+    FRIDAY(5, "Friday", "Viernes"),
+    SATURDAY(6, "Saturday", "Sábado");
 
     private Integer reference;
     private String eng;
