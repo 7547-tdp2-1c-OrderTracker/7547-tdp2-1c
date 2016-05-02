@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
@@ -39,11 +38,36 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        clearAllSemaphore();
+        startCleanUpUI();
+        //clearAllSemaphore();
         highlightToday();
 
         if (RestClient.isOnline(this)) new GetScheduleWeekTask(this).execute(DateUtils.formatShortDate(Calendar.getInstance().getTime()), String.valueOf(AppSettings.getSellerId()));
 
+    }
+
+    private void startCleanUpUI() {
+        ((TextView) findViewById(R.id.semaphore_red_monday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_red_tuesday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_red_wednesday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_red_thursday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_red_friday_text)).setText("");
+
+        ((TextView) findViewById(R.id.semaphore_yellow_monday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_yellow_tuesday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_yellow_wednesday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_yellow_thursday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_yellow_friday_text)).setText("");
+
+        ((TextView) findViewById(R.id.semaphore_green_monday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_green_tuesday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_green_wednesday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_green_thursday_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_green_friday_text)).setText("");
+
+        ((TextView) findViewById(R.id.semaphore_red_outofroute_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_yellow_outofroute_text)).setText("");
+        ((TextView) findViewById(R.id.semaphore_green_outofroute_text)).setText("");
     }
 
     @Override
