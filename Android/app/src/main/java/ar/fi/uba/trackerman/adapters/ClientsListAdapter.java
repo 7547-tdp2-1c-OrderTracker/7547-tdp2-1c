@@ -118,7 +118,11 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(isContentValid(client.getLastName())+", "+isContentValid(client.getName()) + " "+isContentValid(showCoolDistance(client.getDistance()))+"mts");
+        String nameDisplay = isContentValid(client.getLastName())+", "+isContentValid(client.getName());
+        String dist = showCoolDistance(client.getDistance());
+        if (!dist.isEmpty()) nameDisplay+=" "+dist;
+
+        holder.name.setText(nameDisplay);
         holder.address.setText(isContentValid(client.getAddress()));
         Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
 
