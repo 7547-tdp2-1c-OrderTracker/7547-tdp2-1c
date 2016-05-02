@@ -19,15 +19,17 @@ import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
-import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.CircleTransform;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
+import static ar.fi.uba.trackerman.utils.FieldValidator.showCoolDistance;
 
 public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClientListTask.ClientsListAggregator {
 
+    private boolean firstRefresed;
+    private Location loc;
     private long total;
     private long offset;
     private boolean fetching;
@@ -38,6 +40,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
         total=1;
         offset=0;
         fetching=false;
+        firstRefresed = false;
     }
 
     public void refresh(){
@@ -50,21 +53,40 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
     public void fetchMore(){
         if(offset<total && !fetching){
             fetching=true;
-            if (RestClient.isOnline(getContext())) new GetClientListTask(ClientsListAdapter.this).execute(String.valueOf(offset));
+            solveTask();
             LocationService ls = new LocationService(this.getContext());
             ls.config(new LocationService.MyLocation() {
                 @Override
                 public void processLocation(Location loc) {
-                    if (RestClient.isOnline(getContext())) new GetClientListTask(ClientsListAdapter.this).execute(String.valueOf(offset),String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
+                    ClientsListAdapter.this.loc = loc;
+                    if (!ClientsListAdapter.this.firstRefresed) {
+                        //solveTask();
+                        ClientsListAdapter.this.firstRefresed = true;
+                    }
                 }
             });
 
         }
     }
 
+    private void solveTask() {
+        if (RestClient.isOnline(getContext())) {
+            GetClientListTask listClients = new GetClientListTask(ClientsListAdapter.this);
+            if (loc != null) {
+                listClients.execute(String.valueOf(offset), String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
+            } else {
+                MyPreferences pref = new MyPreferences(getContext());
+                String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
+                String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
+                if (lat.isEmpty() && lon.isEmpty()) listClients.execute(String.valueOf(offset));
+                else listClients.execute(String.valueOf(offset), lat, lon);
+            }
+        }
+    }
+
     public void addClients(ClientSearchResult clientSearchResult) {
         if(clientSearchResult!=null) {
-            this.clear();
+            //this.clear();
             this.addAll(clientSearchResult.getClients());
             this.offset = this.getCount();
             this.total = clientSearchResult.getTotal();
@@ -96,7 +118,11 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(isContentValid(client.getLastName())+", "+isContentValid(client.getName()));
+        String nameDisplay = isContentValid(client.getLastName())+", "+isContentValid(client.getName());
+        String dist = showCoolDistance(client.getDistance());
+        if (!dist.isEmpty()) nameDisplay+=" "+dist;
+
+        holder.name.setText(nameDisplay);
         holder.address.setText(isContentValid(client.getAddress()));
         Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
 
