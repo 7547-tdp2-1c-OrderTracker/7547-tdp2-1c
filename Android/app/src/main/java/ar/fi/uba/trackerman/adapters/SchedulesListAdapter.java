@@ -34,13 +34,7 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         super(context, resource, clients);
         LocationHelper.updatePosition(getContext());
 
-        MyPreferences pref = new MyPreferences(getContext());
-        String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
-        String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
-        String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
-        long seller = AppSettings.getSellerId();
-
-        if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(currentDate, Long.toString(seller), lat, lon);
+        solveTask(null);
     }
 
     @Override
@@ -78,6 +72,16 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     public ScheduleDay getCurrentScheduleDay() {
         return currentScheduleDay;
+    }
+
+    public void solveTask(String date) {
+        MyPreferences pref = new MyPreferences(getContext());
+        String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
+        String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
+        String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
+        String dateToSolve = (date==null)?currentDate:date;
+
+        if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(dateToSolve, Long.toString(AppSettings.getSellerId()), lat, lon);
     }
 
     private static class ViewHolder {
