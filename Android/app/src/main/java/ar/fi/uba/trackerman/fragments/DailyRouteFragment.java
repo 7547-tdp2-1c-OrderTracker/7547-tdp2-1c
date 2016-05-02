@@ -37,6 +37,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     public static final String DIFF = "DailyRouteFragment.DIFF";
     ListView clientsList;
     private SchedulesListAdapter schedulesListAdapter;
+    private View emptyView;
 
     public DailyRouteFragment(){
         super();
@@ -70,11 +71,11 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
-        schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
+        schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>(),this);
         schedulesList.setAdapter(schedulesListAdapter);
         schedulesListAdapter.solveTask(DateUtils.formatShortDate(cal.getTime()));
         //schedulesList.setOnItemClickListener(this);
-
+        this.emptyView= fragmentView.findViewById(R.id.agenda_row_clients_empty);
 
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
@@ -130,4 +131,13 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     public void afterCreatingVisit(Visit visit) {
         //TODO glaghi luego de crear la visita refrescar la vista
     }
+
+    public void showEmptyList(){
+        emptyView.setVisibility(View.VISIBLE);
+    }
+
+    public void showClientList(){
+        emptyView.setVisibility(View.GONE);
+    }
+
 }

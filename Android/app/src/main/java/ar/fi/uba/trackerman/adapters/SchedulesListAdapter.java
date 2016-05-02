@@ -1,10 +1,12 @@
 package ar.fi.uba.trackerman.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
+import ar.fi.uba.trackerman.fragments.DailyRouteFragment;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.schedule.GetScheduleDayListTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
@@ -28,12 +31,13 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.showCoolDistance;
 public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     private ScheduleDay currentScheduleDay;
+    private DailyRouteFragment fragment;
 
     public SchedulesListAdapter(Context context, int resource,
-                                List<Client> clients) {
+                                List<Client> clients, DailyRouteFragment fragment) {
         super(context, resource, clients);
         LocationHelper.updatePosition(getContext());
-
+        this.fragment= fragment;
         solveTask(null);
     }
 
@@ -67,7 +71,15 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     public void setScheduleDay(ScheduleDay day) {
         this.currentScheduleDay = day;
-        this.addAll(day.getClients());
+
+        if(day.getClients().size()==0){
+            fragment.showEmptyList();
+        }else {
+            fragment.showClientList();
+            this.clear();
+            this.addAll(day.getClients());
+            this.notifyDataSetChanged();
+        }
     }
 
     public ScheduleDay getCurrentScheduleDay() {
