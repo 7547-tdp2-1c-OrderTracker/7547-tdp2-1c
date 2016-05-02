@@ -36,8 +36,6 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> implements GetSch
         String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
         String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
         String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
-
-        currentDate = "2016-04-26"; // FIXME: borrar esta linea
         long seller = AppSettings.getSellerId();
         seller = 2; // FIXME: borrar esta linea
 
