@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -24,6 +25,7 @@ import ar.fi.uba.trackerman.domains.Visit;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.visit.PostVisitTask;
 import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.DayOfWeek;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -33,10 +35,10 @@ import fi.uba.ar.soldme.R;
 public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitCreator{
 
     public static final String ITEM_POSITION = "DailyRouteFragment.ITEM_POSITION";
-    public static String DAY_ARG = "DailyRouteFragment.DAY_ARG";
-    private String day;
+    public static final String DIFF = "DailyRouteFragment.DIFF";
     ListView clientsList;
     private SchedulesListAdapter schedulesListAdapter;
+    private View emptyView;
 
     public DailyRouteFragment(){
         super();
@@ -47,17 +49,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
                              Bundle savedInstanceState) {
 
         Bundle args = getArguments();
-        day = args.getString(DAY_ARG);
         Integer item = args.getInt(ITEM_POSITION);
-
-        MyPreferences pref = new MyPreferences(this.getContext());
-        String currentDate = pref.get(getString(R.string.shared_pref_current_schedule_date), "");
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(DateUtils.parseShortDate(currentDate));
-
-        //cal.get(Calendar.DAY_OF_WEEK)-2;
-
-
+        Integer diff = args.getInt(DIFF);
 
         View fragmentView= inflater.inflate(R.layout.fragment_daily_route, container, false);
         clientsList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
@@ -65,15 +58,29 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         registerForContextMenu(clientsList);
 
 
+        MyPreferences pref = new MyPreferences(this.getContext());
+        String currentDate = pref.get(this.getContext().getString(R.string.shared_pref_current_schedule_date), "");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(DateUtils.parseShortDate(currentDate));
+        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + diff);
+        //pref.save(context.getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(cal.getTime()));
+        String queriedDate = DateUtils.formatShortDate(cal.getTime());
+
+
         TextView text= (TextView)fragmentView.findViewById(R.id.daily_route_day);
-        text.setText(day+" - position="+item);
+        //String extra = String.valueOf(diff) + " - " + queriedDate;
+        //text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() +" - position="+item+" - diff"+extra);
+        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + " - " + queriedDate);
+
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
-        schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
+        schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>(),this);
         schedulesList.setAdapter(schedulesListAdapter);
+        Log.d("daily_route","Date queried = " + queriedDate);
+        schedulesListAdapter.solveTask(queriedDate);
         //schedulesList.setOnItemClickListener(this);
-
+        this.emptyView= fragmentView.findViewById(R.id.agenda_row_clients_empty);
 
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
@@ -129,4 +136,13 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     public void afterCreatingVisit(Visit visit) {
         //TODO glaghi luego de crear la visita refrescar la vista
     }
+
+    public void showEmptyList(){
+        emptyView.setVisibility(View.VISIBLE);
+    }
+
+    public void showClientList(){
+        emptyView.setVisibility(View.GONE);
+    }
+
 }

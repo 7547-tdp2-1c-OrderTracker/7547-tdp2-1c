@@ -34,10 +34,11 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        pagerAdapter = new DailyViewPagerAdapter(getSupportFragmentManager(), this.getApplicationContext());
+        pagerAdapter = new DailyViewPagerAdapter(getSupportFragmentManager(), this.getApplicationContext(), getCurrentDay());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         //mViewPager.setCurrentItem(getCurrentDay());
         mViewPager.setAdapter(pagerAdapter);
+
         mViewPager.post(new Runnable() {
             @Override
             public void run() {
@@ -72,27 +73,31 @@ public class MyDayAgendaActivity extends AppCompatActivity {
 
     public static class DailyViewPagerAdapter extends FragmentPagerAdapter {
         private final Context context;
-        private int prev=0;
-        public DailyViewPagerAdapter(FragmentManager fm, Context context) {
+        private final int startPosition;
+        public DailyViewPagerAdapter(FragmentManager fm, Context context, int startPosition) {
             super(fm);
             this.context = context;
+            this.startPosition = startPosition;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return super.getItemPosition(object);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return super.getItemId(position);
         }
 
         @Override
         public Fragment getItem(int i) {
             DailyRouteFragment fragment = new DailyRouteFragment();
-            Bundle args = new Bundle();
-            MyPreferences pref = new MyPreferences(context);
-            String currentDate = pref.get(context.getString(R.string.shared_pref_current_schedule_date), "");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(DateUtils.parseShortDate(currentDate));
-            int diff = i-prev;
-            //cal.set(Calendar.DATE,cal.get(Calendar.DATE)+diff);
 
-            args.putString(DailyRouteFragment.DAY_ARG, DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp());
+            Bundle args = new Bundle();
             args.putInt(DailyRouteFragment.ITEM_POSITION, i);
+            args.putInt(DailyRouteFragment.DIFF, i-startPosition);
             fragment.setArguments(args);
-            prev = i;
             return fragment;
         }
 

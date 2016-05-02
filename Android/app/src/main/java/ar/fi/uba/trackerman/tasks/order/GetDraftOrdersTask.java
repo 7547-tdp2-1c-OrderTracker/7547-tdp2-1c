@@ -13,8 +13,10 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
 public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapper>,AppCompatActivity> {
@@ -29,6 +31,8 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
             ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId);
         } catch (BusinessException e) {
             Log.e("business_error", e.getMessage(), e);
+        } catch (ServerErrorException e) {
+            Log.e("server_error", e.getMessage(), e);
         }
         return ordersWrapper;
     }
