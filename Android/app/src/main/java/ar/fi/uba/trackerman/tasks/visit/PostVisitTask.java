@@ -21,8 +21,8 @@ public class PostVisitTask extends AbstractTask<String,Void,Visit,DailyRouteFrag
         super(fragment);
     }
 
-    public Visit createVisit(String scheduleEntryId, String date, String comment) {
-        String body = "{\"schedule_entry_id\": "+ scheduleEntryId + ",\"date\":"+date+",\"comment\":"+comment+"}";
+    public Visit createVisit(String clientId, String dayOfWeek, String date, String comment) {
+        String body = "{\"client_id\": "+ clientId + ",\"day_of_week\":"+ dayOfWeek + ",\"date\":"+date+",\"comment\":"+comment+"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/visits";

@@ -19,6 +19,7 @@ import java.util.Calendar;
 
 import ar.fi.uba.trackerman.adapters.SchedulesListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.ScheduleDay;
 import ar.fi.uba.trackerman.domains.Visit;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.visit.PostVisitTask;
@@ -35,6 +36,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     public static String DAY_ARG = "DailyRouteFragment.DAY_ARG";
     private String day;
     ListView clientsList;
+    private SchedulesListAdapter schedulesListAdapter;
 
     public DailyRouteFragment(){
         super();
@@ -68,7 +70,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
-        SchedulesListAdapter schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
+        schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
         schedulesList.setAdapter(schedulesListAdapter);
         //schedulesList.setOnItemClickListener(this);
 
@@ -105,7 +107,17 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
                 // FIXME: Aqui se deberia marcar como visitado
                 Toast.makeText(this.getActivity().getApplicationContext(), "Marcar como vistado !!!", Toast.LENGTH_LONG).show();
 
-                //if (RestClient.isOnline(this.getContext())) new PostVisitTask(this).execute(scheduleEntryId,DateUtils.formatDate(Calendar.getInstance().getTime()),comment);
+                ScheduleDay day = schedulesListAdapter.getCurrentScheduleDay();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(day.getDate());
+                String dayOfWeek = String.valueOf(cal.get(Calendar.DAY_OF_WEEK) - 1);
+
+                //FIXME guido tenes que obtener el comentario y cambiar esta linea.
+                String comment = "Te visite";
+                //FIXME guido obtener el client y poner el clientId
+                String clientId = "1";
+
+                if (RestClient.isOnline(this.getContext())) new PostVisitTask(this).execute(clientId,dayOfWeek,DateUtils.formatDate(Calendar.getInstance().getTime()),comment);
 
                 return true;
             default:

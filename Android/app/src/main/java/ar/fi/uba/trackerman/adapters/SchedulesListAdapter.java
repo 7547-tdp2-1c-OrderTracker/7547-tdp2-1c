@@ -27,6 +27,8 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.showCoolDistance;
 
 public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
+    private ScheduleDay currentScheduleDay;
+
     public SchedulesListAdapter(Context context, int resource,
                                 List<Client> clients) {
         super(context, resource, clients);
@@ -70,7 +72,12 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
     }
 
     public void setScheduleDay(ScheduleDay day) {
+        this.currentScheduleDay = day;
         this.addAll(day.getClients());
+    }
+
+    public ScheduleDay getCurrentScheduleDay() {
+        return currentScheduleDay;
     }
 
     private static class ViewHolder {
