@@ -138,8 +138,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     @Override
     public void afterCreatingVisit(Visit visit) {
         // refresh del fragment
-        //FragmentTransaction ft = getFragmentManager().beginTransaction();
-        //ft.detach(this).attach(this).commit();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
     }
 
     public void showEmptyList(){
