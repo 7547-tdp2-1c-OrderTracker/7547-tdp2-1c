@@ -4,20 +4,22 @@ package ar.fi.uba.trackerman.utils;
  * Created by smpiano on 5/2/16.
  */
 public enum DayOfWeek {
-    MONDAY(0, "Monday"),
-    TUESDAY(1, "Tuesday"),
-    WEDNESDAY(2 ,"Wednesday"),
-    THURSDAY(3, "Thursday"),
-    FRIDAY(4, "Friday"),
-    SATURDAY(5, "Saturday"),
-    SUNDAY(6, "Sunday");
+    MONDAY(0, "Monday", "Lunes"),
+    TUESDAY(1, "Tuesday", "Martes"),
+    WEDNESDAY(2 ,"Wednesday", "Miércoles"),
+    THURSDAY(3, "Thursday", "Jueves"),
+    FRIDAY(4, "Friday", "Viernes"),
+    SATURDAY(5, "Saturday", "Sábado"),
+    SUNDAY(6, "Sunday", "Domingo");
 
     private Integer reference;
     private String eng;
+    private String esp;
 
-    private DayOfWeek(Integer reference, String eng) {
+    private DayOfWeek(Integer reference, String eng, String esp) {
         this.reference = reference;
         this.eng = eng;
+        this.esp = esp;
     }
 
     public Integer getReference() {
@@ -26,6 +28,10 @@ public enum DayOfWeek {
 
     public String toEng() {
         return eng;
+    }
+
+    public String toEsp() {
+        return esp;
     }
 
     public static DayOfWeek byReference(Integer reference) {

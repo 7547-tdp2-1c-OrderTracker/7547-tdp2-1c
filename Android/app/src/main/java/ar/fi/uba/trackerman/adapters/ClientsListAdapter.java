@@ -20,6 +20,7 @@ import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientListTask;
 import ar.fi.uba.trackerman.utils.CircleTransform;
+import ar.fi.uba.trackerman.utils.LocationHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -41,6 +42,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
         offset=0;
         fetching=false;
         firstRefresed = false;
+        LocationHelper.updatePosition(this.getContext());
     }
 
     public void refresh(){

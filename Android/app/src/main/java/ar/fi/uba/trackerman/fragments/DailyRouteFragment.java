@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.adapters.SchedulesListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.domains.ScheduleEntry;
 import fi.uba.ar.soldme.R;
 
 /**

@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.utils.LocationHelper;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;

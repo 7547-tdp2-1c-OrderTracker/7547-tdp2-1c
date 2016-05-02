@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderWrapper;
@@ -21,6 +22,7 @@ import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
         pref.save(getString(R.string.shared_pref_current_order_id), -1L);
         pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_client_id), -1L);
+        pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
 
         setupNavigationDrawerContent(navigationView);
 
