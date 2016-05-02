@@ -173,20 +173,22 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     public boolean onOptionsItemSelected(final MenuItem item) {
 
         if(item.getItemId()==R.id.action_cancel) {
-            new ConfirmDialog(this) {
+            ConfirmDialog confirmDialog = new ConfirmDialog(this) {
                 @Override
                 public void onConfirm() {
                     if (RestClient.isOnline(OrderActivity.this)) new CancellOrderTask(OrderActivity.this).execute(Long.toString(OrderActivity.this.orderId));
                 }
             };
+            confirmDialog.show();
         }
         if(item.getItemId()==R.id.action_empty) {
-            new ConfirmDialog(this) {
+            ConfirmDialog confirmDialog = new ConfirmDialog(this) {
                 @Override
                 public void onConfirm() {
                     if (RestClient.isOnline(OrderActivity.this)) new EmptyOrderTask(OrderActivity.this).execute(Long.toString(OrderActivity.this.orderId));
                 }
             };
+            confirmDialog.show();
         }
 
 
