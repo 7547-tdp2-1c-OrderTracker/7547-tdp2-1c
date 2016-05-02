@@ -10,7 +10,13 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import ar.fi.uba.trackerman.domains.ScheduleWeekView;
+import ar.fi.uba.trackerman.domains.Semaphore;
+import ar.fi.uba.trackerman.server.RestClient;
+import ar.fi.uba.trackerman.tasks.schedule.GetScheduleWeekTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.DayOfWeek;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
@@ -27,9 +33,9 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         clearAllSemaphore();
-        fillRandomSemaphore();
-
         highlightToday();
+
+        if (RestClient.isOnline(this)) new GetScheduleWeekTask(this).execute(DateUtils.formatShortDate(Calendar.getInstance().getTime()), String.valueOf(AppSettings.getSellerId()));
 
     }
 
@@ -48,75 +54,42 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setSemaphore(int day_of_week,String color, int ammount) {
-
+    public void setSemaphore(int dayOfWeek,String color, int ammount) {
         // identifier sample: semaphore_green_monday_text
         String identifier = "";
-        String dayOfWeekStr = DateUtils.dayOfWeekToText(day_of_week).toLowerCase();
-        identifier = "semaphore_" + color +"_"+ dayOfWeekStr +"_text";
+
+        identifier = "semaphore_" + color +"_"+ DayOfWeek.byReference(dayOfWeek).toEng().toLowerCase() +"_text";
         int resID = getResources().getIdentifier(identifier, "id", getPackageName());
-
-        ((TextView)findViewById(resID)).setText(isContentValid(Integer.toString(ammount)));
-
-    }
-
-    public void fillRandomSemaphore() {
-        setSemaphore(1,"red",0);
-        setSemaphore(1,"green",32);
-        setSemaphore(1,"yellow",18);
-
-        setSemaphore(2,"red",15);
-        setSemaphore(2,"green",3);
-        setSemaphore(2,"yellow",0);
-
-        setSemaphore(3,"red",115);
-        setSemaphore(3,"green",30);
-        setSemaphore(3,"yellow",2);
-
-        setSemaphore(4,"red",1);
-        setSemaphore(4,"green",2);
-        setSemaphore(4,"yellow",1);
-
-        setSemaphore(5,"red",150);
-        setSemaphore(5,"green",32);
-        setSemaphore(5,"yellow",9);
-
+        ((TextView)findViewById(resID)).setText(isContentValid(String.valueOf(ammount)));
     }
 
     public void clearAllSemaphore() {
-        setSemaphore(1,"red",0);
-        setSemaphore(1,"green",0);
-        setSemaphore(1,"yellow",0);
-
-        setSemaphore(2,"red",0);
-        setSemaphore(2,"green",0);
-        setSemaphore(2,"yellow",0);
-
-        setSemaphore(3,"red",0);
-        setSemaphore(3,"green",0);
-        setSemaphore(3,"yellow",0);
-
-        setSemaphore(4,"red",0);
-        setSemaphore(4,"green",0);
-        setSemaphore(4,"yellow",0);
-
-        setSemaphore(5,"red",0);
-        setSemaphore(5,"green",0);
-        setSemaphore(5,"yellow",0);
+        for(int i = 0; i<5; i++) {
+            setSemaphore(i,"red",0);
+            setSemaphore(i,"green",0);
+            setSemaphore(i,"yellow",0);
+        }
     }
 
     public void highlightToday() {
-
-        int day_of_week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        day_of_week = 4;
-        if ((day_of_week >= 1) && (day_of_week <= 5)) {
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        //dia 1 para el Calendar.DAY_OF_WEEK es domingo, por eso el -1
+        if (dayOfWeek == 1) dayOfWeek = 6; //nuestro domingo
+        else dayOfWeek -= 2; //de lunes a sabado
+        if (DayOfWeek.isWorkingDay(dayOfWeek)) {
             String identifier = "";
-            String dayOfWeekStr = DateUtils.dayOfWeekToText(day_of_week).toLowerCase();
-            identifier = "agenda_week_" + dayOfWeekStr +"_card";
+            identifier = "agenda_week_" + DayOfWeek.byReference(dayOfWeek).toEng().toLowerCase() +"_card";
             int resID = getResources().getIdentifier(identifier, "id", getPackageName());
             ((CardView) findViewById(resID)).setCardBackgroundColor(Color.CYAN);
         }
-
     }
 
+    public void fillWeek(ScheduleWeekView week) {
+        for(Semaphore semaphore : week.getSemaphores()) {
+            if(!DayOfWeek.isWorkingDay(semaphore.getDayOfWeek())) break;
+            setSemaphore(semaphore.getDayOfWeek(),"red",semaphore.getRed());
+            setSemaphore(semaphore.getDayOfWeek(),"green",semaphore.getGreen());
+            setSemaphore(semaphore.getDayOfWeek(),"yellow",semaphore.getYellow());
+        }
+    }
 }

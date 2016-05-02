@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.concurrent.RecursiveTask;
 
 import ar.fi.uba.trackerman.fragments.DailyRouteFragment;
+import ar.fi.uba.trackerman.utils.DayOfWeek;
 import fi.uba.ar.soldme.R;
 
 public class MyDayAgendaActivity extends AppCompatActivity {
@@ -68,27 +69,9 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         public Fragment getItem(int i) {
             DailyRouteFragment fragment = new DailyRouteFragment();
             Bundle args = new Bundle();
-            args.putString(DailyRouteFragment.DAY_ARG,getCurrentDay(i));
+            args.putString(DailyRouteFragment.DAY_ARG, DayOfWeek.byReference(i).toEsp());
             fragment.setArguments(args);
             return fragment;
-        }
-
-        private String getCurrentDay(int day){
-
-            switch (day){
-                case 0:
-                    return "MONDAY";
-                case 1:
-                    return "THURSDAY";
-                case 2:
-                    return "WEDNESDAY";
-                case 3:
-                    return "TUESDAY";
-                case 4:
-                    return "FRIDAY";
-                default:
-                    return "UNKNOWS";
-            }
         }
 
         @Override

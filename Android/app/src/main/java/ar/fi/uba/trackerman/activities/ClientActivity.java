@@ -1,7 +1,6 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,7 +20,6 @@ import java.util.List;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
-import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
@@ -71,7 +69,6 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         pref.save(getString(R.string.shared_pref_current_client_id), clientId);
 
         this.startCleanUpUI();
-
         if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getSellerId()), String.valueOf(clientId) );
     }
 

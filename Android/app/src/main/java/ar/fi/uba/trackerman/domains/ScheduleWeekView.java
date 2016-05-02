@@ -15,15 +15,14 @@ import ar.fi.uba.trackerman.utils.FieldValidator;
 /**
  * Created by smpiano on 5/1/16.
  */
-public class ScheduleDay {
+public class ScheduleWeekView {
     private long sellerId;
     private Date date;
-    private List<Client> clients;
+    private List<Semaphore> semaphores;
 
-    public ScheduleDay(long sellerId, Date date) {
+    public ScheduleWeekView(Long sellerId) {
         this.sellerId = sellerId;
-        this.date = date;
-        this.clients = new ArrayList<Client>();
+        this.semaphores = new ArrayList<Semaphore>();
     }
 
     public long getSellerId() {
@@ -42,26 +41,28 @@ public class ScheduleDay {
         this.date = date;
     }
 
-    public List<Client> getClients() {
-        return clients;
+    public List<Semaphore> getSemaphores() {
+        return semaphores;
     }
 
-    public static ScheduleDay fromJson(JSONObject json) {
-        ScheduleDay scheduleDay = null;
+    public static ScheduleWeekView fromJson(JSONObject json) {
+        ScheduleWeekView week = null;
         try {
+            week = new ScheduleWeekView(json.getLong("seller_id"));
+
             String dateStr = json.getString("date");
             Date date = null;
             if (FieldValidator.isValid(dateStr)) date = DateUtils.parseShortDate(dateStr);
+            week.setDate(date);
 
-            scheduleDay = new ScheduleDay(json.getLong("seller_id"),date);
-            JSONArray resultJSON = (JSONArray) json.get("clients");
-            for (int i = 0; i < resultJSON.length(); i++) {
-                scheduleDay.getClients().add(Client.fromJson(resultJSON.getJSONObject(i)));
+            JSONArray semaphores = (JSONArray) json.get("semaphore");
+            for (int i = 0; i < semaphores.length(); i++) {
+                week.getSemaphores().add(Semaphore.fromJson(semaphores.getJSONObject(i)));
             }
 
-        } catch(JSONException e) {
-            throw new BusinessException("Error parsing ScheduleDayView.",e);
+        } catch (JSONException e) {
+            throw new BusinessException("Error parsing ScheduleWeekView.",e);
         }
-        return scheduleDay;
+        return week;
     }
 }

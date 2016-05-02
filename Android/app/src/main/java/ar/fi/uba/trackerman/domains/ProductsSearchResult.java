@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.fi.uba.trackerman.exceptions.BusinessException;
+
 /**
  * Created by plucadei on 3/4/16.
  */
@@ -58,7 +60,7 @@ public class ProductsSearchResult {
                 productsSearchResult.addProduct(Product.fromJson(resultJSON.getJSONObject(i)));
             }
         } catch(JSONException e) {
-
+            throw new BusinessException("Error parsing ProductSearchResult.",e);
         }
         return productsSearchResult;
     }

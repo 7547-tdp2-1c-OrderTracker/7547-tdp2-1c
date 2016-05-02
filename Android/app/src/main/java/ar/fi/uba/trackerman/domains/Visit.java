@@ -96,7 +96,7 @@ public class Visit {
             visit.setLastModified(lastModified);
 
         } catch(JSONException e) {
-            throw new BusinessException("Error parsing Product.",e);
+            throw new BusinessException("Error parsing Visit.",e);
         }
         return visit;
     }

@@ -1,30 +1,24 @@
 package ar.fi.uba.trackerman.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.domains.Product;
-import ar.fi.uba.trackerman.domains.ProductsSearchResult;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
-import ar.fi.uba.trackerman.domains.ScheduleEntry;
-import ar.fi.uba.trackerman.domains.SchedulesSearchResult;
 import ar.fi.uba.trackerman.server.RestClient;
-import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
 import ar.fi.uba.trackerman.tasks.schedule.GetScheduleDayListTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.LocationHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -36,23 +30,18 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> implements GetSch
     public SchedulesListAdapter(Context context, int resource,
                                 List<Client> clients) {
         super(context, resource, clients);
-        GetScheduleDayListTask scheduleListTask = new GetScheduleDayListTask(this);
-
-
-        Calendar today = Calendar.getInstance();
-        // String todayStr = today.get(Calendar.YEAR) +"-"+today.get(Calendar.MONTH) +"-"+today.get(Calendar.DATE);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String todayStr = sdf.format(today.getTime());
-        todayStr = "2016-04-26"; // FIXME: borrar esta linea
-
-        long seller = AppSettings.getSellerId();
-        seller = 2; // FIXME: borrar esta linea
+        LocationHelper.updatePosition(getContext());
 
         MyPreferences pref = new MyPreferences(getContext());
         String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
         String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
+        String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
 
-        scheduleListTask.execute(todayStr, Long.toString(seller), lat, lon);
+        currentDate = "2016-04-26"; // FIXME: borrar esta linea
+        long seller = AppSettings.getSellerId();
+        seller = 2; // FIXME: borrar esta linea
+
+        if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(currentDate, Long.toString(seller), lat, lon);
     }
 
     @Override
