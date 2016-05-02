@@ -38,14 +38,15 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> implements GetSch
         super(context, resource, clients);
         GetScheduleDayListTask scheduleListTask = new GetScheduleDayListTask(this);
 
+
         Calendar today = Calendar.getInstance();
         // String todayStr = today.get(Calendar.YEAR) +"-"+today.get(Calendar.MONTH) +"-"+today.get(Calendar.DATE);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String todayStr = sdf.format(today.getTime());
-        todayStr = "2016-04-26";
+        todayStr = "2016-04-26"; // FIXME: borrar esta linea
 
         long seller = AppSettings.getSellerId();
-        seller = 2;
+        seller = 2; // FIXME: borrar esta linea
 
         MyPreferences pref = new MyPreferences(getContext());
         String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
