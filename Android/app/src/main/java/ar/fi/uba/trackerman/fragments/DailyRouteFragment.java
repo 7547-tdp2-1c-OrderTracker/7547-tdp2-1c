@@ -41,7 +41,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     private SchedulesListAdapter schedulesListAdapter;
     private View emptyView;
 
-    private Client selectedClient;
+    private static Client selectedClient;
 
     public DailyRouteFragment(){
         super();
@@ -116,7 +116,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         switch (item.getItemId()) {
             case R.id.mark_client_as_visited:
 
-                Toast.makeText(this.getActivity().getApplicationContext(),selectedClient.getFullName() +" marcado como visitado", Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getActivity().getApplicationContext(),this.selectedClient.getFullName() +" marcado como visitado", Toast.LENGTH_LONG).show();
 
                 ScheduleDay day = schedulesListAdapter.getCurrentScheduleDay();
                 Calendar cal = Calendar.getInstance();
@@ -138,8 +138,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     @Override
     public void afterCreatingVisit(Visit visit) {
         // refresh del fragment
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(this).attach(this).commit();
+        //FragmentTransaction ft = getFragmentManager().beginTransaction();
+        //ft.detach(this).attach(this).commit();
     }
 
     public void showEmptyList(){
