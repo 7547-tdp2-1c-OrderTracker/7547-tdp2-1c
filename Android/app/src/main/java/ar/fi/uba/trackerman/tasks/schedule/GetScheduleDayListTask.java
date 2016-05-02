@@ -32,8 +32,14 @@ public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay
         String urlString = "/v1/schedule/day";
         if (params.length == 2) {
             String dateConsult = params[0];
-            String seller= params[1];
-            urlString+="?date="+dateConsult+"&seller_id="+seller;
+            String seller = params[1];
+            urlString += "?date=" + dateConsult + "&seller_id=" + seller;
+        } else if (params.length == 4) {
+            String dateConsult = params[0];
+            String seller = params[1];
+            String lat = params[2];
+            String lon = params[3];
+            urlString += "?date=" + dateConsult + "&seller_id=" + seller +"&lat="+ lat +"&lon="+ lon;
         } else {
             //FIXME smpiano, replace by adapter and show message.
             Log.e("schedule_day_task_error","NO no no "+urlString);

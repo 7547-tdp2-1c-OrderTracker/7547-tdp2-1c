@@ -59,6 +59,14 @@ public class MainActivity extends AppCompatActivity implements
         this.startCleanUpUI();
 
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(this));
+
+        // -----
+        // hardcodeados los datos para el emulador, si luego existe el GPS se pisan !!
+        pref.save(getString(R.string.shared_pref_current_location_lat), String.valueOf(-34.563424));
+        pref.save(getString(R.string.shared_pref_current_location_lon), String.valueOf(-58.463874));
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(MainActivity.this) + ". POS HARD lat=-34.563424 lon=-58.463874");
+        // ---- fin del hardcode (borrar entre comentarios)
+
         LocationService ls = new LocationService(this);
         ls.config(new LocationService.MyLocation() {
             @Override
