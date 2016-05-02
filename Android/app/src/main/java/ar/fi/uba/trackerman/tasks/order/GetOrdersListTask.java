@@ -13,6 +13,7 @@ import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.OrdersSearchResult;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
@@ -30,6 +31,7 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
         if(offset != null){
             urlString += "&offset="+offset.toString();
         }
+        urlString+="&seller_id="+ AppSettings.getSellerId();
 
         OrdersSearchResult ordersSearchResult = null;
         try {
