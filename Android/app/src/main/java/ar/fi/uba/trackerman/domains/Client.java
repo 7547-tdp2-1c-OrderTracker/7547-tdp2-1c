@@ -174,8 +174,8 @@ public class Client {
             client.setThumbnail(json.getString("thumbnail"));
 
             client.setCuil(json.getString("cuil"));
-            client.setLat(json.getDouble("lat"));
-            client.setLon(json.getDouble("lon"));
+            if (!json.isNull("lat")) client.setLat(json.getDouble("lat"));
+            if (!json.isNull("lon")) client.setLon(json.getDouble("lon"));
             client.setEmail(json.getString("email"));
             client.setAvatar(json.getString("avatar"));
             client.setPhoneNumber(json.getString("phone_number"));
