@@ -18,9 +18,10 @@
 
     <TextView
         android:id="@+id/daily_route_day"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DIA" />
+        android:text="DIA"
+        android:layout_gravity="center_horizontal" />
 
     <ListView
         android:id="@+id/dayAgendaListView"

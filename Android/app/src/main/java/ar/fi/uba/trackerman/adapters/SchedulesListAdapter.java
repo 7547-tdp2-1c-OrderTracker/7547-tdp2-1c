@@ -2,6 +2,9 @@ package ar.fi.uba.trackerman.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +68,12 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         holder.clientName.setText(isContentValid(client.getFullName()));
         holder.clientAddress.setText(isContentValid(client.getAddress()));
         holder.distance.setText(showCoolDistance(client.getDistance()));
+
+        if ( client.getVisited() != null ) {
+            holder.clientName.setTextColor(Color.parseColor("#43a047"));
+        } else {
+            holder.clientName.setTextColor(Color.parseColor("#666666"));
+        }
 
         return convertView;
     }

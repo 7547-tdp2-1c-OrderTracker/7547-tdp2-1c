@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -39,6 +40,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     ListView clientsList;
     private SchedulesListAdapter schedulesListAdapter;
     private View emptyView;
+
+    private Client selectedClient;
 
     public DailyRouteFragment(){
         super();
@@ -102,6 +105,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
         Client client= (Client) clientsList.getAdapter().getItem(info.position);
         menu.setHeaderTitle(client.getFullName());
+        this.selectedClient = client;
 
         inflater.inflate(R.menu.menu_day_agenda_context, menu);
     }
@@ -111,8 +115,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
         switch (item.getItemId()) {
             case R.id.mark_client_as_visited:
-                // FIXME: Aqui se deberia marcar como visitado
-                Toast.makeText(this.getActivity().getApplicationContext(), "Marcar como vistado !!!", Toast.LENGTH_LONG).show();
+
+                Toast.makeText(this.getActivity().getApplicationContext(),selectedClient.getFullName() +" marcado como visitado", Toast.LENGTH_LONG).show();
 
                 ScheduleDay day = schedulesListAdapter.getCurrentScheduleDay();
                 Calendar cal = Calendar.getInstance();
@@ -121,8 +125,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
                 //FIXME guido tenes que obtener el comentario y cambiar esta linea.
                 String comment = "Te visite";
-                //FIXME guido obtener el client y poner el clientId
-                String clientId = "1";
+                String clientId = Long.toString(selectedClient.getId());
 
                 if (RestClient.isOnline(this.getContext())) new PostVisitTask(this).execute(clientId,dayOfWeek,DateUtils.formatDate(Calendar.getInstance().getTime()),comment);
 
@@ -134,7 +137,9 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
     @Override
     public void afterCreatingVisit(Visit visit) {
-        //TODO glaghi luego de crear la visita refrescar la vista
+        // refresh del fragment
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
     }
 
     public void showEmptyList(){
