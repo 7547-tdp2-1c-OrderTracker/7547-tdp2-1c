@@ -7,19 +7,21 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import ar.fi.uba.trackerman.adapters.SchedulesListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by smpiano on 5/1/16.
  */
-public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay,GetScheduleDayListTask.Sheduleable> {
+public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay,SchedulesListAdapter> {
 
     private List<Client> clients;
 
-    public GetScheduleDayListTask(Sheduleable adapter) {
+    public GetScheduleDayListTask(SchedulesListAdapter adapter) {
         super(adapter);
     }
 
@@ -37,18 +39,14 @@ public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay
             String lon = params[3];
             urlString += "?date=" + dateConsult + "&seller_id=" + seller +"&lat="+ lat +"&lon="+ lon;
         } else {
-            //FIXME smpiano, replace by adapter and show message.
-            Log.e("schedule_day_task_error","NO no no "+urlString);
+            ShowMessage.toastMessage(weakReference.get().getContext(), "Parmetros incorrectos");
         }
-
 
         ScheduleDay day = null;
         try{
             day = (ScheduleDay) restClient.get(urlString);
         } catch (BusinessException e) {
-            //FIXME smpiano, replace by adapter and show message.
-            //ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
-            Log.e("error", e.getMessage());
+            ShowMessage.toastMessage(weakReference.get().getContext(), e.getMessage());
         }
         return day;
     }
@@ -61,10 +59,6 @@ public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay
     @Override
     protected void onPostExecute(ScheduleDay day) {
         weakReference.get().setScheduleDay(day);
-    }
-
-    public interface Sheduleable {
-        public void setScheduleDay(ScheduleDay day);
     }
 
 }

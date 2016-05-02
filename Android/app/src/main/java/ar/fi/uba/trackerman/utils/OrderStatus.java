@@ -5,9 +5,9 @@ package ar.fi.uba.trackerman.utils;
  */
 public enum OrderStatus {
     DRAFT("draft", "Borrador", "#1565c0") ,
-    CANCEL("cancelled", "Cancelada", "#ff0000"),// FIXME luego borrar
+    CANCEL("cancelled", "Cancelada", "#ff0000"),// deprecada por CANCELLED
     CANCELLED("cancelled", "Cancelada", "#ff0000"),
-    CONFIRM("confirm", "Confirmada", "#558b2f"), //FIXME luego borrar
+    CONFIRM("confirm", "Confirmada", "#558b2f"), //deprecada por CONFIRMED
     CONFIRMED("confirmed", "Confirmada", "#558b2f");
 
     private String status;

@@ -25,7 +25,7 @@ import fi.uba.ar.soldme.R;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.trackerman.utils.FieldValidator.showCoolDistance;
 
-public class SchedulesListAdapter extends ArrayAdapter<Client> implements GetScheduleDayListTask.Sheduleable {
+public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     public SchedulesListAdapter(Context context, int resource,
                                 List<Client> clients) {
@@ -70,7 +70,6 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> implements GetSch
         return convertView;
     }
 
-    @Override
     public void setScheduleDay(ScheduleDay day) {
         this.addAll(day.getClients());
     }
