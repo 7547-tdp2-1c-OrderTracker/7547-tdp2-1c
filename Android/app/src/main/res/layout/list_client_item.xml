@@ -5,34 +5,78 @@
     android:layout_margin="8dp">
 
     <ImageView
+        android:id="@+id/client_row_picture"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:id="@+id/client_row_picture"
-        android:src="@drawable/people"/>
+        android:src="@drawable/people" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="LastName, Name"
-            android:id="@+id/client_row_name"
-            android:textStyle="bold"
-            android:layout_marginTop="2dp" />
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:id="@+id/client_row_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="LastName, Name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/client_row_address"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Address Line" />
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Address Line"
-            android:id="@+id/client_row_address"
-            android:layout_marginTop="2dp" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/client_row_client_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:gravity="right"
+                android:text="# 123"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/client_row_client_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:text="3,4 km" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 </LinearLayout>
