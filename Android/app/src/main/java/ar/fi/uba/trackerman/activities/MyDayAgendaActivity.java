@@ -38,6 +38,7 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         //mViewPager.setCurrentItem(getCurrentDay());
         mViewPager.setAdapter(pagerAdapter);
+
         mViewPager.post(new Runnable() {
             @Override
             public void run() {
@@ -92,6 +93,7 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int i) {
             DailyRouteFragment fragment = new DailyRouteFragment();
+
             Bundle args = new Bundle();
             args.putInt(DailyRouteFragment.ITEM_POSITION, i);
             args.putInt(DailyRouteFragment.DIFF, i-startPosition);

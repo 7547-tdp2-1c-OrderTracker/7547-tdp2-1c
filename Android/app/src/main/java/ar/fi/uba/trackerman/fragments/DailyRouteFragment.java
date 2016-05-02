@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -63,17 +64,21 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         cal.setTime(DateUtils.parseShortDate(currentDate));
         cal.set(Calendar.DATE, cal.get(Calendar.DATE) + diff);
         //pref.save(context.getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(cal.getTime()));
+        String queriedDate = DateUtils.formatShortDate(cal.getTime());
 
-        String extra = String.valueOf(diff) + " - " + DateUtils.formatShortDate(cal.getTime());
 
         TextView text= (TextView)fragmentView.findViewById(R.id.daily_route_day);
-        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() +" - position="+item+" - diff"+extra);
+        //String extra = String.valueOf(diff) + " - " + queriedDate;
+        //text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() +" - position="+item+" - diff"+extra);
+        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + " - " + queriedDate);
+
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
         schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>(),this);
         schedulesList.setAdapter(schedulesListAdapter);
-        schedulesListAdapter.solveTask(DateUtils.formatShortDate(cal.getTime()));
+        Log.d("daily_route","Date queried = " + queriedDate);
+        schedulesListAdapter.solveTask(queriedDate);
         //schedulesList.setOnItemClickListener(this);
         this.emptyView= fragmentView.findViewById(R.id.agenda_row_clients_empty);
 

@@ -71,7 +71,6 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     public void setScheduleDay(ScheduleDay day) {
         this.currentScheduleDay = day;
-
         if(day.getClients().size()==0){
             fragment.showEmptyList();
         }else {
@@ -91,6 +90,8 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
         String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
         String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
+
+        // by preference set date from swiper instead set currentDate (today) or chose by schedule week
         String dateToSolve = (date==null)?currentDate:date;
 
         if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(dateToSolve, Long.toString(AppSettings.getSellerId()), lat, lon);
@@ -102,5 +103,4 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         public TextView clientAddress;
         public TextView distance;
     }
-
 }
