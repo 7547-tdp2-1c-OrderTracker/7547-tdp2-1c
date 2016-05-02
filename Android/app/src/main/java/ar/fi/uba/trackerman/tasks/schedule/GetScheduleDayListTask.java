@@ -7,14 +7,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
-import ar.fi.uba.trackerman.domains.ScheduleEntry;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by smpiano on 5/1/16.

@@ -36,24 +36,7 @@ public class DateUtils {
         return parseDate(dateStr,SHORT_FORMATTER);
     }
 
-    public static String dayOfWeekToText(int day_of_week) {
-        switch (day_of_week) {
-            case 1:
-                return "Monday";
-            case 2:
-                return "Tuesday";
-            case 3:
-                return "Wednesday";
-            case 4:
-                return "Thursday";
-            case 5:
-                return "Friday";
-            case 6:
-                return "Saturday";
-            case 7:
-                return "Sunday";
-        }
-        return "";
+    public static String formatShortDate(Date date) {
+        return SHORT_FORMATTER.format(date);
     }
-
 }

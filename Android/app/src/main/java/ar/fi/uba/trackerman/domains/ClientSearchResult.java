@@ -56,11 +56,6 @@ public class ClientSearchResult {
             clientSearchResult.setOffset(pagingJSON.getLong("offset"));
             JSONArray resultJSON = (JSONArray) json.get("results");
             for (int i = 0; i < resultJSON.length(); i++) {
-                //client= new Client(row.getLong("id"));
-                //client.setName(row.getString("name"));
-                //client.setLastName(row.getString("lastname"));
-                //client.setAddress(row.getString("address"));
-                //client.setThumbnail(row.getString("thumbnail"));
                 clientSearchResult.addClient(Client.fromJson(resultJSON.getJSONObject(i)));
             }
         } catch (JSONException e) {
