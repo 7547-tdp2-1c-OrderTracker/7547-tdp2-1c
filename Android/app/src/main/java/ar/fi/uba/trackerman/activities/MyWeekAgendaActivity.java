@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 
 import ar.fi.uba.trackerman.domains.ScheduleWeekView;
 import ar.fi.uba.trackerman.domains.Semaphore;
@@ -20,11 +21,14 @@ import ar.fi.uba.trackerman.tasks.schedule.GetScheduleWeekTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
 public class MyWeekAgendaActivity extends AppCompatActivity {
+
+    private List<Semaphore> semaphores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +104,10 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
     }
 
     public void fillWeek(ScheduleWeekView week) {
-
+        this.semaphores = week.getSemaphores();
         int totalRed = 0;
         int totalYellow = 0;
         int totalGreen = 0;
-
         for(Semaphore semaphore : week.getSemaphores()) {
             if(!DayOfWeek.isWorkingDay(semaphore.getDayOfWeek())) break;
 
@@ -125,13 +128,22 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
 
     }
 
-    public void openMyClientsActivity(View view) {
+    public void clickCardFR(View v) {
         Intent intent = new Intent(this, MyClientsActivity.class);
         startActivity(intent);
     }
 
-    public void clickCardFR(View v) {
-        openMyClientsActivity(v);
+    public void onClickDayOfWeek(View view) {
+        for (DayOfWeek day : DayOfWeek.values()) {
+            if (day.isWorkingDay(day.getReference())) {
+                String id = "agenda_week_" + day.toEng().toLowerCase() +"_card";
+                if (view.getId() == getResources().getIdentifier(id, "id", getPackageName())) {
+                    MyPreferences pref = new MyPreferences(this);
+                    pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(this.semaphores.get(day.getReference()).getDate()));
+                    Intent intent = new Intent(this, MyDayAgendaActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
     }
-
 }
