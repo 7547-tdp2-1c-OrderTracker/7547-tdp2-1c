@@ -18,8 +18,8 @@
         android:id="@+id/poducts_button"
         android:onClick="openProductsActivity"/ -->
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:src="@drawable/icon"
         android:layout_gravity="center_horizontal" />
 

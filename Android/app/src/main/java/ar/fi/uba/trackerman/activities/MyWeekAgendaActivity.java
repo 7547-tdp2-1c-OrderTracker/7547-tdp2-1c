@@ -81,6 +81,9 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
             setSemaphore(i,"green",0);
             setSemaphore(i,"yellow",0);
         }
+        setSemaphoreFR("red",0);
+        setSemaphoreFR("green",0);
+        setSemaphoreFR("yellow",0);
     }
 
     public void highlightToday() {
