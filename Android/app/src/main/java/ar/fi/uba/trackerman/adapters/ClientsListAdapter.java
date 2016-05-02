@@ -128,7 +128,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
         holder.name.setText(isContentValid(client.getLastName())+", "+isContentValid(client.getName()));
         holder.distance.setText(showCoolDistance(client.getDistance()));
         holder.address.setText(isContentValid(client.getAddress()));
-        if (client.getThumbnail().isEmpty()) {
+        if (isContentValid(client.getThumbnail()).isEmpty()) {
             Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
         } else {
             Picasso.with(this.getContext()).load(client.getThumbnail()).transform(new CircleTransform()).into(holder.image);
