@@ -12,7 +12,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ar.fi.uba.trackerman.adapters.ClientsListAdapter;
+import ar.fi.uba.trackerman.adapters.SchedulesListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.ScheduleEntry;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -42,20 +44,17 @@ public class DailyRouteFragment extends Fragment{
         TextView text= (TextView)fragmentView.findViewById(R.id.daily_route_day);
         text.setText(day);
 
+        ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
-
-/*
-        ListView clientsList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
-
-        ClientsListAdapter clientsAdapter = new ClientsListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
-        clientsList.setAdapter(clientsAdapter);
-        clientsList.setOnItemClickListener(this);
+        SchedulesListAdapter schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<ScheduleEntry>());
+        schedulesList.setAdapter(schedulesListAdapter);
+        //schedulesList.setOnItemClickListener(this);
 
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
-        clientsList.setEmptyView(bar);
-        clientsAdapter.refresh();
-*/
+        schedulesList.setEmptyView(bar);
+        //schedulesListAdapter.refresh();
+
         return fragmentView;
     }
 }

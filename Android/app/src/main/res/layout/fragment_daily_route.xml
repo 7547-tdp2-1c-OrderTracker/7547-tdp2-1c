@@ -21,7 +21,7 @@
         android:id="@+id/dayAgendaListView"
         android:layout_weight="1"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/activity_my_clients">
+        tools:showIn="@layout/activity_my_day_agenda">
     </ListView>
 
 </LinearLayout>
