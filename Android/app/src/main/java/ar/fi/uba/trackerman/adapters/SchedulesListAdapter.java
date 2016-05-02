@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
+import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
@@ -21,20 +24,28 @@ import ar.fi.uba.trackerman.domains.SchedulesSearchResult;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
 import ar.fi.uba.trackerman.tasks.schedule.GetScheduleDayListTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
-public class SchedulesListAdapter extends ArrayAdapter<ScheduleEntry> implements GetScheduleDayListTask.Sheduleable {
+public class SchedulesListAdapter extends ArrayAdapter<Client> implements GetScheduleDayListTask.Sheduleable {
 
     public SchedulesListAdapter(Context context, int resource,
-                                List<ScheduleEntry> schedules) {
-        super(context, resource, schedules);
+                                List<Client> clients) {
+        super(context, resource, clients);
+        GetScheduleDayListTask scheduleListTask = new GetScheduleDayListTask(this);
+
+        Calendar today = Calendar.getInstance();
+        // String todayStr = today.get(Calendar.YEAR) +"-"+today.get(Calendar.MONTH) +"-"+today.get(Calendar.DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String todayStr = sdf.format(today.getTime());
+        scheduleListTask.execute(todayStr,Long.toString(AppSettings.getSellerId()));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ScheduleEntry scheduleEntry = this.getItem(position);
+        Client client = this.getItem(position);
         ViewHolder holder;
 
         if (convertView == null) {
@@ -49,14 +60,14 @@ public class SchedulesListAdapter extends ArrayAdapter<ScheduleEntry> implements
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.clientName.setText(isContentValid(Long.toString(scheduleEntry.getClientId())));
+        holder.clientName.setText(isContentValid(Long.toString(client.getId())));
 
         return convertView;
     }
 
     @Override
     public void setScheduleDay(ScheduleDay day) {
-
+        this.addAll(day.getClients());
     }
 
     private static class ViewHolder {

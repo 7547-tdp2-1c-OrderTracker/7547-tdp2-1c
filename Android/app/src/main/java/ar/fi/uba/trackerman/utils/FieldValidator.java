@@ -47,7 +47,9 @@ public class FieldValidator {
 
     public static String showCoolDistance(double dist) {
         String expected = THREE_DECIMALS.format(dist);
-        if (expected=="0.000") expected = "";
+
+        if (expected=="0.000") return "";
+
         String unit = "kms";
         if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(1D) < 0)) {
             expected = expected.substring(expected.indexOf(".")+1);
@@ -55,6 +57,6 @@ public class FieldValidator {
         } else if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(100D) >= 0)) {
             expected = NO_DECIMALS.format(dist);
         }
-        return expected+unit;
+        return expected+" "+unit;
     }
 }

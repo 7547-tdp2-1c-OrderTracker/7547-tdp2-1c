@@ -46,7 +46,7 @@ public class DailyRouteFragment extends Fragment{
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
-        SchedulesListAdapter schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<ScheduleEntry>());
+        SchedulesListAdapter schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>());
         schedulesList.setAdapter(schedulesListAdapter);
         //schedulesList.setOnItemClickListener(this);
 
