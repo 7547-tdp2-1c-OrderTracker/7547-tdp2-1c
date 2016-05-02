@@ -37,7 +37,6 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
         String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
         long seller = AppSettings.getSellerId();
-        seller = 2; // FIXME: borrar esta linea
 
         if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(currentDate, Long.toString(seller), lat, lon);
     }
