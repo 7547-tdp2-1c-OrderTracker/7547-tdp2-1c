@@ -22,7 +22,7 @@ public class PostVisitTask extends AbstractTask<String,Void,Visit,DailyRouteFrag
     }
 
     public Visit createVisit(String clientId, String dayOfWeek, String date, String comment) {
-        String body = "{\"client_id\": "+ clientId + ",\"day_of_week\":"+ dayOfWeek + ",\"date\":"+date+",\"comment\":"+comment+"}";
+        String body = "{\"client_id\": "+ clientId + ",\"day_of_week\":"+ dayOfWeek + ",\"date\":\""+date+"\",\"comment\":\""+comment+"\"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/visits";

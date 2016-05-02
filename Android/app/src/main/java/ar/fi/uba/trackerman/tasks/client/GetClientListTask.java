@@ -12,6 +12,7 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
@@ -36,6 +37,7 @@ public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResu
             String lon = params[2];
             urlString = "/v1/clients?limit=10&offset="+offset+"&lat="+lat+"&lon="+lon+"&order=distance";
         }
+        urlString+="&seller_id="+ AppSettings.getSellerId();
 
         ClientSearchResult clientSearchResult = null;
         try{
