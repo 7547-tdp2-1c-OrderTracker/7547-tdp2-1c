@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,13 +35,13 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.showCoolDistance;
 public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     private ScheduleDay currentScheduleDay;
-    private DailyRouteFragment fragment;
+    private WeakReference reference;
 
     public SchedulesListAdapter(Context context, int resource,
                                 List<Client> clients, DailyRouteFragment fragment) {
         super(context, resource, clients);
         LocationHelper.updatePosition(getContext());
-        this.fragment= fragment;
+        this.reference = new WeakReference<DailyRouteFragment>(fragment);
         solveTask(null);
     }
 
@@ -80,10 +81,11 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     public void setScheduleDay(ScheduleDay day) {
         this.currentScheduleDay = day;
+
         if(day.getClients().size()==0){
-            fragment.showEmptyList();
+            if (reference.get() != null) ((DailyRouteFragment)reference.get()).showEmptyList();
         }else {
-            fragment.showClientList();
+            if (reference.get() != null) ((DailyRouteFragment)reference.get()).showClientList();
             this.clear();
             this.addAll(day.getClients());
             this.notifyDataSetChanged();
