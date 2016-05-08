@@ -154,10 +154,14 @@ public class Product {
     public static Product fromJson(JSONObject json) {
         Product product = null;
         try {
+            JSONObject jsonBrand = json.getJSONObject("brand"); //getting the brand object inside
+
+
             product = new Product(json.getLong("id"));
             product.setName(json.getString("name"));
             product.setBrandId(json.getLong("brand_id"));
-            product.setBrandName(json.getString("brand_name"));
+            //product.setBrandName(json.getString("brand_name"));
+            product.setBrandName(jsonBrand.getString("name"));
             product.setStock(json.getInt("stock"));
 
             product.setCode(json.getString("code"));

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements
         GetDraftOrdersTask.DraftOrdersValidation {
 
     DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupNavigationDrawerContent(navigationView);
         }
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
+
+        // FIXME: Es para poner el nombre del vendedor en el menu lateral. Pero explota.
+        //((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
     }
 
     private void startCleanUpUI() {
@@ -124,6 +128,12 @@ public class MainActivity extends AppCompatActivity implements
     public void openMyWeekAgendaActivity(View view) {
         Intent intent = new Intent(this, MyWeekAgendaActivity.class);
         startActivity(intent);
+    }
+
+    public void openMyReportSellsActivity(View view) {
+        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+        //Intent intent = new Intent(this, MyReportSellsActivity.class);
+        //startActivity(intent);
     }
 
     public void openProductsActivity(View view) {
@@ -191,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyWeekAgendaActivity(null);
+                                return true;
+                            case R.id.nav_reporte_ventas:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openMyReportSellsActivity(null);
                                 return true;
                             case R.id.nav_login:
                                 menuItem.setChecked(true);

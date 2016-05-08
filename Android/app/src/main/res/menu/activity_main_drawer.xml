@@ -23,6 +23,10 @@
             android:icon="@drawable/ic_calendar"
             android:title="@string/menu_agenda_semanal" />
         <item
+            android:id="@+id/nav_reporte_ventas"
+            android:icon="@drawable/ic_receipt"
+            android:title="@string/menu_reporte_venta" />
+        <item
             android:id="@+id/nav_login"
             android:icon="@drawable/ic_login"
             android:title="@string/menu_login" />

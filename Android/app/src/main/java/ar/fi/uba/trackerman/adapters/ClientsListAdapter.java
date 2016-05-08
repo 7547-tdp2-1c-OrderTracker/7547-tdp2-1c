@@ -115,6 +115,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
             holder = new ViewHolder();
             holder.client_id = (TextView) convertView.findViewById(R.id.client_row_client_id);
             holder.name = (TextView) convertView.findViewById(R.id.client_row_name);
+            holder.company = (TextView) convertView.findViewById(R.id.client_row_company);
             holder.distance = (TextView) convertView.findViewById(R.id.client_row_client_distance);
             holder.address = (TextView) convertView.findViewById(R.id.client_row_address);
             holder.image = (ImageView) convertView.findViewById(R.id.client_row_picture);
@@ -126,6 +127,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
 
         holder.client_id.setText("# "+ isContentValid(Long.toString(client.getId())));
         holder.name.setText(isContentValid(client.getLastName())+", "+isContentValid(client.getName()));
+        holder.company.setText(isContentValid(client.getCompany()));
         holder.distance.setText(showCoolDistance(client.getDistance()));
         holder.address.setText(isContentValid(client.getAddress()));
         if (isContentValid(client.getThumbnail()).isEmpty()) {
@@ -140,6 +142,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
     private static class ViewHolder {
         public TextView name;
         public TextView address;
+        public TextView company;
         public TextView client_id;
         public TextView distance;
         public ImageView image;
