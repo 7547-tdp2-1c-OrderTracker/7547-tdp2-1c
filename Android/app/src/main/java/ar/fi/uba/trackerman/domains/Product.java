@@ -1,9 +1,14 @@
 package ar.fi.uba.trackerman.domains;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.FieldValidator;
 
 /**
  * Created by plucadei on 3/4/16.
@@ -14,6 +19,11 @@ public class Product {
     private long brandId;
     private String brandName;
     private int stock;
+
+    private int promotion;
+    private Date promotionBeginDate;
+    private Date promotionEndDate;
+
     private String code;
     private String status;
     private String description;
@@ -139,6 +149,30 @@ public class Product {
         return thumbnail;
     }
 
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
+    }
+
+    public Date getPromotionBeginDate() {
+        return promotionBeginDate;
+    }
+
+    public void setPromotionBeginDate(Date promotionBeginDate) {
+        this.promotionBeginDate = promotionBeginDate;
+    }
+
+    public Date getPromotionEndDate() {
+        return promotionEndDate;
+    }
+
+    public void setPromotionEndDate(Date promotionEndDate) {
+        this.promotionEndDate = promotionEndDate;
+    }
+
     public String getPriceWithCurrency() {
         return this.getCurrency() +" "+ Double.toString(this.getPrice());
     }
@@ -151,11 +185,15 @@ public class Product {
         return this.getCurrency() +" "+ Double.toString(this.getWholesalePrice());
     }
 
+    public boolean hasPromotion() {
+        return this.getPromotion() > 0;
+    }
+
     public static Product fromJson(JSONObject json) {
         Product product = null;
         try {
             JSONObject jsonBrand = json.getJSONObject("brand"); //getting the brand object inside
-
+            JSONArray jsonArrayPromotions = json.getJSONArray("promotions"); //getting the promotions array inside
 
             product = new Product(json.getLong("id"));
             product.setName(json.getString("name"));
@@ -163,6 +201,24 @@ public class Product {
             //product.setBrandName(json.getString("brand_name"));
             product.setBrandName(jsonBrand.getString("name"));
             product.setStock(json.getInt("stock"));
+
+            product.setPromotion(0); // default de promocion es 0
+            product.setPromotionBeginDate(null);
+            product.setPromotionEndDate(null);
+            if (jsonArrayPromotions.length() > 0) {
+                JSONObject jsonPromotion = jsonArrayPromotions.getJSONObject(0); // tomo la primera promo
+                product.setPromotion(jsonPromotion.getInt("percent"));
+
+                String promotionBeginDateStr = jsonPromotion.getString("begin_date");
+                Date beginDate = null;
+                if (FieldValidator.isValid(promotionBeginDateStr)) beginDate = DateUtils.parseDate(promotionBeginDateStr);
+                product.setPromotionBeginDate(beginDate);
+
+                String promotionEndDateStr = jsonPromotion.getString("end_date");
+                Date endDate = null;
+                if (FieldValidator.isValid(promotionEndDateStr)) endDate = DateUtils.parseDate(promotionEndDateStr);
+                product.setPromotionEndDate(endDate);
+            }
 
             product.setCode(json.getString("code"));
             product.setStatus(json.getString("status"));

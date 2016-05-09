@@ -77,6 +77,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
             holder.idProduct = (TextView) convertView.findViewById(R.id.product_row_product_id);
             holder.name = (TextView) convertView.findViewById(R.id.product_row_name);
             holder.stock = (TextView) convertView.findViewById(R.id.product_row_product_stock);
+            holder.promotion = (TextView) convertView.findViewById(R.id.product_row_product_promotion);
             holder.brand= (TextView) convertView.findViewById(R.id.product_row_brand);
             holder.image = (ImageView) convertView.findViewById(R.id.product_row_picture);
             convertView.setTag(holder);
@@ -88,6 +89,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         holder.name.setText(isContentValid(product.getName()));
         holder.stock.setText(isContentValid(Integer.toString(product.getStock())));
         holder.brand.setText(isContentValid(product.getBrandName()));
+        holder.promotion.setText(isContentValid(Integer.toString(product.getPromotion()) +" %"));
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 
         return convertView;
@@ -101,6 +103,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         public TextView idProduct;
         public TextView name;
         public TextView stock;
+        public TextView promotion;
         public TextView brand;
         public ImageView image;
     }

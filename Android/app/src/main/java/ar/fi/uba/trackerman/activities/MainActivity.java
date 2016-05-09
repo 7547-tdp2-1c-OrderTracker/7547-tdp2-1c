@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements
         this.startCleanUpUI();
 
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(this));
-        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
+//        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
 
         // -----
         // hardcodeados los datos para el emulador, si luego existe el GPS se pisan !!
