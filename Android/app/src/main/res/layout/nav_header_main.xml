@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="190dp"
+    android:background="@drawable/navigation_drawer_background"
     android:orientation="vertical"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:padding="28dp"
-    android:layout_gravity="top|center">
+    >
+
 
     <ImageView
         android:id="@+id/menu_header_logo"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:src="@drawable/icon" />
-    <!--
+        android:src="@drawable/icon"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="@string/nav_header_main_vendor_name_default"
-        android:textColor="@color/cardview_shadow_start_color"
+        android:textColor="@color/cardview_dark_background"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:id="@+id/nav_header_main_vendor_name" />
+        android:id="@+id/nav_header_main_vendor_name"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="20dp" />
 
+    <!--
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -30,4 +35,4 @@
             android:text="vendedor@email.com" />
     -->
 
-</LinearLayout>
+</RelativeLayout>

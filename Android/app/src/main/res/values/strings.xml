@@ -9,6 +9,7 @@
     <string name="menu_orders">Pedidos</string>
     <string name="menu_agenda_del_dia">Agenda del día</string>
     <string name="menu_agenda_semanal">Agenda semanal</string>
+    <string name="menu_reporte_venta">Reporte de ventas</string>
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
@@ -36,6 +37,7 @@
     <string name="direcci_n_del_cliente">Dirección del cliente</string>
     <string name="codigo_del_cliente">Código del cliente</string>
     <string name="nombre_del_cliente">Nombre del Cliente</string>
+    <string name="razon_social_del_cliente">Razón Social del Cliente</string>
     <string name="cuil_del_cliente">CUIL del Cliente</string>
 
     <string name="codigo_del_producto">Codigo del producto</string>
@@ -44,6 +46,8 @@
     <string name="stock_del_producto">Stock del producto</string>
     <string name="precio_del_producto">Precio del producto</string>
     <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
+    <string name="descuento_del_producto_porcentaje">Descuento del producto</string>
+    <string name="descuento_del_producto_fecha">Fecha vigencia del descuento</string>
 
     <string name="codigo_del_pedido">Código del pedido</string>
     <string name="estado_del_pedido">Estado del pedido</string>
@@ -58,8 +62,8 @@
 
     <string name="menu_login">Ingresa</string>
     <string name="menu_logout">Salir</string>
-    <string name="nav_header_main_vendor_name_default">Nombre Vendedor</string>
-    <string name="fragment_main_vendor_name_default">Vendedor #1</string>
+    <string name="nav_header_main_vendor_name_default">Apellido, Nombre</string>
+    <string name="fragment_main_vendor_name_default">Apellido, Nombre</string>
 
     <string name="shared_pref_file_key">ordertracker_preferences</string>
     <string name="shared_pref_current_vendor_id">vendor_id</string>

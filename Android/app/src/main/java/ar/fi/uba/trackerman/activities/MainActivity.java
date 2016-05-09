@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements
         GetDraftOrdersTask.DraftOrdersValidation {
 
     DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,23 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            // FIXME:
+            // Es para poner el nombre del vendedor en el menu lateral. Lo pone con delay.
+            // Si lo pongo directamente en el onCreate, explota por null
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupNavigationDrawerContent(navigationView);
         }
@@ -57,11 +69,12 @@ public class MainActivity extends AppCompatActivity implements
         pref.save(getString(R.string.shared_pref_current_client_id), -1L);
         pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
 
-        setupNavigationDrawerContent(navigationView);
+        //setupNavigationDrawerContent(navigationView);
 
         this.startCleanUpUI();
 
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(this));
+        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
 
         // -----
         // hardcodeados los datos para el emulador, si luego existe el GPS se pisan !!
@@ -81,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
+
     }
 
     private void startCleanUpUI() {
@@ -124,6 +138,12 @@ public class MainActivity extends AppCompatActivity implements
     public void openMyWeekAgendaActivity(View view) {
         Intent intent = new Intent(this, MyWeekAgendaActivity.class);
         startActivity(intent);
+    }
+
+    public void openMyReportSellsActivity(View view) {
+        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+        //Intent intent = new Intent(this, MyReportSellsActivity.class);
+        //startActivity(intent);
     }
 
     public void openProductsActivity(View view) {
@@ -191,6 +211,11 @@ public class MainActivity extends AppCompatActivity implements
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyWeekAgendaActivity(null);
+                                return true;
+                            case R.id.nav_reporte_ventas:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openMyReportSellsActivity(null);
                                 return true;
                             case R.id.nav_login:
                                 menuItem.setChecked(true);

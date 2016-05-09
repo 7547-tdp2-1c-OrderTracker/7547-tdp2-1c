@@ -28,6 +28,7 @@ public class Client {
     private long id;
     private String name;
     private String lastName;
+    private String company;
     private String cuil;
     private String address;
     private String phoneNumber;
@@ -64,6 +65,14 @@ public class Client {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getCuil() {
@@ -170,6 +179,7 @@ public class Client {
             client = new Client(json.getLong("id"));
             client.setName(json.getString("name"));
             client.setLastName(json.getString("lastname"));
+            client.setCompany(json.getString("company"));
             client.setAddress(json.getString("address"));
             client.setThumbnail(json.getString("thumbnail"));
 

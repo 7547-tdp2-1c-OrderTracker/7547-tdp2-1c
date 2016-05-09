@@ -75,9 +75,10 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     private void startCleanUpUI() {
         ((CollapsingToolbarLayout) findViewById(R.id.client_detail_collapsing_toolbar)).setTitle("");
 
-        ((TextView)findViewById(R.id.client_detail_id)).setText("");
-        ((TextView)findViewById(R.id.client_detail_name)).setText("");
-        ((TextView)findViewById(R.id.client_detail_cuil)).setText("");
+        ((TextView) findViewById(R.id.client_detail_id)).setText("");
+        ((TextView) findViewById(R.id.client_detail_name)).setText("");
+        ((TextView) findViewById(R.id.client_detail_company)).setText("");
+        ((TextView) findViewById(R.id.client_detail_cuil)).setText("");
         ((TextView) findViewById(R.id.client_detail_address)).setText("");
         ((TextView) findViewById(R.id.client_detail_phone)).setText("");
         ((TextView) findViewById(R.id.client_detail_email)).setText("");
@@ -101,8 +102,8 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
                 if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()), Long.toString(clientId));
             }
         } else if((view.getId() == R.id.client_detail_phone || view.getId() == R.id.client_detail_phone_number_icon)
-                && isValidPhone(((TextView)findViewById(R.id.client_detail_phone)).getText())){
-            String uri = "tel:" + ((TextView)findViewById(R.id.client_detail_phone)).getText().toString().trim();
+                && isValidPhone(((TextView) findViewById(R.id.client_detail_phone)).getText())){
+            String uri = "tel:" + ((TextView) findViewById(R.id.client_detail_phone)).getText().toString().trim();
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(uri));
             startActivity(intent);
@@ -124,9 +125,10 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             Picasso.with(this).load(client.getAvatar()).into(((ImageView) findViewById(R.id.client_detail_image)));
         }
 
-        ((TextView)findViewById(R.id.client_detail_id)).setText(isContentValid(Long.toString(client.getId())));
-        ((TextView)findViewById(R.id.client_detail_name)).setText(isContentValid(client.getFullName()));
-        ((TextView)findViewById(R.id.client_detail_cuil)).setText(isContentValid(client.getCuil()));
+        ((TextView) findViewById(R.id.client_detail_id)).setText(isContentValid(Long.toString(client.getId())));
+        ((TextView) findViewById(R.id.client_detail_name)).setText(isContentValid(client.getFullName()));
+        ((TextView) findViewById(R.id.client_detail_company)).setText(isContentValid(client.getCompany()));
+        ((TextView) findViewById(R.id.client_detail_cuil)).setText(isContentValid(client.getCuil()));
         ((TextView) findViewById(R.id.client_detail_address)).setText(isContentValid(client.getAddress()));
 
         int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
@@ -134,7 +136,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         TextView phoneField = ((TextView)findViewById(R.id.client_detail_phone));
         phoneField.setText(isContentValid(client.getPhoneNumber()));
         if (isValidPhone(phoneField.getText())) {
-            ((ImageView)findViewById(R.id.client_detail_phone_number_icon)).setColorFilter(colorAccent);
+            ((ImageView) findViewById(R.id.client_detail_phone_number_icon)).setColorFilter(colorAccent);
             phoneField.setTextColor(colorAccent);
         }
 
