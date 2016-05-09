@@ -41,10 +41,21 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            // FIXME:
+            // Es para poner el nombre del vendedor en el menu lateral. Lo pone con delay.
+            // Si lo pongo directamente en el onCreate, explota por null
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
@@ -58,11 +69,12 @@ public class MainActivity extends AppCompatActivity implements
         pref.save(getString(R.string.shared_pref_current_client_id), -1L);
         pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
 
-        setupNavigationDrawerContent(navigationView);
+        //setupNavigationDrawerContent(navigationView);
 
         this.startCleanUpUI();
 
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(this));
+        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
 
         // -----
         // hardcodeados los datos para el emulador, si luego existe el GPS se pisan !!
@@ -83,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements
 
         if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
 
-        // FIXME: Es para poner el nombre del vendedor en el menu lateral. Pero explota.
-        //((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
     }
 
     private void startCleanUpUI() {
