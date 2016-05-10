@@ -4,7 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.utils.DateUtils;
@@ -25,6 +27,7 @@ public class Product {
     private String description;
 
     private Promotion promotion;
+    private List<Promotion> promotions;
 
     private String currency;
     private double price;
@@ -37,6 +40,7 @@ public class Product {
 
     public Product(long id){
         this.id=id;
+        this.promotions = new ArrayList<Promotion>();
     }
 
     public long getId() {
@@ -147,9 +151,27 @@ public class Product {
         return thumbnail;
     }
 
+    public void setPromotions(List<Promotion> promotions) {
+        this.promotions = promotions;
+    }
+
+    public List<Promotion> getPromotions() {
+        return this.promotions;
+    }
+
+    public void addPromotion(Promotion promotion){
+        this.promotions.add(promotion);
+    }
 
     public Promotion getPromotion() {
         return promotion;
+    }
+
+    public Promotion getBestPromotion() {
+        if (this.hasPromotion()) {
+            return this.promotions.get(0); // devolviendo la primera promocion por ahora
+        }
+        return null;
     }
 
     public void setPromotion(Promotion promotion) {
@@ -169,7 +191,7 @@ public class Product {
     }
 
     public boolean hasPromotion() {
-        return (this.getPromotion() != null);
+        return (this.getPromotions().size() > 0);
     }
 
     public static Product fromJson(JSONObject json) {
@@ -185,6 +207,27 @@ public class Product {
             product.setBrandName(jsonBrand.getString("name"));
             product.setStock(json.getInt("stock"));
 
+
+            // products direct promotions
+            JSONArray jsonArrayProductPromotions = json.getJSONArray("promotions"); //getting the promotions array inside
+            if (jsonArrayProductPromotions.length() > 0) {
+                for (int i = 0; i < jsonArrayProductPromotions.length(); i++) {
+                    product.addPromotion(Promotion.fromJson(jsonArrayProductPromotions.getJSONObject(i)));
+                }
+            }
+
+            // products brands promotions
+            /*
+            JSONArray jsonArrayProductPromotions = json.getJSONArray("promotions"); //getting the promotions array inside
+            if (jsonArrayProductPromotions.length() > 0) {
+                for (int i = 0; i < jsonArrayProductPromotions.length(); i++) {
+                    product.addPromotion(Promotion.fromJson(jsonArrayProductPromotions.getJSONObject(i)));
+                }
+            }
+            */
+
+
+            /*
             if (jsonArrayPromotions.length() > 0) {
                 JSONObject jsonPromotion = jsonArrayPromotions.getJSONObject(0); // tomo la primera promo
 
@@ -204,6 +247,7 @@ public class Product {
 
                 product.setPromotion(promotion); //asigno la promocion al producto
             }
+            */
 
             product.setCode(json.getString("code"));
             product.setStatus(json.getString("status"));

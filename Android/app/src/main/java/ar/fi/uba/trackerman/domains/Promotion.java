@@ -100,30 +100,28 @@ public class Promotion {
         this.lastModified = lastModified;
     }
 
-/*
+
     public static Promotion fromJson(JSONObject json) {
         Promotion promotion = null;
         try {
-            String dateCreatedStr = json.getString("date_created");
-            Date dateCreated = null;
-            if (FieldValidator.isValid(dateCreatedStr)) dateCreated = DateUtils.parseDate(dateCreatedStr);
+            promotion = new Promotion(json.getLong("id"));
+            promotion.setName(json.getString("name"));
+            promotion.setPercent(json.getInt("percent"));
 
-            promotion = new Promotion(json.getLong("id"), dateCreated);
+            String promotionBeginDateStr = json.getString("begin_date");
+            Date beginDate = null;
+            if (FieldValidator.isValid(promotionBeginDateStr)) beginDate = DateUtils.parseDate(promotionBeginDateStr);
+            promotion.setBeginDate(beginDate);
 
-            String dateVisitStr = json.getString("date");
-            Date dateVisit = null;
-            if (FieldValidator.isValid(dateVisitStr)) dateVisit = DateUtils.parseDate(dateVisitStr);
-            visit.setDateVisit(dateVisit);
-
-            String lastModifiedStr = json.getString("last_modified");
-            Date lastModified = null;
-            if (FieldValidator.isValid(lastModifiedStr)) lastModified = DateUtils.parseDate(lastModifiedStr);
-            visit.setLastModified(lastModified);
+            String promotionEndDateStr = json.getString("end_date");
+            Date endDate = null;
+            if (FieldValidator.isValid(promotionEndDateStr)) endDate = DateUtils.parseDate(promotionEndDateStr);
+            promotion.setEndDate(endDate);
 
         } catch(JSONException e) {
-            throw new BusinessException("Error parsing Visit.",e);
+            throw new BusinessException("Error parsing Promotion.",e);
         }
-        return visit;
+        return promotion;
     }
-    */
+
 }

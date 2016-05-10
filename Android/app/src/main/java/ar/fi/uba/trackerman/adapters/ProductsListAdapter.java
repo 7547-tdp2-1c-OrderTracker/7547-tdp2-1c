@@ -91,7 +91,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         holder.brand.setText(isContentValid(product.getBrandName()));
         holder.promotion.setText("");
         if (product.hasPromotion()) {
-            holder.promotion.setText(isContentValid(Integer.toString(product.getPromotion().getPercent()) +" %"));
+            holder.promotion.setText(isContentValid(Integer.toString(product.getBestPromotion().getPercent()) +" %"));
         }
         Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 

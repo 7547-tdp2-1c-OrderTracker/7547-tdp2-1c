@@ -188,7 +188,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_price2)).setText(isContentValid(product.getWholeSalePriceWithCurrency()));
 
         if (product.hasPromotion()) {
-            Promotion promotion = product.getPromotion();
+            Promotion promotion = product.getBestPromotion();
             Date promotionBeginDate = promotion.getBeginDate();
             Date promotionEndDate = promotion.getEndDate();
             String promotionBeginDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionBeginDate).toString();
