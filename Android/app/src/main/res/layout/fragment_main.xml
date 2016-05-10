@@ -58,7 +58,6 @@
                     android:layout_margin="16dp"
                     android:text="@string/fragment_main_vendor_name_default"
                     android:textSize="18sp"
-                    android:textIsSelectable="true"
                     android:nestedScrollingEnabled="false"
                     android:layout_marginRight="50dp" />
             </GridLayout>
@@ -92,7 +91,6 @@
                     android:layout_margin="16dp"
                     android:text="@string/pedido_activo"
                     android:textSize="18sp"
-                    android:textIsSelectable="true"
                     android:nestedScrollingEnabled="false"
                     android:layout_marginRight="50dp" />
         </GridLayout>
