@@ -26,7 +26,6 @@ public class Product {
     private String status;
     private String description;
 
-    private Promotion promotion;
     private List<Promotion> promotions;
 
     private String currency;
@@ -163,19 +162,11 @@ public class Product {
         this.promotions.add(promotion);
     }
 
-    public Promotion getPromotion() {
-        return promotion;
-    }
-
     public Promotion getBestPromotion() {
         if (this.hasPromotion()) {
             return this.promotions.get(0); // devolviendo la primera promocion por ahora
         }
         return null;
-    }
-
-    public void setPromotion(Promotion promotion) {
-        this.promotion = promotion;
     }
 
     public String getPriceWithCurrency() {
@@ -223,29 +214,6 @@ public class Product {
                 for (int i = 0; i < jsonArrayProductPromotions.length(); i++) {
                     product.addPromotion(Promotion.fromJson(jsonArrayProductPromotions.getJSONObject(i)));
                 }
-            }
-            */
-
-
-            /*
-            if (jsonArrayPromotions.length() > 0) {
-                JSONObject jsonPromotion = jsonArrayPromotions.getJSONObject(0); // tomo la primera promo
-
-                Promotion promotion = new Promotion(jsonPromotion.getLong("id"));
-
-                String promotionBeginDateStr = jsonPromotion.getString("begin_date");
-                Date beginDate = null;
-                if (FieldValidator.isValid(promotionBeginDateStr)) beginDate = DateUtils.parseDate(promotionBeginDateStr);
-                promotion.setBeginDate(beginDate);
-
-                String promotionEndDateStr = jsonPromotion.getString("end_date");
-                Date endDate = null;
-                if (FieldValidator.isValid(promotionEndDateStr)) endDate = DateUtils.parseDate(promotionEndDateStr);
-                promotion.setEndDate(endDate);
-
-                promotion.setPercent(jsonPromotion.getInt("percent"));
-
-                product.setPromotion(promotion); //asigno la promocion al producto
             }
             */
 
