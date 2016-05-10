@@ -27,6 +27,7 @@ import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.domains.Promotion;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
@@ -187,13 +188,14 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_price2)).setText(isContentValid(product.getWholeSalePriceWithCurrency()));
 
         if (product.hasPromotion()) {
-            Date promotionBeginDate = product.getPromotionBeginDate();
-            Date promotionEndDate = product.getPromotionEndDate();
+            Promotion promotion = product.getPromotion();
+            Date promotionBeginDate = promotion.getBeginDate();
+            Date promotionEndDate = promotion.getEndDate();
             String promotionBeginDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionBeginDate).toString();
             String promotionEndDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionEndDate).toString();
             String promotionFullDateStr = promotionBeginDateStr + " / "+ promotionEndDateStr;
 
-            ((TextView) findViewById(R.id.product_detail_product_promotion_percent)).setText(isContentValid(Integer.toString(product.getPromotion()) +" %"));
+            ((TextView) findViewById(R.id.product_detail_product_promotion_percent)).setText(isContentValid(Integer.toString(promotion.getPercent()) +" %"));
             ((TextView) findViewById(R.id.product_detail_product_promotion_dates)).setText(promotionFullDateStr);
 
             ((CardView)findViewById(R.id.product_detail_card_promotion)).setVisibility(View.VISIBLE);

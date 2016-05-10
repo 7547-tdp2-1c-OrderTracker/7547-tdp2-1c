@@ -20,13 +20,11 @@ public class Product {
     private String brandName;
     private int stock;
 
-    private int promotion;
-    private Date promotionBeginDate;
-    private Date promotionEndDate;
-
     private String code;
     private String status;
     private String description;
+
+    private Promotion promotion;
 
     private String currency;
     private double price;
@@ -149,28 +147,13 @@ public class Product {
         return thumbnail;
     }
 
-    public int getPromotion() {
+
+    public Promotion getPromotion() {
         return promotion;
     }
 
-    public void setPromotion(int promotion) {
+    public void setPromotion(Promotion promotion) {
         this.promotion = promotion;
-    }
-
-    public Date getPromotionBeginDate() {
-        return promotionBeginDate;
-    }
-
-    public void setPromotionBeginDate(Date promotionBeginDate) {
-        this.promotionBeginDate = promotionBeginDate;
-    }
-
-    public Date getPromotionEndDate() {
-        return promotionEndDate;
-    }
-
-    public void setPromotionEndDate(Date promotionEndDate) {
-        this.promotionEndDate = promotionEndDate;
     }
 
     public String getPriceWithCurrency() {
@@ -186,7 +169,7 @@ public class Product {
     }
 
     public boolean hasPromotion() {
-        return this.getPromotion() > 0;
+        return (this.getPromotion() != null);
     }
 
     public static Product fromJson(JSONObject json) {
@@ -202,22 +185,24 @@ public class Product {
             product.setBrandName(jsonBrand.getString("name"));
             product.setStock(json.getInt("stock"));
 
-            product.setPromotion(0); // default de promocion es 0
-            product.setPromotionBeginDate(null);
-            product.setPromotionEndDate(null);
             if (jsonArrayPromotions.length() > 0) {
                 JSONObject jsonPromotion = jsonArrayPromotions.getJSONObject(0); // tomo la primera promo
-                product.setPromotion(jsonPromotion.getInt("percent"));
+
+                Promotion promotion = new Promotion(jsonPromotion.getLong("id"));
 
                 String promotionBeginDateStr = jsonPromotion.getString("begin_date");
                 Date beginDate = null;
                 if (FieldValidator.isValid(promotionBeginDateStr)) beginDate = DateUtils.parseDate(promotionBeginDateStr);
-                product.setPromotionBeginDate(beginDate);
+                promotion.setBeginDate(beginDate);
 
                 String promotionEndDateStr = jsonPromotion.getString("end_date");
                 Date endDate = null;
                 if (FieldValidator.isValid(promotionEndDateStr)) endDate = DateUtils.parseDate(promotionEndDateStr);
-                product.setPromotionEndDate(endDate);
+                promotion.setEndDate(endDate);
+
+                promotion.setPercent(jsonPromotion.getInt("percent"));
+
+                product.setPromotion(promotion); //asigno la promocion al producto
             }
 
             product.setCode(json.getString("code"));
@@ -235,4 +220,5 @@ public class Product {
         }
         return product;
     }
+
 }
