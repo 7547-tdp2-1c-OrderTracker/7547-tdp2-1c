@@ -164,7 +164,16 @@ public class Product {
 
     public Promotion getBestPromotion() {
         if (this.hasPromotion()) {
-            return this.promotions.get(0); // devolviendo la primera promocion por ahora
+            double bestPercent = 0;
+            Promotion bestPromotion = null;
+            for (int i = 0; i < this.promotions.size(); i++) {
+                Promotion promotion = this.promotions.get(i);
+                if (promotion.getPercent() > bestPercent) {
+                    bestPercent = promotion.getPercent();
+                    bestPromotion = promotion;
+                }
+            }
+            return bestPromotion; // devolviendo la primera promocion por ahora
         }
         return null;
     }
@@ -189,15 +198,12 @@ public class Product {
         Product product = null;
         try {
             JSONObject jsonBrand = json.getJSONObject("brand"); //getting the brand object inside
-            JSONArray jsonArrayPromotions = json.getJSONArray("promotions"); //getting the promotions array inside
 
             product = new Product(json.getLong("id"));
             product.setName(json.getString("name"));
             product.setBrandId(json.getLong("brand_id"));
-            //product.setBrandName(json.getString("brand_name"));
             product.setBrandName(jsonBrand.getString("name"));
             product.setStock(json.getInt("stock"));
-
 
             // products direct promotions
             JSONArray jsonArrayProductPromotions = json.getJSONArray("promotions"); //getting the promotions array inside
@@ -208,14 +214,12 @@ public class Product {
             }
 
             // products brands promotions
-            /*
-            JSONArray jsonArrayProductPromotions = json.getJSONArray("promotions"); //getting the promotions array inside
-            if (jsonArrayProductPromotions.length() > 0) {
-                for (int i = 0; i < jsonArrayProductPromotions.length(); i++) {
-                    product.addPromotion(Promotion.fromJson(jsonArrayProductPromotions.getJSONObject(i)));
+            JSONArray jsonArrayBrandPromotions = jsonBrand.getJSONArray("promotions"); //getting the promotions array inside brands
+            if (jsonArrayBrandPromotions.length() > 0) {
+                for (int i = 0; i < jsonArrayBrandPromotions.length(); i++) {
+                    product.addPromotion(Promotion.fromJson(jsonArrayBrandPromotions.getJSONObject(i)));
                 }
             }
-            */
 
             product.setCode(json.getString("code"));
             product.setStatus(json.getString("status"));
