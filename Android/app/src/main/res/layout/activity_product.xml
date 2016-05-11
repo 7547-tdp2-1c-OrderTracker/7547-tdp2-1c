@@ -134,6 +134,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:id="@+id/product_detail_card_promotion"
                 card_view:cardBackgroundColor="#ddd"
                 card_view:cardCornerRadius="2dp"
                 card_view:contentPadding="10dp">
@@ -153,6 +154,7 @@
                         android:layout_column="0" />
 
                     <TextView
+                        android:id="@+id/product_detail_product_promotion_percent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_row="0"
@@ -169,6 +171,7 @@
                         android:layout_column="0" />
 
                     <TextView
+                        android:id="@+id/product_detail_product_promotion_dates"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_row="1"

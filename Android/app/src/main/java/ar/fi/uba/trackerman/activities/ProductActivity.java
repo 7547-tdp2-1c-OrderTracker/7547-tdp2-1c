@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Brand;
@@ -25,6 +27,7 @@ import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.Product;
+import ar.fi.uba.trackerman.domains.Promotion;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
@@ -86,6 +89,12 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_price1)).setText("");
         ((TextView) findViewById(R.id.product_detail_price2)).setText("");
         ((TextView)findViewById(R.id.product_detail_description)).setText("");
+
+        // by default hide promotion card
+        ((CardView)findViewById(R.id.product_detail_card_promotion)).setVisibility(View.GONE);
+
+        ((TextView)findViewById(R.id.product_detail_product_promotion_percent)).setText("");
+        ((TextView)findViewById(R.id.product_detail_product_promotion_dates)).setText("");
     }
 
     public void showSnackbarSimpleMessage(String msg){
@@ -177,6 +186,22 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         ((TextView) findViewById(R.id.product_detail_stock)).setText(isContentValid(Long.toString(product.getStock())));
         ((TextView) findViewById(R.id.product_detail_price1)).setText(isContentValid(product.getRetailPriceWithCurrency()));
         ((TextView) findViewById(R.id.product_detail_price2)).setText(isContentValid(product.getWholeSalePriceWithCurrency()));
+
+        if (product.hasPromotion()) {
+            Promotion promotion = product.getBestPromotion();
+            Date promotionBeginDate = promotion.getBeginDate();
+            Date promotionEndDate = promotion.getEndDate();
+            String promotionBeginDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionBeginDate).toString();
+            String promotionEndDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionEndDate).toString();
+            String promotionFullDateStr = promotionBeginDateStr + " / "+ promotionEndDateStr;
+
+            ((TextView) findViewById(R.id.product_detail_product_promotion_percent)).setText(isContentValid(Integer.toString(promotion.getPercent()) +" %"));
+            ((TextView) findViewById(R.id.product_detail_product_promotion_dates)).setText(promotionFullDateStr);
+
+            ((CardView)findViewById(R.id.product_detail_card_promotion)).setVisibility(View.VISIBLE);
+        }
+
+
 
         ((TextView)findViewById(R.id.product_detail_description)).setText(isContentValid(product.getDescription()));
     }
