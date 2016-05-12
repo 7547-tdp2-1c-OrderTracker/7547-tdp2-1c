@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import android.provider.Settings.Secure;
 
+import org.json.JSONException;
+
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.server.RestClient;
@@ -34,7 +36,14 @@ public class RegistrationIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.restClient=new RestClient(null);
+        this.restClient=new RestClient(new RestClient.ResponseParse() {
+
+            @Override
+            public Object readResponse(String json) throws JSONException {
+                Log.e(TAG,"Response: "+json);
+                return null;
+            }
+        });
     }
 
     @Override
