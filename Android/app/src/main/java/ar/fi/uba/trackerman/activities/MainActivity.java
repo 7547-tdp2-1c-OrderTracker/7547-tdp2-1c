@@ -25,6 +25,7 @@ import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
+import fi.uba.ar.soldme.services.RegistrationIntentService;
 
 public class MainActivity extends AppCompatActivity implements
         GetDraftOrdersTask.DraftOrdersValidation {
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
-
+        registerDevice();
     }
 
     private void startCleanUpUI() {
@@ -231,5 +232,10 @@ public class MainActivity extends AppCompatActivity implements
                         return true;
                     }
                 });
+    }
+
+    private void registerDevice(){
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
     }
 }
