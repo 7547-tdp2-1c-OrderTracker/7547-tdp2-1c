@@ -27,7 +27,7 @@ public class RegistrationIntentService extends IntentService {
     private RestClient restClient;
 
     private static final String TAG = "RegIntentService";
-    private static final String[] TOPICS = {"promotions"};
+    private static final String[] TOPICS = {"promotions","stock"};
     private static final String SENT_TOKEN_TO_SERVER = "SENT_TOKEN_TO_SERVER";
     public RegistrationIntentService() {
         super(TAG);
@@ -71,7 +71,7 @@ public class RegistrationIntentService extends IntentService {
         String androidId = Secure.getString(this.getContentResolver(),Secure.ANDROID_ID);
         long sellerId= AppSettings.getSellerId();
 
-        String body = "{\"seller_id\": "+sellerId+", \"registration_id\":"+token+"}";
+        String body = "{\"seller_id\": "+sellerId+", \"registration_id\":\""+token+"\"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         try {
