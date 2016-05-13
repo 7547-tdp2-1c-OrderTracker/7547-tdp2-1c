@@ -30,6 +30,7 @@ public class MyGcmListenerService extends GcmListenerService {
     private static final String NEW_CLIENT = "NEW_CLIENT";
     private static final String CLIENT_UPDATED = "CLIENT_UPDATED";
     private static final String PRODUCT_STOCKED = "PRODUCT_STOCKED";
+    private static final String NEW_PROMOTION= "NEW_PROMOTION";
 
 
     // [START receive_message]
@@ -41,17 +42,14 @@ public class MyGcmListenerService extends GcmListenerService {
         String picture= data.getString("picture");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Tipo: "+ type + " , Id: " +identifier );
-
-        if (from.startsWith("/topics/")) {
+        if(NEW_CLIENT.equals(type)){
+            showNewClientNotification(message,identifier,picture);
+        }else if(CLIENT_UPDATED.equals(type)){
+            showClientUpdatedNotification(message,identifier,picture);
+        }else if(PRODUCT_STOCKED.equals(type)){
+            showProductStockedNotification(message,identifier,picture);
+        }else if(NEW_PROMOTION.equals(type)) {
             showNewPromotionNotification(message);
-        } else {
-            if(NEW_CLIENT.equals(type)){
-                showNewClientNotification(message,identifier,picture);
-            }else if(CLIENT_UPDATED.equals(type)){
-                showClientUpdatedNotification(message,identifier,picture);
-            }else if(PRODUCT_STOCKED.equals(type)){
-                showProductStockedNotification(message,identifier,picture);
-            }
         }
     }
 
@@ -78,7 +76,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private void showNewClientNotification(String message, String clientId, String picture) {
         Intent intent = new Intent(this, ClientActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,clientId);
+        intent.putExtra(Intent.EXTRA_UID,Long.parseLong(clientId));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -104,7 +102,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private void showClientUpdatedNotification(String message, String clientId, String picture) {
         Intent intent = new Intent(this, ClientActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,clientId);
+        intent.putExtra(Intent.EXTRA_UID,Long.parseLong(clientId));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -130,7 +128,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private void showProductStockedNotification(String message, String productId, String picture) {
         Intent intent = new Intent(this, ProductActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,productId);
+        intent.putExtra(Intent.EXTRA_UID,Long.parseLong(productId));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
