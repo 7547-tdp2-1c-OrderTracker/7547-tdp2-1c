@@ -65,6 +65,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentTitle(getString(R.string.new_promotion))
                 .setContentText(message)
                 .setAutoCancel(true)
+                .setGroup("Promotions")
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
@@ -87,6 +88,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentTitle(getString(R.string.new_client))
                 .setContentText(message)
                 .setAutoCancel(true)
+                .setGroup("NewClient")
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
@@ -97,7 +99,7 @@ public class MyGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(200+Integer.parseInt(clientId), notificationBuilder.build());
     }
 
     private void showClientUpdatedNotification(String message, String clientId, String picture) {
@@ -113,6 +115,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentTitle(getString(R.string.client_updated))
                 .setContentText(message)
                 .setAutoCancel(true)
+                .setGroup("ClientsUpdate")
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
@@ -123,7 +126,7 @@ public class MyGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(Integer.parseInt(clientId), notificationBuilder.build());
     }
 
     private void showProductStockedNotification(String message, String productId, String picture) {
@@ -140,6 +143,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setGroup("stock")
                 .setContentIntent(pendingIntent);
 
         if(picture!=null && !picture.isEmpty()){
@@ -149,7 +153,7 @@ public class MyGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(500+Integer.parseInt(productId), notificationBuilder.build());
     }
 
     public Bitmap getBitmapFromURL(String strURL) {

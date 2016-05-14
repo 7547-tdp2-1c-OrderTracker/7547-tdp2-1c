@@ -27,13 +27,16 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name="fi.uba.ar.soldme.services.RegistrationIntentService"
+            android:exported="false">
+        </service>
         <service android:name="fi.uba.ar.soldme.services.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
             </intent-filter>
         </service>
-
         <service
             android:name="fi.uba.ar.soldme.services.MyGcmListenerService"
             android:exported="false" >
@@ -51,7 +54,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.MyClientsActivity"
             android:label="@string/clients"
@@ -61,7 +63,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.ProductsListActivity"
             android:label="@string/products"
@@ -71,7 +72,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.ClientActivity"
             android:label="@string/clients"
@@ -81,7 +81,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MyClientsActivity" />
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.ProductActivity"
             android:label="@string/products"
@@ -91,7 +90,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.ProductsListActivity" />
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.ProductsFilterActivity"
             android:label="@string/brands"
@@ -101,7 +99,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.ProductsListActivity" />
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.OrderActivity"
             android:label="@string/order"
@@ -111,7 +108,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-
         <activity
             android:name="ar.fi.uba.trackerman.activities.MyOrdersActivity"
             android:label="@string/orders"
@@ -121,8 +117,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-
-        <activity android:name="ar.fi.uba.trackerman.activities.MyWeekAgendaActivity"
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.MyWeekAgendaActivity"
             android:label="@string/agenda"
             android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -130,8 +126,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-
-        <activity android:name="ar.fi.uba.trackerman.activities.MyDayAgendaActivity"
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.MyDayAgendaActivity"
             android:label="@string/agenda"
             android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -139,22 +135,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-
-        <activity android:name="ar.fi.uba.trackerman.activities.LoginActivity"
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.LoginActivity"
             android:label="@string/menu_login"
             android:parentActivityName="ar.fi.uba.trackerman.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
-
         </activity>
-
-        <service
-            android:name="fi.uba.ar.soldme.services.RegistrationIntentService"
-            android:exported="false">
-        </service>
-
+        <activity android:name="ar.fi.uba.trackerman.activities.ScanActivity"></activity>
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@
     <string name="menu_orders">Pedidos</string>
     <string name="menu_agenda_del_dia">Agenda del día</string>
     <string name="menu_agenda_semanal">Agenda semanal</string>
-    <string name="menu_reporte_venta">Reporte de ventas</string>
+    <string name="menu_scanear_codigo">Scanear Código</string>
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
