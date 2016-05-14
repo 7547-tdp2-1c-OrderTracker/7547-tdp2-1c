@@ -17,6 +17,7 @@ import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.product.SearchProductsListTask;
+import ar.fi.uba.trackerman.utils.CircleTransform;
 import fi.uba.ar.soldme.R;
 
 import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
@@ -93,7 +94,13 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         if (product.hasPromotion()) {
             holder.promotion.setText(isContentValid(Integer.toString(product.getBestPromotion().getPercent()) +" %"));
         }
-        Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
+        //Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
+
+        if (isContentValid(product.getThumbnail()).isEmpty()) {
+            Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
+        } else {
+            Picasso.with(this.getContext()).load(product.getThumbnail()).transform(new CircleTransform()).into(holder.image);
+        }
 
         return convertView;
     }
