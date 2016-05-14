@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
+                TextView txt = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
+                if (txt != null) {
+                    txt.setText("Vendedor #" + AppSettings.getSellerId());
+                }
                 super.onDrawerOpened(drawerView);
             }
         };

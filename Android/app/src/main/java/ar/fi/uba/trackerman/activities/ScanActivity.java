@@ -32,13 +32,12 @@ public class ScanActivity extends AppCompatActivity {
 
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
             intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // "PRODUCT_MODE for bar codes
-
             startActivityForResult(intent, 0);
 
         } catch (Exception e) {
 
             if (isEmulator()) {
-                Toast.makeText(getApplicationContext(), "Desde emulador no se accede al scanner", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Desde emulador no se accede al scanner", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
@@ -50,23 +49,34 @@ public class ScanActivity extends AppCompatActivity {
 
     }
 
+    // solo tomo como contenido de QR valido, numeros enteros positivos
+    private boolean validQRContent(String str) {
+        return str.matches("^\\d*$");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 0) {
 
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
-                //Toast.makeText(getApplicationContext(), contents, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, ClientActivity.class);
-                intent.putExtra(Intent.EXTRA_UID, Long.parseLong(contents));
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                String format = data.getStringExtra("SCAN_RESULT_FORMAT");
+                Toast.makeText(getApplicationContext(), format, Toast.LENGTH_LONG).show();
+                if (validQRContent(contents)) {
+                    Intent intent = new Intent(this, ClientActivity.class);
+                    intent.putExtra(Intent.EXTRA_UID, Long.parseLong(contents));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Formato código inválido", Toast.LENGTH_SHORT).show();
+                }
             }
             if(resultCode == RESULT_CANCELED){
-                Toast.makeText(getApplicationContext(), "Scan Cancelado", Toast.LENGTH_LONG).show();
-                finish();
+                Toast.makeText(getApplicationContext(), "Scan Cancelado", Toast.LENGTH_SHORT).show();
             }
         }
+
+        finishActivity(requestCode);
     }
 }
