@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,7 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Calendar;
@@ -47,6 +51,13 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_qrscan, menu);
+        return true;
+    }
+
     private int getCurrentDay(){
         MyPreferences pref = new MyPreferences(this.getApplicationContext());
         String currentDate = pref.get(getString(R.string.shared_pref_current_schedule_date), "");
@@ -56,19 +67,25 @@ public class MyDayAgendaActivity extends AppCompatActivity {
         return position;
     }
 
+    public void openScanQRCodeActivity(View view) {
+        Intent intent = new Intent(this, ScanActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_qrscan:
+                openScanQRCodeActivity(null);
+                return true;
+            case R.id.action_settings:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
+
     }
 
     public static class DailyViewPagerAdapter extends FragmentPagerAdapter {

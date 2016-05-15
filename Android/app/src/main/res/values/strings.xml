@@ -2,6 +2,7 @@
     <string name="app_name">TrackerMan</string>
     <string name="action_settings">Opciones</string>
     <string name="action_filter">Filtrar</string>
+    <string name="action_qrscan">QR Scan</string>
 
     <!-- items del menu lateral -->
     <string name="menu_clients">Clientes</string>

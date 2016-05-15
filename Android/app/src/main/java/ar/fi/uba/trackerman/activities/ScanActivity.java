@@ -70,7 +70,7 @@ public class ScanActivity extends AppCompatActivity implements GetClientDirectTa
         startActivity(intent);
     }
 
-    private void openClientOrderActivity(long idClient) {
+    private void openClientOrderActivity(long idOrder) {
 
 /*
         MyPreferences pref = new MyPreferences(this.getActivity());
@@ -84,8 +84,8 @@ public class ScanActivity extends AppCompatActivity implements GetClientDirectTa
         startActivity(intent);
          */
 
-        Intent intent = new Intent(this, ClientActivity.class);
-        intent.putExtra(Intent.EXTRA_UID, idClient);
+        Intent intent = new Intent(this, OrderActivity.class);
+        intent.putExtra(Intent.EXTRA_UID, idOrder);
         startActivity(intent);
     }
 
@@ -130,7 +130,9 @@ public class ScanActivity extends AppCompatActivity implements GetClientDirectTa
     public void updateClientDirect(Client client) {
         Toast.makeText(getApplicationContext(), "Cliente identificado: "+ client.getFullName(), Toast.LENGTH_SHORT).show();
         if (client.getDistance() >= 0) {
-            openMyClientActivity(client.getId());
+//            openMyClientActivity(client.getId());
+
+            openClientOrderActivity(9);
         }
     }
 
