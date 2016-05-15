@@ -80,4 +80,11 @@
     <string name="jueves_shorttag">Jue</string>
     <string name="viernes_shorttag">Vie</string>
     <string name="fueraruta_shorttag">FR</string>
+
+    <string name="new_promotion">Promociones</string>
+    <string name="new_client">Nuevo Cliente</string>
+    <string name="client_updated">Cliente Actualizado</string>
+    <string name="product_stocked">Producto con Stock</string>
+
+
 </resources>
