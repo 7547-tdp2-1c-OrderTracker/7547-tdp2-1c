@@ -10,17 +10,20 @@ import android.widget.Toast;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Client;
+import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.domains.QRValidationWrapper;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientDirectTask;
 import ar.fi.uba.trackerman.tasks.client.GetClientTask;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.qr.GetQRValidationTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
-public class ScanActivity extends AppCompatActivity implements GetClientDirectTask.ClientDirectReceiver {
+public class ScanActivity extends AppCompatActivity implements GetQRValidationTask.QRValidationResponse {
 
     public static boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
@@ -71,19 +74,6 @@ public class ScanActivity extends AppCompatActivity implements GetClientDirectTa
     }
 
     private void openClientOrderActivity(long idOrder) {
-
-/*
-        MyPreferences pref = new MyPreferences(this.getActivity());
-
-        pref.save(getString(R.string.shared_pref_current_order_id), order.getId());
-        pref.save(getString(R.string.shared_pref_current_order_status), order.getStatus());
-        pref.save(getString(R.string.shared_pref_current_client_id), orderWrapper.getClient().getId());
-
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra(Intent.EXTRA_UID,order.getId());
-        startActivity(intent);
-         */
-
         Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra(Intent.EXTRA_UID, idOrder);
         startActivity(intent);
@@ -100,16 +90,15 @@ public class ScanActivity extends AppCompatActivity implements GetClientDirectTa
                 String format = data.getStringExtra("SCAN_RESULT_FORMAT");
                 if (validQRContent(contents)) {
 
-                    if (RestClient.isOnline(this)) new GetClientDirectTask(this).execute( contents );
-//                    Toast.makeText(getApplicationContext(), "BBB: "+ this.scanClient.getAddress(), Toast.LENGTH_SHORT).show();
+                    //if (RestClient.isOnline(this)) new GetClientDirectTask(this).execute( contents );
 
-                    // TODO:
-                    // obtener client
-                    // validar si es mi cliente
-                    // validar distancia
+                    String sellerId = String.valueOf(AppSettings.getSellerId());
 
-                    //openMyClientActivity(Long.parseLong(contents));
-                    //openClientOrderActivity(Long.parseLong(contents));
+                    MyPreferences pref = new MyPreferences(this);
+                    String lat = pref.get(this.getString(R.string.shared_pref_current_location_lat), "");
+                    String lon = pref.get(this.getString(R.string.shared_pref_current_location_lon), "");
+
+                    if (RestClient.isOnline(this)) new GetQRValidationTask(this).execute( contents, sellerId, lat, lon);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Formato código inválido", Toast.LENGTH_SHORT).show();
@@ -128,12 +117,15 @@ public class ScanActivity extends AppCompatActivity implements GetClientDirectTa
     }
 
     public void updateClientDirect(Client client) {
-        Toast.makeText(getApplicationContext(), "Cliente identificado: "+ client.getFullName(), Toast.LENGTH_SHORT).show();
-        if (client.getDistance() >= 0) {
-//            openMyClientActivity(client.getId());
-
-            openClientOrderActivity(9);
-        }
     }
 
+
+    @Override
+    public void afterQRValidationResponse(QRValidationWrapper qrValidationWrapper) {
+        Order order = qrValidationWrapper.getOrder();
+        Client client = qrValidationWrapper.getClient();
+        Toast.makeText(getApplicationContext(), "Orden identificada: "+ client.getFullName(), Toast.LENGTH_SHORT).show();
+
+        openClientOrderActivity(order.getId());
+    }
 }
