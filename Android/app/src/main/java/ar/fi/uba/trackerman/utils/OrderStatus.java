@@ -8,7 +8,10 @@ public enum OrderStatus {
     CANCEL("cancelled", "Cancelada", "#ff0000"),// deprecada por CANCELLED
     CANCELLED("cancelled", "Cancelada", "#ff0000"),
     CONFIRM("confirm", "Confirmada", "#558b2f"), //deprecada por CONFIRMED
-    CONFIRMED("confirmed", "Confirmada", "#558b2f");
+    CONFIRMED("confirmed", "Confirmada", "#558b2f"),
+    DELIVERED("delivered", "Entregado", "#E9F50A"),
+    INTRANSIT("intransit", "EnTransito", "#B60AF5"),
+    PREPARED("prepared", "Preparado", "#F5C60A");
 
     private String status;
     private String translate;
