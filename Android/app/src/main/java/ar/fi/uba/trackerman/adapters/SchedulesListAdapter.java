@@ -68,7 +68,7 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         holder.client_id.setText("# "+ isContentValid(Long.toString(client.getId())));
         holder.clientName.setText(isContentValid(client.getFullName()));
         holder.clientAddress.setText(isContentValid(client.getAddress()));
-        holder.distance.setText(showCoolDistance(client.getDistance()));
+        holder.distance.setText(showCoolDistance(getContext(),client.getDistance()));
 
         if ( client.getVisited() != null ) {
             holder.clientName.setTextColor(Color.parseColor("#43a047"));
