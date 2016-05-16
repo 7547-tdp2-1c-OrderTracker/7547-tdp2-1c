@@ -101,6 +101,14 @@ public class MainActivity extends AppCompatActivity implements
         registerDevice();
     }
 
+    private void debugCardMessage(Location loc) {
+        String position = "POS HARD lat=-34.563424 lon=-58.463874";
+        if (loc != null) {
+            position = "POS lat="+loc.getLatitude()+" lon="+loc.getLongitude();
+        }
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". NET=" + RestClient.isOnline(MainActivity.this) + ". "+position);
+    }
+
     private void startCleanUpUI() {
         ((TextView)findViewById(R.id.dashboard_draft_orders)).setText("");
     }
