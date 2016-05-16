@@ -114,17 +114,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void updateReport(Report report){
-        String msg = "Atendidos = " + report.getVisits() + "\n\n" +
-                "Pedidos vendidos = " + report.getConfirmedOrders() + "\n\n" +
-                "Atendidos fuera de ruta = " + report.getOutOfRouteVisits();
+        String msgDinero = "";
         if (!report.getMoneyReports().isEmpty()) {
-            msg += "\n\nDinero recaudado = [";
-            for(Report.MoneyReport mr : report.getMoneyReports()) msg += mr;
-            msg += "]";
+            msgDinero += "Dinero recaudado = ";
+            for(Report.MoneyReport mr : report.getMoneyReports()) msgDinero += mr;
         } else {
-            msg += "\n\nNo hay dinero recaudado :(";
+            msgDinero += "No hay dinero recaudado :(";
         }
-        ((TextView) findViewById(R.id.fragment_main_report)).setText(msg);
+
+        ((TextView) findViewById(R.id.fragment_main_report_atendidos)).setText("Visitas realizadas = " + report.getVisits());
+        ((TextView) findViewById(R.id.fragment_main_report_vendidos)).setText("Pedidos Confirmados = " + report.getConfirmedOrders());
+        ((TextView) findViewById(R.id.fragment_main_report_fuera_de_ruta)).setText("Visitas fuera de ruta = " + report.getOutOfRouteVisits());
+        ((TextView) findViewById(R.id.fragment_main_report_dinero)).setText(msgDinero);
     }
 
     public void showSnackbarSimpleMessage(String message){
