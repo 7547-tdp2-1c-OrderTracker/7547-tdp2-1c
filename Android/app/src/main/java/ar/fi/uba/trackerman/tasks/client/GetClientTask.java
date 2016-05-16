@@ -12,7 +12,7 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
 /**
  * Created by plucadei on 31/3/16.
  */
-public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivity> implements RestClient.ResponseParse {
+public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivity> {
 
     public GetClientTask(ClientActivity activity) {
         super(activity);

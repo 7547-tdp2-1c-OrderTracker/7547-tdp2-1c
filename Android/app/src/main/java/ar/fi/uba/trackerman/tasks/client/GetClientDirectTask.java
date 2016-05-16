@@ -16,7 +16,7 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
  * Created by guido on 15/05/16.
  */
 
-public class GetClientDirectTask extends AbstractTask<String,Void,Client,AppCompatActivity> implements RestClient.ResponseParse {
+public class GetClientDirectTask extends AbstractTask<String,Void,Client,AppCompatActivity> {
 
     public GetClientDirectTask(AppCompatActivity validation) {
         super(validation);
