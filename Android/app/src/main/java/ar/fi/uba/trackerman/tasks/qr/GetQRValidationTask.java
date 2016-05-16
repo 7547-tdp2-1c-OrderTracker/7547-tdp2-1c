@@ -65,10 +65,7 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
     protected void onPostExecute(QRValidationWrapper qrValidationWrapper) {
         if(qrValidationWrapper != null){
             ((QRValidationResponse) weakReference.get()).afterQRValidationResponse(qrValidationWrapper);
-        } else {
-            ((QRValidationResponse) weakReference.get()).showSnackbarSimpleMessage("No se puede obtener info del codigo QR");
         }
-
     }
 
     public interface QRValidationResponse {
