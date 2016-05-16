@@ -150,12 +150,11 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void afterCreatingOrderItem(OrderItem orderItemCreated) {
         String msg = "Item/s Agregado/s al pedido!";
-        if (getView() == null) {
+        if (getView() != null) {
             ShowMessage.showSnackbarSimpleMessage(getView(),msg);
         } else {
             ShowMessage.toastMessage(getContext(),msg);
         }
-
     }
 
     @Override
