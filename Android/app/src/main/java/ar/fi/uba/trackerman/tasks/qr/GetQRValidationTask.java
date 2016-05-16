@@ -11,11 +11,8 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.domains.QRValidationWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.QRValidationException;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
-import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by guido on 15/05/16.
@@ -36,9 +33,6 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
 
         try {
             qrValidationWrapper = (QRValidationWrapper) restClient.post(url, body, headers);
-        } catch (QRValidationException e) {
-            //ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Error en la validación QR");
-            Log.e("QRValidationException", e.getMessage(), e);
         } catch (BusinessException e) {
             Log.e("business_error", e.getMessage(), e);
         } catch (ServerErrorException e) {

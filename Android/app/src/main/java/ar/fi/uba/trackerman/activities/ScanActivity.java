@@ -90,7 +90,9 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
                     String lat = pref.get(this.getString(R.string.shared_pref_current_location_lat), "");
                     String lon = pref.get(this.getString(R.string.shared_pref_current_location_lon), "");
 
-                    if (RestClient.isOnline(this)) new GetQRValidationTask(this).execute( contents, sellerId, lat, lon);
+                    if (RestClient.isOnline(this)) {
+                        new GetQRValidationTask(this).execute( contents, sellerId, lat, lon);
+                    }
 
                 } else {
                     ShowMessage.toastMessage(getApplicationContext(), "Formato código inválido");
