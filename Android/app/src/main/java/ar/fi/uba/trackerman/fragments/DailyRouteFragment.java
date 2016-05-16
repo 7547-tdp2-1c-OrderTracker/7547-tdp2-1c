@@ -83,7 +83,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         TextView text= (TextView)fragmentView.findViewById(R.id.daily_route_day);
         //String extra = String.valueOf(diff) + " - " + queriedDate;
         //text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() +" - position="+item+" - diff"+extra);
-        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + " - " + queriedDate);
+        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + ": " + DateUtils.formatShortDateArg(cal.getTime()));
 
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
