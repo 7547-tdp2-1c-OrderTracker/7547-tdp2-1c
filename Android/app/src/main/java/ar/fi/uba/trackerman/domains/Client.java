@@ -14,17 +14,6 @@ import ar.fi.uba.trackerman.utils.FieldValidator;
  */
 public class Client {
 
-    /*
-    "location": {
-    "type": "Point",
-    "coordinates": [
-    -34.5649,
-    -58.4592
-    ]
-    },
-    "distance": 7.862451261787
-     */
-
     private long id;
     private String name;
     private String lastName;
