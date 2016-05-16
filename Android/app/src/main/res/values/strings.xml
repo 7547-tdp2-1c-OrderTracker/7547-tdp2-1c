@@ -86,6 +86,7 @@
     <string name="new_client">Nuevo Cliente</string>
     <string name="client_updated">Cliente Actualizado</string>
     <string name="product_stocked">Producto con Stock</string>
+    <string name="fragment_main_report">No hay reporte diario</string>
 
 
 </resources>
