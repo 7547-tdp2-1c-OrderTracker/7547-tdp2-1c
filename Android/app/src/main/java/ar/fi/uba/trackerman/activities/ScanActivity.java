@@ -3,6 +3,9 @@ package ar.fi.uba.trackerman.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -104,8 +107,22 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
         finishActivity(requestCode);
     }
 
-    public void showSnackbarSimpleMessage(String msg){
-        ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
+    public void showSnackbarSimpleMessage(final String msg){
+
+        new Thread() {
+            public void run() {
+                ScanActivity.this.runOnUiThread(new Runnable() {
+                    public void run()
+                    {
+                        if (getCurrentFocus() != null) {
+                            ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),msg);
+                        } else {
+                            ShowMessage.toastMessage(getApplicationContext(),msg);
+                        }
+                    }
+                });
+            }
+        }.start();
     }
 
     @Override

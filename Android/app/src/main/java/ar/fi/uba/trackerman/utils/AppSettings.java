@@ -27,4 +27,8 @@ public class AppSettings {
     }
 
     public static int getServerTimeout() { return SERVER_TIMEOUT; }
+
+    public static Integer getValidDistance() {
+        return 300000;
+    }
 }

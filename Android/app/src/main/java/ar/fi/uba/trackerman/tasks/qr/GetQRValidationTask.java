@@ -29,20 +29,15 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
 
     public QRValidationWrapper getQRValidation(String idSeller, String idClient, String lat, String lon) {
         QRValidationWrapper qrValidationWrapper = null;
-        String body = "{\"client_id\": "+ idClient +",\"seller_id\":"+ idSeller +",\"lat\": "+ lat +",\"lon\": "+ lon +",\"distance\":300000}";
+        String body = "{\"client_id\": "+ idClient +",\"seller_id\":"+ idSeller +",\"lat\": "+ lat +",\"lon\": "+ lon +",\"distance\":"+AppSettings.getValidDistance()+"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/scanqr/validate";
 
         try {
             qrValidationWrapper = (QRValidationWrapper) restClient.post(url, body, headers);
-        } catch (QRValidationException e) {
-            //ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Error en la validación QR");
-            Log.e("QRValidationException", e.getMessage(), e);
         } catch (BusinessException e) {
-            Log.e("business_error", e.getMessage(), e);
-        } catch (ServerErrorException e) {
-            Log.e("server_error", e.getMessage(), e);
+            ((QRValidationResponse) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
         }
         return qrValidationWrapper;
     }
@@ -68,16 +63,16 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
 
     @Override
     protected void onPostExecute(QRValidationWrapper qrValidationWrapper) {
-//        super.onPostExecute(client);
         if(qrValidationWrapper != null){
             ((QRValidationResponse) weakReference.get()).afterQRValidationResponse(qrValidationWrapper);
         } else {
-            // weakReference.get().showSnackbarSimpleMessage("No se puede obtener info del cliente");
+            ((QRValidationResponse) weakReference.get()).showSnackbarSimpleMessage("No se puede obtener info del codigo QR");
         }
 
     }
 
     public interface QRValidationResponse {
         public void afterQRValidationResponse(QRValidationWrapper qrValidationWrapper);
+        public void showSnackbarSimpleMessage(String message);
     }
 }
