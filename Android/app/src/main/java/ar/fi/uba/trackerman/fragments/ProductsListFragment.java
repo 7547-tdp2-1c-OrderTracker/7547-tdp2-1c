@@ -151,7 +151,7 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
     public void afterCreatingOrderItem(OrderItem orderItemCreated) {
         String msg = "Item/s Agregado/s al pedido!";
         if (getView() == null) {
-            ShowMessage.showSnackbarSimpleMessage(getView(),msfg);
+            ShowMessage.showSnackbarSimpleMessage(getView(),msg);
         } else {
             ShowMessage.toastMessage(getContext(),msg);
         }
