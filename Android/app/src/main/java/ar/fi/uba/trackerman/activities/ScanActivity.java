@@ -7,16 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import java.util.List;
-
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
-import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.QRValidationWrapper;
 import ar.fi.uba.trackerman.server.RestClient;
-import ar.fi.uba.trackerman.tasks.client.GetClientDirectTask;
-import ar.fi.uba.trackerman.tasks.client.GetClientTask;
-import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.qr.GetQRValidationTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
@@ -90,8 +84,6 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
                 String format = data.getStringExtra("SCAN_RESULT_FORMAT");
                 if (validQRContent(contents)) {
 
-                    //if (RestClient.isOnline(this)) new GetClientDirectTask(this).execute( contents );
-
                     String sellerId = String.valueOf(AppSettings.getSellerId());
 
                     MyPreferences pref = new MyPreferences(this);
@@ -101,7 +93,7 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
                     if (RestClient.isOnline(this)) new GetQRValidationTask(this).execute( contents, sellerId, lat, lon);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Formato código inválido", Toast.LENGTH_SHORT).show();
+                    ShowMessage.toastMessage(getApplicationContext(), "Formato código inválido");
                 }
             }
             if(resultCode == RESULT_CANCELED){
@@ -116,16 +108,11 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
         ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
     }
 
-    public void updateClientDirect(Client client) {
-    }
-
-
     @Override
     public void afterQRValidationResponse(QRValidationWrapper qrValidationWrapper) {
         Order order = qrValidationWrapper.getOrder();
         Client client = qrValidationWrapper.getClient();
-        Toast.makeText(getApplicationContext(), "Orden identificada: "+ client.getFullName(), Toast.LENGTH_SHORT).show();
-
+        ShowMessage.toastMessage(getApplicationContext(), "Orden identificada: "+ client.getFullName());
         openClientOrderActivity(order.getId());
     }
 }
