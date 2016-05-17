@@ -25,7 +25,7 @@ public class GetReportTask extends AbstractTask<String,Void,Report,AppCompatActi
         String end = params[1];
         Report report = null;
         try {
-            report = (Report) restClient.get("/v1/sellers/"+ AppSettings.getSellerId()+"/reports?start_date="+start+"&end_date="+end);
+            report = (Report) restClient.get("/v1/sellers/"+ AppSettings.getSellerId()+"/reports?start_date="+start);
         } catch (BusinessException e) {
             ((ReportReceiver) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
         }
