@@ -1,8 +1,13 @@
 package ar.fi.uba.trackerman.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -11,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,11 +30,15 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
 import ar.fi.uba.trackerman.domains.Visit;
 import ar.fi.uba.trackerman.server.RestClient;
+import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.tasks.visit.PostVisitTask;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
 import ar.fi.uba.trackerman.utils.MyPreferences;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
 /**
  * Created by plucadei on 1/5/16.
@@ -73,7 +83,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         TextView text= (TextView)fragmentView.findViewById(R.id.daily_route_day);
         //String extra = String.valueOf(diff) + " - " + queriedDate;
         //text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() +" - position="+item+" - diff"+extra);
-        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + " - " + queriedDate);
+        text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + ": " + DateUtils.formatShortDateArg(cal.getTime()));
 
 
         ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
@@ -116,18 +126,37 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         switch (item.getItemId()) {
             case R.id.mark_client_as_visited:
 
-                Toast.makeText(this.getActivity().getApplicationContext(),this.selectedClient.getFullName() +" marcado como visitado", Toast.LENGTH_LONG).show();
-
                 ScheduleDay day = schedulesListAdapter.getCurrentScheduleDay();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(day.getDate());
-                String dayOfWeek = String.valueOf(cal.get(Calendar.DAY_OF_WEEK) - 1);
 
-                //FIXME guido tenes que obtener el comentario y cambiar esta linea.
-                String comment = "Te visite";
-                String clientId = Long.toString(selectedClient.getId());
+                final String dayOfWeek = String.valueOf(cal.get(Calendar.DAY_OF_WEEK) - 1);
+                final EditText edittext = new EditText(getContext());
+                final Client clientObj = this.selectedClient;
 
-                if (RestClient.isOnline(this.getContext())) new PostVisitTask(this).execute(clientId,dayOfWeek,DateUtils.formatDate(Calendar.getInstance().getTime()),comment);
+                new AlertDialog.Builder(this.getContext())
+                        .setTitle("Agregar comentario")
+                        .setMessage("")
+                        .setView(edittext)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                String comment = edittext.getText().toString();
+                                String clientId = Long.toString(selectedClient.getId());
+
+                                //if (RestClient.isOnline(this.getContext())) new PostVisitTask(this).execute(clientId,dayOfWeek,DateUtils.formatDate(Calendar.getInstance().getTime()),comment);
+                                if (RestClient.isOnline(DailyRouteFragment.this.getContext())) {
+                                    new PostVisitTask(DailyRouteFragment.this).execute(clientId,dayOfWeek,DateUtils.formatDate(Calendar.getInstance().getTime()),comment);
+                                    Toast.makeText(DailyRouteFragment.this.getActivity().getApplicationContext(),clientObj.getFullName() +" marcado como visitado", Toast.LENGTH_LONG).show();
+                                }
+
+                            }})
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        })
+                        .show();
+
 
                 return true;
             default:

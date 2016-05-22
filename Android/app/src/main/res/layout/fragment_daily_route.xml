@@ -8,20 +8,18 @@
     android:padding="10dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="20dp"
-        android:text="Agenda del día"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
         android:id="@+id/daily_route_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DIA"
+        android:textSize="30dp"
         android:layout_gravity="center_horizontal" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="4dp"
+        android:background="@color/cardview_dark_background" />
 
     <ListView
         android:id="@+id/dayAgendaListView"
@@ -37,8 +35,9 @@
         android:id="@+id/agenda_row_clients_empty"
         android:visibility="gone"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/calendars">
 
     </ImageView>
