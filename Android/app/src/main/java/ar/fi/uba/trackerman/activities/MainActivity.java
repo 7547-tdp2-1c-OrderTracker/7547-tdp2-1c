@@ -18,16 +18,20 @@ import java.util.Calendar;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderWrapper;
+import ar.fi.uba.trackerman.domains.Report;
 import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
+import ar.fi.uba.trackerman.tasks.report.GetReportTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
+import fi.uba.ar.soldme.services.RegistrationIntentService;
 
 public class MainActivity extends AppCompatActivity implements
-        GetDraftOrdersTask.DraftOrdersValidation {
+        GetDraftOrdersTask.DraftOrdersValidation, GetReportTask.ReportReceiver {
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -49,7 +53,10 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
+                TextView txt = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
+                if (txt != null) {
+                    txt.setText("Vendedor #" + AppSettings.getSellerId());
+                }
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -73,28 +80,64 @@ public class MainActivity extends AppCompatActivity implements
 
         this.startCleanUpUI();
 
-        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(this));
 //        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
 
         // -----
         // hardcodeados los datos para el emulador, si luego existe el GPS se pisan !!
         pref.save(getString(R.string.shared_pref_current_location_lat), String.valueOf(-34.563424));
         pref.save(getString(R.string.shared_pref_current_location_lon), String.valueOf(-58.463874));
-        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(MainActivity.this) + ". POS HARD lat=-34.563424 lon=-58.463874");
+        debugCardMessage(null);
         // ---- fin del hardcode (borrar entre comentarios)
 
         LocationService ls = new LocationService(this);
         ls.config(new LocationService.MyLocation() {
             @Override
             public void processLocation(Location loc) {
-                ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId() + ". Inter=" + RestClient.isOnline(MainActivity.this) + ". POS lat=" + loc.getLatitude()+" lon=" + loc.getLongitude());
+                debugCardMessage(loc);
                 pref.save(getString(R.string.shared_pref_current_location_lat), String.valueOf(loc.getLatitude()));
                 pref.save(getString(R.string.shared_pref_current_location_lon), String.valueOf(loc.getLongitude()));
             }
         });
 
-        if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
+        if (RestClient.isOnline(this)) {
+            new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
 
+            //new GetReportTask(this).execute("2015-01-01","2017-01-01");
+            Calendar today = Calendar.getInstance();
+            String start = DateUtils.formatShortDate(today.getTime());
+            today.set(Calendar.DATE, today.get(Calendar.DATE)+1);
+            String end = DateUtils.formatShortDate(today.getTime());
+            new GetReportTask(this).execute(start,end);
+        }
+
+        registerDevice();
+    }
+
+    public void updateReport(Report report){
+        String msgDinero = "";
+        if (!report.getMoneyReports().isEmpty()) {
+            msgDinero += "Dinero recaudado = ";
+            for(Report.MoneyReport mr : report.getMoneyReports()) msgDinero += mr;
+        } else {
+            msgDinero += "No hay dinero recaudado :(";
+        }
+
+        ((TextView) findViewById(R.id.fragment_main_report_atendidos)).setText("Visitas realizadas = " + report.getVisits());
+        ((TextView) findViewById(R.id.fragment_main_report_vendidos)).setText("Pedidos Confirmados = " + report.getConfirmedOrders());
+        ((TextView) findViewById(R.id.fragment_main_report_fuera_de_ruta)).setText("Visitas fuera de ruta = " + report.getOutOfRouteVisits());
+        ((TextView) findViewById(R.id.fragment_main_report_dinero)).setText(msgDinero);
+    }
+
+    public void showSnackbarSimpleMessage(String message){
+        ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(),message);
+    }
+
+    private void debugCardMessage(Location loc) {
+        String position = "POS HARD lat=-34.563424 lon=-58.463874";
+        if (loc != null) {
+            position = "POS lat="+loc.getLatitude()+" lon="+ loc.getLongitude();
+        }
+        ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText(position);
     }
 
     private void startCleanUpUI() {
@@ -140,10 +183,9 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    public void openMyReportSellsActivity(View view) {
-        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
-        //Intent intent = new Intent(this, MyReportSellsActivity.class);
-        //startActivity(intent);
+    public void openScanQRCodeActivity(View view) {
+        Intent intent = new Intent(this, ScanActivity.class);
+        startActivity(intent);
     }
 
     public void openProductsActivity(View view) {
@@ -212,10 +254,10 @@ public class MainActivity extends AppCompatActivity implements
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyWeekAgendaActivity(null);
                                 return true;
-                            case R.id.nav_reporte_ventas:
+                            case R.id.nav_scan_codigo:
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                openMyReportSellsActivity(null);
+                                openScanQRCodeActivity(null);
                                 return true;
                             case R.id.nav_login:
                                 menuItem.setChecked(true);
@@ -231,5 +273,10 @@ public class MainActivity extends AppCompatActivity implements
                         return true;
                     }
                 });
+    }
+
+    private void registerDevice(){
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
     }
 }

@@ -2,6 +2,7 @@
     <string name="app_name">TrackerMan</string>
     <string name="action_settings">Opciones</string>
     <string name="action_filter">Filtrar</string>
+    <string name="action_qrscan">QR Scan</string>
 
     <!-- items del menu lateral -->
     <string name="menu_clients">Clientes</string>
@@ -9,7 +10,7 @@
     <string name="menu_orders">Pedidos</string>
     <string name="menu_agenda_del_dia">Agenda del día</string>
     <string name="menu_agenda_semanal">Agenda semanal</string>
-    <string name="menu_reporte_venta">Reporte de ventas</string>
+    <string name="menu_scanear_codigo">Scanear Código</string>
 
     <string name="clients">Clientes</string>
     <string name="products">Productos</string>
@@ -80,4 +81,12 @@
     <string name="jueves_shorttag">Jue</string>
     <string name="viernes_shorttag">Vie</string>
     <string name="fueraruta_shorttag">FR</string>
+
+    <string name="new_promotion">Promociones</string>
+    <string name="new_client">Nuevo Cliente</string>
+    <string name="client_updated">Cliente Actualizado</string>
+    <string name="product_stocked">Producto con Stock</string>
+    <string name="fragment_main_report">No hay reporte diario</string>
+
+
 </resources>

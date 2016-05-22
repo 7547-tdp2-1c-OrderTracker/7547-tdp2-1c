@@ -1,8 +1,11 @@
 package ar.fi.uba.trackerman.utils;
 
+import android.content.Context;
 import android.telephony.PhoneNumberUtils;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  * Created by smpiano on 4/24/16.
@@ -10,6 +13,7 @@ import java.text.DecimalFormat;
 public class FieldValidator {
 
     private static DecimalFormat THREE_DECIMALS = new DecimalFormat("####0.000");
+    private static DecimalFormat THREE_DECIMALS_LOCALIZED = new DecimalFormat("####0.000");
     private static DecimalFormat TWO_DECIMALS = new DecimalFormat("####0.00");
     private static DecimalFormat NO_DECIMALS = new DecimalFormat("####0");
     public static boolean isValid(String content) {
@@ -45,8 +49,12 @@ public class FieldValidator {
         }
     }
 
-    public static String showCoolDistance(double dist) {
+    public static String showCoolDistance(Context ctx, double dist) {
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols(getAndroidLocale(ctx));
+        dfs.setDecimalSeparator(',');
+        THREE_DECIMALS_LOCALIZED.setDecimalFormatSymbols(dfs);
         String expected = THREE_DECIMALS.format(dist);
+
 
         if (expected=="0.000") return "";
 
@@ -56,7 +64,13 @@ public class FieldValidator {
             unit = "mts";
         } else if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(100D) >= 0)) {
             expected = NO_DECIMALS.format(dist);
+        } else if (!expected.isEmpty()) {
+            expected = THREE_DECIMALS_LOCALIZED.format(dist);
         }
         return expected+" "+unit;
+    }
+
+    public static Locale getAndroidLocale(Context appContext) {
+        return appContext.getResources().getConfiguration().locale;
     }
 }

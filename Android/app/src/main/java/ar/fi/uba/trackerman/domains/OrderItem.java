@@ -155,7 +155,7 @@ public class OrderItem {
             long product_id = json.getLong("product_id");
             String name = json.getString("name");
             int quantity = json.getInt("quantity");
-            double price = json.getDouble("unit_price");
+            double price = json.isNull("unit_price")? 0 : json.getDouble("unit_price");
             String currencyItem = json.getString("currency");
             String brand = json.getString("brand_name");
             String picture = json.getString("thumbnail");
