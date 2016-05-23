@@ -54,7 +54,7 @@ public class MyGcmListenerService extends GcmListenerService {
     }
 
     private void showNewPromotionNotification(String message, String picture, Bundle data) {
-        String dicount = data.getString("percent");
+        String discount = data.getString("percent");
         String product = data.getString("product");
         String brand = data.getString("brand");
         Intent intent = new Intent(this, MainActivity.class);
@@ -63,7 +63,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        String content = dicount + "%" + ((product!=null)?" en "+product:(brand!=null)?" en "+brand:"");
+        String content = discount + "%" + ((product!=null)?" en "+product:(brand!=null)?" en "+brand:"");
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(message)
