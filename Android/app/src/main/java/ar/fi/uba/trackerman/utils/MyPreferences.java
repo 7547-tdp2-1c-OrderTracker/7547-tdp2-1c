@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.Map;
 
+import ar.fi.uba.trackerman.domains.Seller;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -45,7 +46,6 @@ public class MyPreferences {
     }
 
     public void load() {
-        this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_vendor_id), (long) 1);
         this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_client_id), (long) -1);
         this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_order_id), (long) -1);
     }

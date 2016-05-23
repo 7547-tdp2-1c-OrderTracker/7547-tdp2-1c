@@ -54,18 +54,20 @@ public class MyGcmListenerService extends GcmListenerService {
     }
 
     private void showNewPromotionNotification(String message, String picture, Bundle data) {
-        String dicount= data.getString("percent");
-        String product= data.getString("product");
+        String dicount = data.getString("percent");
+        String product = data.getString("product");
+        String brand = data.getString("brand");
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String content = dicount + "%" + ((product!=null)?" en "+product:(brand!=null)?" en "+brand:"");
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(message)
-                .setContentText(dicount+"% en "+product)
+                .setContentText(content)
                 .setAutoCancel(true)
                 .setGroup("Promotions")
                 .setSound(defaultSoundUri)

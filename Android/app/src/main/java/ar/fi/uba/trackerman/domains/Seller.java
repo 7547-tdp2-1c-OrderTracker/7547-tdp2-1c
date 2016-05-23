@@ -22,7 +22,6 @@ public class Seller {
     private Date lastModified;
 
     public Seller(long id) {
-        super();
         this.id= id;
     }
 

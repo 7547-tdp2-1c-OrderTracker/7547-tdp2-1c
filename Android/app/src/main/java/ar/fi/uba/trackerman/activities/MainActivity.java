@@ -11,24 +11,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.Report;
+import ar.fi.uba.trackerman.domains.Seller;
 import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.report.GetReportTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.CircleTransform;
 import ar.fi.uba.trackerman.utils.DateUtils;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 import fi.uba.ar.soldme.services.RegistrationIntentService;
+
+import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 
 public class MainActivity extends AppCompatActivity implements
         GetDraftOrdersTask.DraftOrdersValidation, GetReportTask.ReportReceiver {
@@ -57,13 +64,25 @@ public class MainActivity extends AppCompatActivity implements
             // Si lo pongo directamente en el onCreate, explota por null
             @Override
             public void onDrawerOpened(View drawerView) {
+
+                MyPreferenceHelper helper = new MyPreferenceHelper(MainActivity.this);
+                Seller seller = helper.getSeller();
+
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 TextView sellerName = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
                 TextView sellerEmail = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_email));
+
                 if (sellerName != null) {
-                    String fullSellerName = pref.get(getString(R.string.shared_pref_current_vendor_fullname), "") + "  (#"+pref.get(getString(R.string.shared_pref_current_vendor_id), 1L)+")";
+                    String fullSellerName = seller.getFullName() + "  (#"+seller.getId()+")";
                     sellerName.setText(fullSellerName);
-                    sellerEmail.setText(pref.get(getString(R.string.shared_pref_current_vendor_email), ""));
+                    sellerEmail.setText(seller.getEmail());
+                    String avatar = isContentValid(seller.getAvatar());
+                    ImageView mainAvatar = (ImageView) findViewById(R.id.menu_header_logo);
+                    if (avatar != null && !avatar.isEmpty()) {
+                        Picasso.with(MainActivity.this).load(avatar).transform(new CircleTransform()).into(mainAvatar);
+                    } else {
+                        Picasso.with(MainActivity.this).load(R.drawable.icon).into(mainAvatar);
+                    }
                 }
                 super.onDrawerOpened(drawerView);
             }
@@ -101,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         if (RestClient.isOnline(this)) {
-            new GetDraftOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString());
+            MyPreferenceHelper helper = new MyPreferenceHelper(this);
+            new GetDraftOrdersTask(this).execute(String.valueOf(helper.getSeller().getId()));
 
             //new GetReportTask(this).execute("2015-01-01","2017-01-01");
             Calendar today = Calendar.getInstance();

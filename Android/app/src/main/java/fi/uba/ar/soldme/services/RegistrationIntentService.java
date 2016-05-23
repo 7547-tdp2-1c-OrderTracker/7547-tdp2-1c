@@ -20,9 +20,12 @@ import org.json.JSONException;
 
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
+import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 public class RegistrationIntentService extends IntentService {
@@ -42,7 +45,7 @@ public class RegistrationIntentService extends IntentService {
 
             @Override
             public Object readResponse(String json) throws JSONException {
-                Log.e(TAG,"Response: "+json);
+                Log.i(TAG,"Response: "+json);
                 return null;
             }
         });
@@ -58,19 +61,19 @@ public class RegistrationIntentService extends IntentService {
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             Log.i(TAG, "GCM Registration Token: " + token);
 
-            MyPreferences pref = new MyPreferences(this);
-            sendRegistrationToServer(token, pref.get(getString(R.string.shared_pref_current_vendor_id), 1L));
+            MyPreferenceHelper helper = new MyPreferenceHelper(this);
+            sendRegistrationToServer(token, helper.getSeller().getId());
 
             subscribeTopics(token);
             sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, true).apply();
         } catch (Exception e) {
-            Log.d(TAG, "Failed to complete token refresh", e);
+            ShowMessage.toastMessage(this, "Failed to complete token refresh");
             sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, false).apply();
         }
     }
 
     private void sendRegistrationToServer(String token, Long sellerId) {
-        Log.e(this.getClass().getCanonicalName(),"Token: "+token);
+        Log.i(this.getClass().getCanonicalName(),"Token: "+token);
         String androidId = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
 
         String body = "{\"seller_id\": "+sellerId+", \"registration_id\":\""+token+"\"}";
@@ -79,7 +82,9 @@ public class RegistrationIntentService extends IntentService {
         try {
             restClient.put("/v1/devices/"+androidId, body, headers);
         } catch (BusinessException e) {
-            Log.e(this.getClass().getCanonicalName(),"ERROR POSTEANDO TOKEN!!!");
+            ShowMessage.toastMessage(this, e.getMessage());
+        } catch (ServerErrorException e) {
+            ShowMessage.toastMessage(this, e.getMessage());
         }
     }
 

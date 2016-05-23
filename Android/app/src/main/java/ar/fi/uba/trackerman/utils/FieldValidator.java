@@ -78,4 +78,8 @@ public class FieldValidator {
     public static Locale getAndroidLocale(Context appContext) {
         return appContext.getResources().getConfiguration().locale;
     }
+
+    public static String showPrice(double price) {
+        return TWO_DECIMALS.format(price);
+    }
 }

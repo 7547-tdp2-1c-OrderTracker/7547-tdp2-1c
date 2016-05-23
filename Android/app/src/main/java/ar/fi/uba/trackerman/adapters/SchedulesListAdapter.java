@@ -26,6 +26,7 @@ import ar.fi.uba.trackerman.tasks.schedule.GetScheduleDayListTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.LocationHelper;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -101,7 +102,8 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
         String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
         String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
-        String seller = pref.get(getContext().getString(R.string.shared_pref_current_vendor_id), 1L).toString();
+        MyPreferenceHelper helper = new MyPreferenceHelper(getContext());
+        String seller = String.valueOf(helper.getSeller().getId());
 
         // by preference set date from swiper instead set currentDate (today) or chose by schedule week
         String dateToSolve = (date==null)?currentDate:date;

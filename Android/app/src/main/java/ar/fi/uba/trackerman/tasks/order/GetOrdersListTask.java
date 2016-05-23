@@ -14,6 +14,7 @@ import ar.fi.uba.trackerman.domains.OrdersSearchResult;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -21,13 +22,13 @@ import fi.uba.ar.soldme.R;
 
 public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult,OrdersListAdapter> {
 
-    private MyPreferences pref;
+    private MyPreferenceHelper helper;
     private String key;
 
     public GetOrdersListTask(OrdersListAdapter adapter) {
         super(adapter);
-        this.key = adapter.getContext().getString(R.string.shared_pref_current_vendor_id);
-        pref = new MyPreferences(adapter.getContext());
+        this.key = adapter.getContext().getString(R.string.shared_pref_current_seller);
+        helper = new MyPreferenceHelper(adapter.getContext());
     }
 
     @Override
@@ -37,7 +38,7 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
         if(offset != null){
             urlString += "&offset="+offset.toString();
         }
-        urlString+="&seller_id="+ pref.get(key, 1L);
+        urlString+="&seller_id="+ helper.getSeller().getId();
 
         OrdersSearchResult ordersSearchResult = null;
         try {
