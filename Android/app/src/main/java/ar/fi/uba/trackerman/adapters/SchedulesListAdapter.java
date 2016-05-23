@@ -36,6 +36,7 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
 
     private ScheduleDay currentScheduleDay;
     private WeakReference reference;
+    private MyPreferences pref = new MyPreferences(getContext());
 
     public SchedulesListAdapter(Context context, int resource,
                                 List<Client> clients, DailyRouteFragment fragment) {
@@ -97,15 +98,15 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
     }
 
     public void solveTask(String date) {
-        MyPreferences pref = new MyPreferences(getContext());
         String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
         String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
         String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
+        String seller = pref.get(getContext().getString(R.string.shared_pref_current_vendor_id), 1L).toString();
 
         // by preference set date from swiper instead set currentDate (today) or chose by schedule week
         String dateToSolve = (date==null)?currentDate:date;
 
-        if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(dateToSolve, Long.toString(AppSettings.getSellerId()), lat, lon);
+        if (RestClient.isOnline(getContext())) new GetScheduleDayListTask(this).execute(dateToSolve, seller, lat, lon);
     }
 
     private static class ViewHolder {

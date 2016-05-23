@@ -28,6 +28,7 @@ public class MyDayAgendaActivity extends AppCompatActivity {
 
     private DailyViewPagerAdapter pagerAdapter;
     private ViewPager mViewPager;
+    private MyPreferences pref = new MyPreferences(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,6 @@ public class MyDayAgendaActivity extends AppCompatActivity {
     }
 
     private int getCurrentDay(){
-        MyPreferences pref = new MyPreferences(this.getApplicationContext());
         String currentDate = pref.get(getString(R.string.shared_pref_current_schedule_date), "");
         Calendar cal = Calendar.getInstance();
         cal.setTime(DateUtils.parseShortDate(currentDate));

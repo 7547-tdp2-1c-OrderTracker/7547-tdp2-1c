@@ -29,7 +29,7 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
 
     public QRValidationWrapper getQRValidation(String idSeller, String idClient, String lat, String lon) {
         QRValidationWrapper qrValidationWrapper = null;
-        String body = "{\"client_id\": "+ idClient +",\"seller_id\":"+ idSeller +",\"lat\": "+ lat +",\"lon\": "+ lon +",\"distance\":"+AppSettings.getValidDistance()+"}";
+        String body = "{\"client_id\": "+ idClient +",\"seller_id\":"+ idSeller +",\"lat\": "+ lat +",\"lon\": "+ lon+"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/scanqr/validate";
