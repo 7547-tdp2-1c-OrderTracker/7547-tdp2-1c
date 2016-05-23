@@ -42,4 +42,16 @@
 
     </ImageView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/viewRoute"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_location"
+        app:layout_anchor="@id/toolbar"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_gravity="end"
+        android:layout_marginBottom="16dp"
+        android:onClick="viewRoute" />
+
 </LinearLayout>
