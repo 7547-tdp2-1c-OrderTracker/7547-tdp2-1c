@@ -15,12 +15,14 @@ import ar.fi.uba.trackerman.exceptions.BusinessException;
 public class ProductsSearchResult {
     long offset;
     long total;
+    long limit;
     List<Product> products;
 
     public ProductsSearchResult(){
         super();
         offset=0;
         total=1;
+        limit=0;
         products= new ArrayList<>();
     }
 
@@ -40,6 +42,14 @@ public class ProductsSearchResult {
         return total;
     }
 
+    public long getLimit() {
+        return limit;
+    }
+
+    public void setLimit(long limit) {
+        this.limit = limit;
+    }
+
     public List<Product> getProducts() {
         return products;
     }
@@ -53,8 +63,9 @@ public class ProductsSearchResult {
         try {
             productsSearchResult = new ProductsSearchResult();
             JSONObject pagingJSON = json.getJSONObject("paging");
-            productsSearchResult.setTotal(pagingJSON.getLong("total"));
+            productsSearchResult.setLimit(pagingJSON.getLong("limit"));
             productsSearchResult.setOffset(pagingJSON.getLong("offset"));
+            productsSearchResult.setTotal(pagingJSON.getLong("total"));
             JSONArray resultJSON = (JSONArray) json.get("results");
             for (int i = 0; i < resultJSON.length(); i++) {
                 productsSearchResult.addProduct(Product.fromJson(resultJSON.getJSONObject(i)));

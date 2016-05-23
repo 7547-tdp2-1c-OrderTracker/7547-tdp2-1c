@@ -26,26 +26,29 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
 
     private long total;
     private long offset;
-    private boolean fetching;
+    private long limit;
+    private boolean fetched;
     private String brands; // utlizado para filtrar
 
     public ProductsListAdapter(Context context, int resource,
                                List<Product> products) {
         super(context, resource, products);
-        total=1;
-        offset=0;
-        fetching=false;
+        limit = 0;
+        total = 0;
+        offset = 0;
+        fetched = false;
     }
     public void refresh(){
         this.clear();
-        offset=0;
-        total=1;
+        limit = 0;
+        offset = 0;
+        total = 0;
         fetchMore();
     }
 
     public void fetchMore(){
-        if(offset<total && !fetching){
-            fetching=true;
+        if(offset < total || !fetched){
+            fetched = true;
             if (RestClient.isOnline(getContext())) new SearchProductsListTask(this,brands).execute(offset);
         }
     }
@@ -55,7 +58,7 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
             this.addAll(productsSearchResult.getProducts());
             this.offset = this.getCount();
             this.total = productsSearchResult.getTotal();
-            fetching = false;
+            this.limit = productsSearchResult.getLimit();
         }else{
             Log.w(this.getClass().getCanonicalName(), "Something when wrong getting products.");
         }
