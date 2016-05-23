@@ -37,6 +37,7 @@ import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import ar.fi.uba.trackerman.utils.ConfirmDialog;
+import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.OrderStatus;
 import fi.uba.ar.soldme.R;
@@ -51,6 +52,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     ListView orderItems;
     OrderActivity activity;
     Order currentOrder;
+    private MyPreferences pref = new MyPreferences(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,6 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         this.startCleanUpUI();
         getSupportActionBar().setTitle("Pedido #" + orderId);
 
-        MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), orderId);
         if (isClosedOrder()) {
             findViewById(R.id.activity_order_add_product).setVisibility(View.INVISIBLE);
@@ -90,7 +91,6 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     }
 
     private boolean isClosedOrder() {
-        MyPreferences pref = new MyPreferences(this);
         String status = pref.get(getString(R.string.shared_pref_current_order_status), "");
         return (!status.isEmpty() && status.equalsIgnoreCase(OrderStatus.CANCELLED.getStatus()) || status.equalsIgnoreCase(OrderStatus.CONFIRMED.getStatus()));
     }
@@ -128,7 +128,6 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
     public void updateOrderInformation(OrderWrapper orderWrapper) {
         this.currentOrder = orderWrapper.getOrder();
 
-        MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_client_id), currentOrder.getClientId());
 
         ListView orderItems= (ListView)findViewById(R.id.order_items_list);
@@ -145,7 +144,8 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         ((TextView) findViewById(R.id.order_detail_order_status)).setTextColor(Color.parseColor(currentOrder.getColor(currentOrder.getStatus())));
 
         ((TextView) findViewById(R.id.order_detail_order_id)).setText("# " + isContentValid(Long.toString(currentOrder.getId())));
-        ((TextView) findViewById(R.id.order_detail_date)).setText(android.text.format.DateFormat.format("yyyy-MM-dd", fecha));
+        ((TextView) findViewById(R.id.order_detail_date)).setText(DateUtils.formatShortDateArg(fecha));
+
         ((TextView) findViewById(R.id.order_detail_time)).setText(android.text.format.DateFormat.format("hh:mm", fecha));
     }
 

@@ -15,16 +15,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Order;
-import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.client.GetClientTask;
-import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
-import ar.fi.uba.trackerman.tasks.order.PostOrdersTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -33,10 +27,10 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidMail;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidPhone;
 
-public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReceiver, View.OnClickListener, GetDraftOrdersTask.DraftOrdersValidation{
+public class ClientActivity extends AppCompatActivity implements GetClientTask.ClientReceiver, View.OnClickListener{
 
     private long clientId;
-    private List<OrderWrapper> draftOrders;
+    private MyPreferences pref = new MyPreferences(this);
 
     public ClientActivity(){
         super();
@@ -63,13 +57,9 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        MyPreferences pref = new MyPreferences(this);
-        pref.save(getString(R.string.shared_pref_current_order_id), -1L);
-        pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_client_id), clientId);
 
         this.startCleanUpUI();
-        if (RestClient.isOnline(this)) new GetDraftOrdersTask(this).execute( String.valueOf(AppSettings.getSellerId()), String.valueOf(clientId) );
     }
 
     private void startCleanUpUI() {
@@ -92,15 +82,16 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
     public void onClick(View view) {
         if (view.getId()==R.id.fab) {
             CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.client_detail_coordinatorLayout);
-            if (this.draftOrders == null) {
-                ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
-            } else if (this.draftOrders.size() > 0) {
-                // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
-                ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
-            } else {
-                // si no hay orden, crear una nueva
-                if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()), Long.toString(clientId));
-            }
+            ShowMessage.showSnackbarSimpleMessage(cl, "No se hace nada");
+            //if (this.draftOrders == null) {
+            //    ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
+            //} else if (this.draftOrders.size() > 0) {
+            //    // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
+            //    ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
+            //} else {
+            //    // si no hay orden, crear una nueva
+            //    if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString(), Long.toString(clientId));
+            //}
         } else if((view.getId() == R.id.client_detail_phone || view.getId() == R.id.client_detail_phone_number_icon)
                 && isValidPhone(((TextView) findViewById(R.id.client_detail_phone)).getText())){
             String uri = "tel:" + ((TextView) findViewById(R.id.client_detail_phone)).getText().toString().trim();
@@ -151,14 +142,8 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
     }
 
-    @Override
-    public void setDraftOrders(List<OrderWrapper> orders) {
-        this.draftOrders = orders;
-    }
-
     public void afterCreatingOrder(Order orderCreated) {
 
-        MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), orderCreated.getId());
         pref.save(getString(R.string.shared_pref_current_order_status), orderCreated.getStatus());
 

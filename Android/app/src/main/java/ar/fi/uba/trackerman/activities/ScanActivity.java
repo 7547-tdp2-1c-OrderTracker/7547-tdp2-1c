@@ -22,6 +22,8 @@ import fi.uba.ar.soldme.R;
 
 public class ScanActivity extends AppCompatActivity implements GetQRValidationTask.QRValidationResponse {
 
+    private MyPreferences pref = new MyPreferences(this);
+
     public static boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
@@ -87,9 +89,7 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
                 String format = data.getStringExtra("SCAN_RESULT_FORMAT");
                 if (validQRContent(contents)) {
 
-                    String sellerId = String.valueOf(AppSettings.getSellerId());
-
-                    MyPreferences pref = new MyPreferences(this);
+                    String sellerId = pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString();
                     String lat = pref.get(this.getString(R.string.shared_pref_current_location_lat), "");
                     String lon = pref.get(this.getString(R.string.shared_pref_current_location_lon), "");
 

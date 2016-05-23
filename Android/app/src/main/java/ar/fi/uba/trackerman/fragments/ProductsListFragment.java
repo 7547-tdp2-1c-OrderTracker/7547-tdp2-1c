@@ -47,11 +47,13 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
     private long productId;
     private int productStock;
     ListView productsList;
+    private MyPreferences pref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         brands=null;
+        pref = new MyPreferences(this.getActivity());
         View fragmentView= inflater.inflate(R.layout.fragment_products_list, container, false);
         productsList= (ListView)fragmentView.findViewById(R.id.productsListView);
         Activity activity= getActivity();
@@ -74,7 +76,8 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
 
 
     private boolean isLongPressValid() {
-        long orderId = (new MyPreferences(this.getActivity())).get(getString(R.string.shared_pref_current_order_id), -1L);
+        if (getActivity()==null) return false;
+        long orderId = pref.get(getActivity().getString(R.string.shared_pref_current_order_id), -1L);
         return (orderId >= 0);
     }
 
@@ -125,7 +128,7 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
 
                         if (isValidQuantity(quantityRequested)) {
                             if (isValidStock(quantityRequested)) {
-                                long orderId = (new MyPreferences(ProductsListFragment.this.getActivity())).get(getString(R.string.shared_pref_current_order_id), -1L);
+                                long orderId = pref.get(getString(R.string.shared_pref_current_order_id), -1L);
 
                                 if (orderId >= 0) {
                                     if (RestClient.isOnline(getContext())) new PostOrderItemsTask(ProductsListFragment.this).execute(String.valueOf(orderId), String.valueOf(productId), String.valueOf(quantityRequested));

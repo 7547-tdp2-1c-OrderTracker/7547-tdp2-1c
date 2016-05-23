@@ -1,7 +1,5 @@
 package ar.fi.uba.trackerman.tasks.visit;
 
-import android.view.View;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,20 +8,26 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.domains.Visit;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.fragments.DailyRouteFragment;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
+import fi.uba.ar.soldme.R;
 
 public class PostVisitTask extends AbstractTask<String,Void,Visit,DailyRouteFragment> {
 
+    private MyPreferences pref;
+    private String key;
+
     public PostVisitTask(DailyRouteFragment fragment) {
         super(fragment);
+        this.key = fragment.getContext().getString(R.string.shared_pref_current_vendor_id);
+        pref = new MyPreferences(fragment.getContext());
     }
 
     public Visit createVisit(String clientId, String dayOfWeek, String date, String comment) {
-        String body = "{\"client_id\": "+ clientId + ",\"seller_id\":"+ AppSettings.getSellerId() + ",\"date\":\""+date+"\",\"comment\":\""+comment+"\"}";
+        String body = "{\"client_id\": "+ clientId + ",\"seller_id\":"+ pref.get(key, 1L).toString() + ",\"date\":\""+date+"\",\"comment\":\""+comment+"\"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/visits";

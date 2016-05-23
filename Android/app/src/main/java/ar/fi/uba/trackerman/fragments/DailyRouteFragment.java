@@ -2,12 +2,9 @@ package ar.fi.uba.trackerman.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -30,15 +27,11 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
 import ar.fi.uba.trackerman.domains.Visit;
 import ar.fi.uba.trackerman.server.RestClient;
-import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.tasks.visit.PostVisitTask;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
 import ar.fi.uba.trackerman.utils.MyPreferences;
-import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
-
-import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
 /**
  * Created by plucadei on 1/5/16.
@@ -50,6 +43,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     ListView clientsList;
     private SchedulesListAdapter schedulesListAdapter;
     private View emptyView;
+    private MyPreferences pref;
 
     private static Client selectedClient;
 
@@ -64,14 +58,13 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         Bundle args = getArguments();
         Integer item = args.getInt(ITEM_POSITION);
         Integer diff = args.getInt(DIFF);
+        pref = new MyPreferences(this.getContext());
 
         View fragmentView= inflater.inflate(R.layout.fragment_daily_route, container, false);
         clientsList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
         ///clientsList.setOnItemClickListener(this);
         registerForContextMenu(clientsList);
 
-
-        MyPreferences pref = new MyPreferences(this.getContext());
         String currentDate = pref.get(this.getContext().getString(R.string.shared_pref_current_schedule_date), "");
         Calendar cal = Calendar.getInstance();
         cal.setTime(DateUtils.parseShortDate(currentDate));

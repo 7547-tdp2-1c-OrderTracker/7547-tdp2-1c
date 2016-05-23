@@ -24,6 +24,8 @@ import fi.uba.ar.soldme.R;
  */
 public class OrdersListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private MyPreferences pref;
+
     public OrdersListFragment() {
         super();
     }
@@ -31,7 +33,7 @@ public class OrdersListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        pref = new MyPreferences(this.getActivity());
         View fragmentView= inflater.inflate(R.layout.fragment_orders_list, container, false);
         ListView ordersList= (ListView)fragmentView.findViewById(R.id.orderListView);
 
@@ -51,7 +53,6 @@ public class OrdersListFragment extends Fragment implements AdapterView.OnItemCl
         OrderWrapper orderWrapper = (OrderWrapper)parent.getItemAtPosition(position);
         Order order = orderWrapper.getOrder();
 
-        MyPreferences pref = new MyPreferences(this.getActivity());
         pref.save(getString(R.string.shared_pref_current_order_id), order.getId());
         pref.save(getString(R.string.shared_pref_current_order_status), order.getStatus());
         pref.save(getString(R.string.shared_pref_current_client_id), orderWrapper.getClient().getId());

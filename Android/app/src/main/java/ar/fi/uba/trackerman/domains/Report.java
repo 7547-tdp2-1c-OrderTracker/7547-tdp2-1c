@@ -98,7 +98,7 @@ public class Report {
             String startStr = range.getString("start");
             Date start = null;
             if (FieldValidator.isValid(startStr)) start = DateUtils.parseDate(startStr);
-            String endStr = range.getString("end");
+            String endStr = range.isNull("end")?null:range.getString("end");
             Date end = null;
             if (FieldValidator.isValid(endStr)) end = DateUtils.parseDate(endStr);
 
