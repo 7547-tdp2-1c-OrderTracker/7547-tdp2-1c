@@ -49,11 +49,13 @@ public class MyGcmListenerService extends GcmListenerService {
         }else if(PRODUCT_STOCKED.equals(type)){
             showProductStockedNotification(message,identifier,picture);
         }else if(NEW_PROMOTION.equals(type)) {
-            showNewPromotionNotification(message);
+            showNewPromotionNotification(message,picture,data);
         }
     }
 
-    private void showNewPromotionNotification(String message) {
+    private void showNewPromotionNotification(String message, String picture, Bundle data) {
+        String dicount= data.getString("percent");
+        String product= data.getString("product");
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
@@ -62,13 +64,17 @@ public class MyGcmListenerService extends GcmListenerService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.icon)
-                .setContentTitle(getString(R.string.new_promotion))
-                .setContentText(message)
+                .setContentTitle(message)
+                .setContentText(dicount+"% en "+product)
                 .setAutoCancel(true)
                 .setGroup("Promotions")
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
+        if(picture!=null && !picture.isEmpty()){
+            notificationBuilder.setLargeIcon(this.getBitmapFromURL(picture));
+        }
+        
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
