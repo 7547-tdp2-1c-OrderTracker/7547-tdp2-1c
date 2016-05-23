@@ -188,8 +188,6 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
             Promotion promotion = product.getBestPromotion();
             Date promotionBeginDate = promotion.getBeginDate();
             Date promotionEndDate = promotion.getEndDate();
-//            String promotionBeginDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionBeginDate).toString();
-//            String promotionEndDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionEndDate).toString();
             String promotionBeginDateStr = DateUtils.formatShortDateArg(promotionBeginDate);
             String promotionEndDateStr = DateUtils.formatShortDateArg(promotionEndDate);
 

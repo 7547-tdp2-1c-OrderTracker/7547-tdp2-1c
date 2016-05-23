@@ -98,7 +98,6 @@ public class OrdersListAdapter extends ArrayAdapter<OrderWrapper> {
         holder.status.setTextColor(Color.parseColor(order.getColor(order.getStatus())));
 
         holder.orderId.setText("# "+ isContentValid(Long.toString(order.getId())));
-        //holder.orderDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd", fecha));
         holder.orderDate.setText(DateUtils.formatShortDateArg(fecha));
         holder.orderTime.setText(android.text.format.DateFormat.format("hh:mm", fecha));
 
