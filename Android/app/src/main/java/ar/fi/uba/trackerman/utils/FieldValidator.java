@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.utils;
 
 import android.content.Context;
 import android.telephony.PhoneNumberUtils;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -15,6 +16,7 @@ public class FieldValidator {
     private static DecimalFormat THREE_DECIMALS = new DecimalFormat("####0.000");
     private static DecimalFormat THREE_DECIMALS_LOCALIZED = new DecimalFormat("####0.000");
     private static DecimalFormat TWO_DECIMALS = new DecimalFormat("####0.00");
+    private static DecimalFormat ONE_DECIMALS = new DecimalFormat("####0.0");
     private static DecimalFormat NO_DECIMALS = new DecimalFormat("####0");
     public static boolean isValid(String content) {
         return content != null && !"null".equalsIgnoreCase(content);
@@ -55,17 +57,20 @@ public class FieldValidator {
         THREE_DECIMALS_LOCALIZED.setDecimalFormatSymbols(dfs);
         String expected = THREE_DECIMALS.format(dist);
 
+        Log.d("coolFormat - Original", Double.toString(dist));
+        Log.d("coolFormat - Expected", expected);
+
 
         if (expected=="0.000") return "";
 
-        String unit = "kms";
+        String unit = "km";
         if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(1D) < 0)) {
             expected = expected.substring(expected.indexOf(".")+1);
-            unit = "mts";
+            unit = "m";
         } else if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(100D) >= 0)) {
             expected = NO_DECIMALS.format(dist);
         } else if (!expected.isEmpty()) {
-            expected = THREE_DECIMALS_LOCALIZED.format(dist);
+            expected = ONE_DECIMALS.format(dist);
         }
         return expected+" "+unit;
     }
