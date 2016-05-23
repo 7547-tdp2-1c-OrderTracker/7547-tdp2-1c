@@ -58,9 +58,12 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                TextView txt = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
-                if (txt != null) {
-                    txt.setText("Vendedor #" + pref.get(getString(R.string.shared_pref_current_vendor_id), 1L));
+                TextView sellerName = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
+                TextView sellerEmail = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_email));
+                if (sellerName != null) {
+                    String fullSellerName = pref.get(getString(R.string.shared_pref_current_vendor_fullname), "") + "  (#"+pref.get(getString(R.string.shared_pref_current_vendor_id), 1L)+")";
+                    sellerName.setText(fullSellerName);
+                    sellerEmail.setText(pref.get(getString(R.string.shared_pref_current_vendor_email), ""));
                 }
                 super.onDrawerOpened(drawerView);
             }
@@ -73,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements
         if (navigationView != null) {
             setupNavigationDrawerContent(navigationView);
         }
-
-
 
         //setupNavigationDrawerContent(navigationView);
 

@@ -12,7 +12,7 @@
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:src="@drawable/icon"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="12dp"
         android:layout_marginLeft="20dp" />
 
     <TextView
@@ -23,7 +23,18 @@
         android:textColor="@color/cardview_dark_background"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:id="@+id/nav_header_main_vendor_name"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="134dp"
+        android:layout_marginLeft="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="@string/nav_header_main_vendor_email_default"
+        android:textColor="@color/cardview_dark_background"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:id="@+id/nav_header_main_vendor_email"
+        android:layout_marginTop="156dp"
         android:layout_marginLeft="20dp" />
 
     <!--

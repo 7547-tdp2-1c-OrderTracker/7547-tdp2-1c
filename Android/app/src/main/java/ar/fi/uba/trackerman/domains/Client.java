@@ -127,7 +127,15 @@ public class Client {
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
     public String getFullName() {
-        return this.lastName +", "+ this.name;
+        if ((!this.name.isEmpty()) && (!this.name.isEmpty())) {
+            return this.lastName +", "+ this.name;
+        } else {
+            if (!this.name.isEmpty()){
+                return this.name;
+            } else {
+                return this.lastName;
+            }
+        }
     }
 
     public Date getDateCreated() {
