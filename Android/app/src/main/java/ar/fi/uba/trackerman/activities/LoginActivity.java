@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
@@ -25,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordText;
     private Button loginButton;
     private TextView signupLink;
+    private MyPreferences pref = new MyPreferences(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,9 +85,9 @@ public class LoginActivity extends AppCompatActivity {
         //                progressDialog.dismiss();
         //            }
         //        }, 3000);
-        AppSettings.setSellerId(Long.valueOf(email));
+        pref.save(getString(R.string.shared_pref_current_vendor_id), Long.valueOf(email));
 
-        Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

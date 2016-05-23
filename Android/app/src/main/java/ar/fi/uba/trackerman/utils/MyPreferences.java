@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import fi.uba.ar.soldme.R;
 
@@ -17,6 +18,9 @@ public class MyPreferences {
     }
 
     private SharedPreferences getSharedPreferences() {
+        if (context == null) {
+            Log.e("pref_error", "Error seteando el contexto");
+        }
         return context.getSharedPreferences(context.getString(R.string.shared_pref_file_key), Context.MODE_PRIVATE);
     }
 

@@ -34,6 +34,7 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
     private long total;
     private long offset;
     private boolean fetching;
+    private MyPreferences pref = new MyPreferences(getContext());
 
     public ClientsListAdapter(Context context, int resource,
                            List<Client> clients) {
@@ -77,7 +78,6 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
             if (loc != null) {
                 listClients.execute(String.valueOf(offset), String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
             } else {
-                MyPreferences pref = new MyPreferences(getContext());
                 String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
                 String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
                 if (lat.isEmpty() && lon.isEmpty()) listClients.execute(String.valueOf(offset));

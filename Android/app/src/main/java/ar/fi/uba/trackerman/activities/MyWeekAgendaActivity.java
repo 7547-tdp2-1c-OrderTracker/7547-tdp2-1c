@@ -28,6 +28,7 @@ import static ar.fi.uba.trackerman.utils.FieldValidator.isContentValid;
 public class MyWeekAgendaActivity extends AppCompatActivity {
 
     private List<Semaphore> semaphores;
+    private MyPreferences pref = new MyPreferences(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         //clearAllSemaphore();
         highlightToday();
 
-        if (RestClient.isOnline(this)) new GetScheduleWeekTask(this).execute(DateUtils.formatShortDate(Calendar.getInstance().getTime()), String.valueOf(AppSettings.getSellerId()));
+        if (RestClient.isOnline(this)) new GetScheduleWeekTask(this).execute(DateUtils.formatShortDate(Calendar.getInstance().getTime()), pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString());
 
     }
 
@@ -162,7 +163,6 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
             if (day.isWorkingDay(day.getReference())) {
                 String id = "agenda_week_" + day.toEng().toLowerCase() +"_card";
                 if (view.getId() == getResources().getIdentifier(id, "id", getPackageName())) {
-                    MyPreferences pref = new MyPreferences(this);
                     pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(this.semaphores.get(day.getReference()).getDate()));
                     Intent intent = new Intent(this, MyDayAgendaActivity.class);
                     startActivity(intent);

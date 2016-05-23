@@ -1,7 +1,5 @@
 package ar.fi.uba.trackerman.tasks.client;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,16 +10,21 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
+import fi.uba.ar.soldme.R;
 
 
 public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResult,ClientsListAdapter> {
 
     private List<Client> clients;
+    private MyPreferences pref;
+    private String key;
 
     public GetClientListTask(ClientsListAdapter adapter) {
         super(adapter);
+        this.key = adapter.getContext().getString(R.string.shared_pref_current_vendor_id);
+        pref = new MyPreferences(adapter.getContext());
     }
 
     @Override
@@ -37,7 +40,7 @@ public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResu
             String lon = params[2];
             urlString = "/v1/clients?limit=10&offset="+offset+"&lat="+lat+"&lon="+lon+"&order=distance";
         }
-        urlString+="&seller_id="+ AppSettings.getSellerId();
+        urlString+="&seller_id="+ pref.get(key, 1L).toString();
 
         ClientSearchResult clientSearchResult = null;
         try{

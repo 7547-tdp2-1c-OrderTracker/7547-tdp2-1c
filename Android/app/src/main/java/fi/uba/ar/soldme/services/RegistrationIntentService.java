@@ -1,6 +1,7 @@
 package fi.uba.ar.soldme.services;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
 public class RegistrationIntentService extends IntentService {
@@ -56,7 +58,8 @@ public class RegistrationIntentService extends IntentService {
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             Log.i(TAG, "GCM Registration Token: " + token);
 
-            sendRegistrationToServer(token);
+            MyPreferences pref = new MyPreferences(this);
+            sendRegistrationToServer(token, pref.get(getString(R.string.shared_pref_current_vendor_id), 1L));
 
             subscribeTopics(token);
             sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, true).apply();
@@ -66,10 +69,9 @@ public class RegistrationIntentService extends IntentService {
         }
     }
 
-    private void sendRegistrationToServer(String token) {
+    private void sendRegistrationToServer(String token, Long sellerId) {
         Log.e(this.getClass().getCanonicalName(),"Token: "+token);
-        String androidId = Secure.getString(this.getContentResolver(),Secure.ANDROID_ID);
-        long sellerId= AppSettings.getSellerId();
+        String androidId = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
 
         String body = "{\"seller_id\": "+sellerId+", \"registration_id\":\""+token+"\"}";
         Map<String, String> headers = new HashMap<String, String>();
