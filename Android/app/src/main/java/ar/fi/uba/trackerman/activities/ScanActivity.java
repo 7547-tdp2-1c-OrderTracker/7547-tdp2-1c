@@ -16,6 +16,7 @@ import ar.fi.uba.trackerman.domains.QRValidationWrapper;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.qr.GetQRValidationTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -89,11 +90,11 @@ public class ScanActivity extends AppCompatActivity implements GetQRValidationTa
                 String format = data.getStringExtra("SCAN_RESULT_FORMAT");
                 if (validQRContent(contents)) {
 
-                    String sellerId = pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString();
+                    MyPreferenceHelper helper = new MyPreferenceHelper(this);
                     String lat = pref.get(this.getString(R.string.shared_pref_current_location_lat), "");
                     String lon = pref.get(this.getString(R.string.shared_pref_current_location_lon), "");
 
-                    if (RestClient.isOnline(this)) new GetQRValidationTask(this).execute( contents, sellerId, lat, lon);
+                    if (RestClient.isOnline(this)) new GetQRValidationTask(this).execute( contents, String.valueOf(helper.getSeller().getId()), lat, lon);
 
                 } else {
                     ShowMessage.toastMessage(getApplicationContext(), "Formato código inválido");

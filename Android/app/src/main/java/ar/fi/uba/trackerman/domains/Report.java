@@ -10,7 +10,8 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.utils.DateUtils;
-import ar.fi.uba.trackerman.utils.FieldValidator;
+import static ar.fi.uba.trackerman.utils.FieldValidator.isValid;
+import static ar.fi.uba.trackerman.utils.FieldValidator.showPrice;
 
 /**
  * Created by smpiano on 5/15/16.
@@ -97,10 +98,10 @@ public class Report {
             JSONObject range = json.getJSONObject("range");
             String startStr = range.getString("start");
             Date start = null;
-            if (FieldValidator.isValid(startStr)) start = DateUtils.parseDate(startStr);
+            if (isValid(startStr)) start = DateUtils.parseDate(startStr);
             String endStr = range.isNull("end")?null:range.getString("end");
             Date end = null;
-            if (FieldValidator.isValid(endStr)) end = DateUtils.parseDate(endStr);
+            if (isValid(endStr)) end = DateUtils.parseDate(endStr);
 
             Report report = new Report(start, end);
             JSONObject totals = json.getJSONObject("totals");
@@ -147,7 +148,7 @@ public class Report {
 
         @Override
         public String toString() {
-            return getCurrency()+" "+getTotal();
+            return getCurrency()+" "+showPrice(getTotal());
         }
     }
 

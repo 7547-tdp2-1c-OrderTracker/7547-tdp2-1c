@@ -17,9 +17,9 @@ import ar.fi.uba.trackerman.domains.ScheduleWeekView;
 import ar.fi.uba.trackerman.domains.Semaphore;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.schedule.GetScheduleWeekTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -43,7 +43,8 @@ public class MyWeekAgendaActivity extends AppCompatActivity {
         //clearAllSemaphore();
         highlightToday();
 
-        if (RestClient.isOnline(this)) new GetScheduleWeekTask(this).execute(DateUtils.formatShortDate(Calendar.getInstance().getTime()), pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString());
+        MyPreferenceHelper helper = new MyPreferenceHelper(this);
+        if (RestClient.isOnline(this)) new GetScheduleWeekTask(this).execute(DateUtils.formatShortDate(Calendar.getInstance().getTime()), String.valueOf(helper.getSeller().getId()));
 
     }
 

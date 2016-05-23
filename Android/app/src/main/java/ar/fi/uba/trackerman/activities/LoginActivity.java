@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ar.fi.uba.trackerman.domains.Seller;
+import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.seller.GetSellerDirectTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -29,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
     private Button loginButton;
     private TextView signupLink;
     private MyPreferences pref = new MyPreferences(this);
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,9 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        loginButton = (Button) findViewById(R.id.activity_login_btn_login);
 
-        findViewById(R.id.activity_login_btn_login).setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -67,33 +72,20 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
             return;
         }
 
-        //loginButton.setEnabled(false);
-
-        //final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-        //        R.style.AppTheme_NoActionBar); //FIXME change for dialog
-        //progressDialog.setIndeterminate(true);
-        //progressDialog.setMessage("Authenticating...");
-        //progressDialog.show();
+        progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.AppTheme_NoActionBar); //FIXME change for dialog
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Autenticando...");
+        progressDialog.show();
 
         String email = ((TextView)findViewById(R.id.activity_login_input_email)).getText().toString();
         //String password = passwordText.getText().toString();
 
-        //new android.os.Handler().postDelayed(
-        //        new Runnable() {
-        //            public void run() {
-        //                // On complete call either onLoginSuccess or onLoginFailed
-        //                onLoginSuccess();
-        //                // onLoginFailed();
-        //                progressDialog.dismiss();
-        //            }
-        //        }, 3000);
         Log.d("Login email = ", email);
-
+        loginButton.setEnabled(false);
         // obtengo el seller, para guardarlo en la shared pref (ver metodo updateSellerDirect);
-        new GetSellerDirectTask(this).execute(email);
+        if (RestClient.isOnline(this)) new GetSellerDirectTask(this).execute(email);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
 
@@ -116,13 +108,22 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
     }
 
     public void updateSellerDirect(Seller seller) {
-        pref.save(getString(R.string.shared_pref_current_vendor_id), seller.getId());
-        pref.save(getString(R.string.shared_pref_current_vendor_fullname), seller.getFullName());
-        pref.save(getString(R.string.shared_pref_current_vendor_email), seller.getEmail());
+        if (seller == null) {
+            onLoginFailed();
+        } else {
+            MyPreferenceHelper helper = new MyPreferenceHelper(this);
+            helper.saveSeller(seller);
+            // On complete call either onLoginSuccess or onLoginFailed
+            onLoginSuccess();
+        }
+        // onLoginFailed();
+        progressDialog.dismiss();
     }
 
     public void onLoginSuccess() {
         findViewById(R.id.activity_login_btn_login).setEnabled(true);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 

@@ -90,7 +90,8 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
             //    ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
             //} else {
             //    // si no hay orden, crear una nueva
-            //    if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString(), Long.toString(clientId));
+            //Cuidado que cambio todo
+            //    if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_seller), 1L).toString(), Long.toString(clientId));
             //}
         } else if((view.getId() == R.id.client_detail_phone || view.getId() == R.id.client_detail_phone_number_icon)
                 && isValidPhone(((TextView) findViewById(R.id.client_detail_phone)).getText())){

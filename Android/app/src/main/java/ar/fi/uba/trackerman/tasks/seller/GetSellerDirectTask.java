@@ -2,15 +2,16 @@ package ar.fi.uba.trackerman.tasks.seller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.Seller;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by guido on 15/05/16.
@@ -18,8 +19,10 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
 
 public class GetSellerDirectTask extends AbstractTask<String,Void,Seller,AppCompatActivity> {
 
-    public GetSellerDirectTask(AppCompatActivity validation) {
-        super(validation);
+    private View view;
+    public GetSellerDirectTask(AppCompatActivity activity) {
+        super(activity);
+        this.view = activity.getCurrentFocus();
     }
 
     public Seller getSeller(String sellerId) {
@@ -27,9 +30,9 @@ public class GetSellerDirectTask extends AbstractTask<String,Void,Seller,AppComp
         try {
             seller = (Seller) restClient.get("/v1/sellers/"+sellerId);
         } catch (BusinessException e) {
-            Log.e("business_error", e.getMessage(), e);
+            ShowMessage.showSnackbarSimpleMessage(view,e.getMessage());
         } catch (ServerErrorException e) {
-            Log.e("server_error", e.getMessage(), e);
+            ShowMessage.showSnackbarSimpleMessage(view,e.getMessage());
         }
         return seller;
     }
@@ -51,13 +54,7 @@ public class GetSellerDirectTask extends AbstractTask<String,Void,Seller,AppComp
 
     @Override
     protected void onPostExecute(Seller seller) {
-//        super.onPostExecute(client);
-        if(seller != null){
-            ((SellerDirectReceiver) weakReference.get()).updateSellerDirect(seller);
-        } else {
-            // weakReference.get().showSnackbarSimpleMessage("No se puede obtener info del cliente");
-        }
-
+        ((SellerDirectReceiver) weakReference.get()).updateSellerDirect(seller);
     }
 
     public interface SellerDirectReceiver {

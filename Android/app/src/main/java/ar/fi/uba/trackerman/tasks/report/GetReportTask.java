@@ -10,6 +10,7 @@ import ar.fi.uba.trackerman.domains.Report;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import fi.uba.ar.soldme.R;
 
@@ -18,23 +19,22 @@ import fi.uba.ar.soldme.R;
  */
 public class GetReportTask extends AbstractTask<String,Void,Report,AppCompatActivity> {
 
-    private MyPreferences pref;
+    private MyPreferenceHelper helper;
     private String key;
 
     public GetReportTask(AppCompatActivity activity) {
         super(activity);
-        this.key = activity.getApplicationContext().getString(R.string.shared_pref_current_vendor_id);
-        pref = new MyPreferences(activity.getApplicationContext());
+        this.key = activity.getApplicationContext().getString(R.string.shared_pref_current_seller);
+        helper = new MyPreferenceHelper(activity.getApplicationContext());
     }
 
     @Override
     protected Report doInBackground(String... params) {
-        String seller = pref.get(key, 1L).toString();
         String start = params[0];
         String end = params[1];
         Report report = null;
         try {
-            report = (Report) restClient.get("/v1/sellers/" + seller +"/reports?start_date="+start);
+            report = (Report) restClient.get("/v1/sellers/" + helper.getSeller().getId() +"/reports?start_date="+start);
         } catch (BusinessException e) {
             ((ReportReceiver) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
         }
