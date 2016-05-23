@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ar.fi.uba.trackerman.domains.Seller;
+import ar.fi.uba.trackerman.tasks.seller.GetSellerDirectTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
@@ -18,7 +20,7 @@ import fi.uba.ar.soldme.R;
 import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements GetSellerDirectTask.SellerDirectReceiver {
 
     private static final int REQUEST_SIGNUP = 0;
 
@@ -85,9 +87,12 @@ public class LoginActivity extends AppCompatActivity {
         //                progressDialog.dismiss();
         //            }
         //        }, 3000);
-        pref.save(getString(R.string.shared_pref_current_vendor_id), Long.valueOf(email));
+        Log.d("Login email = ", email);
 
-                Intent intent = new Intent(this, MainActivity.class);
+        // obtengo el seller, para guardarlo en la shared pref (ver metodo updateSellerDirect);
+        new GetSellerDirectTask(this).execute(email);
+
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -108,6 +113,12 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         // disable going back to the MainActivity
         //moveTaskToBack(true);
+    }
+
+    public void updateSellerDirect(Seller seller) {
+        pref.save(getString(R.string.shared_pref_current_vendor_id), seller.getId());
+        pref.save(getString(R.string.shared_pref_current_vendor_fullname), seller.getFullName());
+        pref.save(getString(R.string.shared_pref_current_vendor_email), seller.getEmail());
     }
 
     public void onLoginSuccess() {
