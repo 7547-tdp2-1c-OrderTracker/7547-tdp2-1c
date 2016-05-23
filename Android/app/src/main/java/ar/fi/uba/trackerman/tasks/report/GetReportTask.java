@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.report;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import org.json.JSONException;
@@ -9,23 +10,31 @@ import ar.fi.uba.trackerman.domains.Report;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.MyPreferences;
+import fi.uba.ar.soldme.R;
 
 /**
  * Created by smpiano on 15/5/16.
  */
 public class GetReportTask extends AbstractTask<String,Void,Report,AppCompatActivity> {
 
+    private MyPreferences pref;
+    private String key;
+
     public GetReportTask(AppCompatActivity activity) {
         super(activity);
+        this.key = activity.getApplicationContext().getString(R.string.shared_pref_current_vendor_id);
+        pref = new MyPreferences(activity.getApplicationContext());
     }
 
     @Override
     protected Report doInBackground(String... params) {
+        String seller = pref.get(key, 1L).toString();
         String start = params[0];
         String end = params[1];
         Report report = null;
         try {
-            report = (Report) restClient.get("/v1/sellers/"+ AppSettings.getSellerId()+"/reports?start_date="+start);
+            report = (Report) restClient.get("/v1/sellers/" + seller +"/reports?start_date="+start);
         } catch (BusinessException e) {
             ((ReportReceiver) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
         }

@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity implements
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        final MyPreferences pref = new MyPreferences(this);
+        pref.load();
+        pref.save(getString(R.string.shared_pref_current_order_status), "");
+        pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
+
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             // FIXME:
             // Es para poner el nombre del vendedor en el menu lateral. Lo pone con delay.
@@ -55,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 TextView txt = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
                 if (txt != null) {
-                    txt.setText("Vendedor #" + AppSettings.getSellerId());
+                    txt.setText("Vendedor #" + pref.get(getString(R.string.shared_pref_current_vendor_id), 1L));
                 }
                 super.onDrawerOpened(drawerView);
             }
@@ -69,12 +74,7 @@ public class MainActivity extends AppCompatActivity implements
             setupNavigationDrawerContent(navigationView);
         }
 
-        final MyPreferences pref = new MyPreferences(this);
-        pref.save(getString(R.string.shared_pref_current_vendor_id), AppSettings.getSellerId());
-        pref.save(getString(R.string.shared_pref_current_order_id), -1L);
-        pref.save(getString(R.string.shared_pref_current_order_status), "");
-        pref.save(getString(R.string.shared_pref_current_client_id), -1L);
-        pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
+
 
         //setupNavigationDrawerContent(navigationView);
 
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         if (RestClient.isOnline(this)) {
-            new GetDraftOrdersTask(this).execute(String.valueOf(AppSettings.getSellerId()));
+            new GetDraftOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_vendor_id), 1L).toString());
 
             //new GetReportTask(this).execute("2015-01-01","2017-01-01");
             Calendar today = Calendar.getInstance();

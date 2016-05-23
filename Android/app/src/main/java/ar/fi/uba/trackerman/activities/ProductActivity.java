@@ -20,20 +20,15 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
-import java.util.List;
 
 import ar.fi.uba.trackerman.domains.Brand;
-import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderItem;
-import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.Promotion;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.brand.GetBrandTask;
-import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.tasks.product.GetProductTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
@@ -46,6 +41,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
 
     private long productId;
     private int quantity;
+    private MyPreferences pref = new MyPreferences(this);
 
     public ProductActivity(){
         super();
@@ -68,7 +64,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id),-1L);
+        long orderId = pref.get(getString(R.string.shared_pref_current_order_id),-1L);
 
         if(orderId == -1){
             fab.hide();
@@ -130,7 +126,7 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
                         if (isValidQuantity(quantityRequested)) {
                             if (isValidStock(quantityRequested)) {
 
-                                long orderId = (new MyPreferences(ProductActivity.this)).get(getString(R.string.shared_pref_current_order_id), -1L);
+                                long orderId = pref.get(getString(R.string.shared_pref_current_order_id), -1L);
 
                                 if (orderId >= 0) {
                                     addingItemsToOrder(String.valueOf(orderId), String.valueOf(productId), quantityRequested);
