@@ -37,6 +37,7 @@ import ar.fi.uba.trackerman.tasks.order.GetOrderTask;
 import ar.fi.uba.trackerman.tasks.order.RemoveOrderItemTask;
 import ar.fi.uba.trackerman.tasks.order.UpdateOrderItemTask;
 import ar.fi.uba.trackerman.utils.ConfirmDialog;
+import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.OrderStatus;
 import fi.uba.ar.soldme.R;
@@ -145,7 +146,9 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
         ((TextView) findViewById(R.id.order_detail_order_status)).setTextColor(Color.parseColor(currentOrder.getColor(currentOrder.getStatus())));
 
         ((TextView) findViewById(R.id.order_detail_order_id)).setText("# " + isContentValid(Long.toString(currentOrder.getId())));
-        ((TextView) findViewById(R.id.order_detail_date)).setText(android.text.format.DateFormat.format("yyyy-MM-dd", fecha));
+        //((TextView) findViewById(R.id.order_detail_date)).setText(android.text.format.DateFormat.format("yyyy-MM-dd", fecha));
+        ((TextView) findViewById(R.id.order_detail_date)).setText(DateUtils.formatShortDateArg(fecha));
+
         ((TextView) findViewById(R.id.order_detail_time)).setText(android.text.format.DateFormat.format("hh:mm", fecha));
     }
 

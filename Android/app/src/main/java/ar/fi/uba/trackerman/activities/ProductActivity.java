@@ -34,6 +34,7 @@ import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.order.PostOrderItemsTask;
 import ar.fi.uba.trackerman.tasks.product.GetProductTask;
 import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
@@ -191,8 +192,11 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
             Promotion promotion = product.getBestPromotion();
             Date promotionBeginDate = promotion.getBeginDate();
             Date promotionEndDate = promotion.getEndDate();
-            String promotionBeginDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionBeginDate).toString();
-            String promotionEndDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionEndDate).toString();
+//            String promotionBeginDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionBeginDate).toString();
+//            String promotionEndDateStr = android.text.format.DateFormat.format("yyyy-MM-dd", promotionEndDate).toString();
+            String promotionBeginDateStr = DateUtils.formatShortDateArg(promotionBeginDate);
+            String promotionEndDateStr = DateUtils.formatShortDateArg(promotionEndDate);
+
             String promotionFullDateStr = promotionBeginDateStr + " / "+ promotionEndDateStr;
 
             ((TextView) findViewById(R.id.product_detail_product_promotion_percent)).setText(isContentValid(Integer.toString(promotion.getPercent()) +" %"));
