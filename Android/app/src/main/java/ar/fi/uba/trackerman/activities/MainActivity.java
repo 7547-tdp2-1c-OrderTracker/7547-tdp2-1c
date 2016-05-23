@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final MyPreferenceHelper helper = new MyPreferenceHelper(MainActivity.this);
+        if (helper.getSeller() == null) {
+            openLoginActivity(drawerLayout);
+            return;
+        }
 
         final MyPreferences pref = new MyPreferences(this);
         pref.load();
@@ -65,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements
             // Si lo pongo directamente en el onCreate, explota por null
             @Override
             public void onDrawerOpened(View drawerView) {
-
-                MyPreferenceHelper helper = new MyPreferenceHelper(MainActivity.this);
                 Seller seller = helper.getSeller();
 
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         if (RestClient.isOnline(this)) {
-            MyPreferenceHelper helper = new MyPreferenceHelper(this);
             new GetDraftOrdersTask(this).execute(String.valueOf(helper.getSeller().getId()));
 
             //new GetReportTask(this).execute("2015-01-01","2017-01-01");
