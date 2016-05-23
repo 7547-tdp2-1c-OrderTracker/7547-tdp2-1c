@@ -30,6 +30,7 @@ import ar.fi.uba.trackerman.domains.ScheduleDay;
 import ar.fi.uba.trackerman.domains.Visit;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.visit.PostVisitTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.DayOfWeek;
 import ar.fi.uba.trackerman.utils.MyPreferences;
@@ -97,8 +98,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
                 MyPreferences pref = new MyPreferences(getContext());
                 double[] points= new double[2+schedulesListAdapter.getCount()*2];
                 String[] clients= new String[schedulesListAdapter.getCount()];
-                points[0]=pref.get("lat",-34.563424d);
-                points[1]=pref.get("lon",-58.463874d);
+                points[0]=pref.get("lat", AppSettings.getGpsLat());
+                points[1]=pref.get("lon", AppSettings.getGpsLon());
                 for(int i=0;i<schedulesListAdapter.getCount();i++){
                     points[2+2*i]=schedulesListAdapter.getItem(i).getLat();
                     points[3+2*i]=schedulesListAdapter.getItem(i).getLon();

@@ -27,6 +27,7 @@ import ar.fi.uba.trackerman.server.LocationService;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.order.GetDraftOrdersTask;
 import ar.fi.uba.trackerman.tasks.report.GetReportTask;
+import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.CircleTransform;
 import ar.fi.uba.trackerman.utils.DateUtils;
 import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
@@ -103,11 +104,20 @@ public class MainActivity extends AppCompatActivity implements
 //        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
 
         // -----
-        // hardcodeados los datos para el emulador, si luego existe el GPS se pisan !!
-        pref.save(getString(R.string.shared_pref_current_location_lat), String.valueOf(-34.563424));
-        pref.save(getString(R.string.shared_pref_current_location_lon), String.valueOf(-58.463874));
-        debugCardMessage(null);
-        // ---- fin del hardcode (borrar entre comentarios)
+        //Tomo los ultimos datos, si no tengo nada tomo los hardcoded.
+        Double lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+        Double lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+        if (lat.compareTo(AppSettings.getGpsLat()) == 0 && lon.compareTo(AppSettings.getGpsLon()) == 0) {
+            debugCardMessage(null);
+        } else {
+            Location l = new Location("");
+            l.reset();
+            l.setLatitude(lat);
+            l.setLongitude(lon);
+            debugCardMessage(l);
+        }
+
+
 
         LocationService ls = new LocationService(this);
         ls.config(new LocationService.MyLocation() {
@@ -154,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void debugCardMessage(Location loc) {
-        String position = "POS HARD lat=-34.563424 lon=-58.463874";
+        String position = "POS HARD";
         if (loc != null) {
             position = "POS lat="+loc.getLatitude()+" lon="+ loc.getLongitude();
         }
