@@ -45,14 +45,6 @@ public class MyPreferences {
     }
 
     public void load() {
-
-        Map<String,?> keys = getSharedPreferences().getAll();
-        for(Map.Entry<String,?> entry : keys.entrySet()){
-            Log.d("map values",entry.getKey() + ": " +
-                    entry.getValue().toString());
-        }
-        this.save(context.getString(R.string.shared_pref_current_vendor_id), 1L);
-
         this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_vendor_id), (long) 1);
         this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_client_id), (long) -1);
         this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_order_id), (long) -1);
