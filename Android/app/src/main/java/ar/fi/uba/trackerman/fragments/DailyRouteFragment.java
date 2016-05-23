@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import ar.fi.uba.trackerman.activities.RouteActivity;
 import ar.fi.uba.trackerman.adapters.SchedulesListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
@@ -43,8 +45,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     ListView clientsList;
     private SchedulesListAdapter schedulesListAdapter;
     private View emptyView;
+    private View routeIcon;
     private MyPreferences pref;
-
     private static Client selectedClient;
 
     public DailyRouteFragment(){
@@ -52,7 +54,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle args = getArguments();
@@ -79,7 +81,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         text.setText(DayOfWeek.byReference(cal.get(Calendar.DAY_OF_WEEK) - 1).toEsp() + ": " + DateUtils.formatShortDateArg(cal.getTime()));
 
 
-        ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
+        final ListView schedulesList= (ListView)fragmentView.findViewById(R.id.dayAgendaListView);
 
         schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>(),this);
         schedulesList.setAdapter(schedulesListAdapter);
@@ -87,6 +89,26 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         schedulesListAdapter.solveTask(queriedDate);
         //schedulesList.setOnItemClickListener(this);
         this.emptyView= fragmentView.findViewById(R.id.agenda_row_clients_empty);
+        this.routeIcon= fragmentView.findViewById(R.id.viewRoute);
+        this.routeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), RouteActivity.class);
+                MyPreferences pref = new MyPreferences(getContext());
+                double[] points= new double[2+schedulesListAdapter.getCount()*2];
+                String[] clients= new String[schedulesListAdapter.getCount()];
+                points[0]=pref.get("lat",-34.563424d);
+                points[1]=pref.get("lon",-58.463874d);
+                for(int i=0;i<schedulesListAdapter.getCount();i++){
+                    points[2+2*i]=schedulesListAdapter.getItem(i).getLat();
+                    points[3+2*i]=schedulesListAdapter.getItem(i).getLon();
+                    clients[i]=schedulesListAdapter.getItem(i).getFullName();
+                }
+                intent.putExtra("LOCATIONS",points);
+                intent.putExtra("CLIENTES",clients);
+                startActivity(intent);
+            }
+        });
 
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
@@ -166,10 +188,11 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
     public void showEmptyList(){
         emptyView.setVisibility(View.VISIBLE);
+        routeIcon.setVisibility(View.GONE);
     }
 
     public void showClientList(){
+        routeIcon.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
     }
-
 }

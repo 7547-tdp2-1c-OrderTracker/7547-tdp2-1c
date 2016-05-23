@@ -62,6 +62,10 @@ public class MyPreferences {
         return this.getSharedPreferences().getInt(key, defValue);
     }
 
+    public Double get(String key, Double defValue) {
+        return Double.parseDouble(this.getSharedPreferences().getString(key, defValue.toString()));
+    }
+
     public void clear() {
         SharedPreferences.Editor editor = this.getSharedPreferences().edit();
         editor.clear();

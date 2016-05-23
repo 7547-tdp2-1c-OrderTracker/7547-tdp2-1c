@@ -8,7 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <permission android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission
+        android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE" />
 
     <application
@@ -20,26 +23,27 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="fi.uba.ar.soldme" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name="fi.uba.ar.soldme.services.RegistrationIntentService"
-            android:exported="false">
-        </service>
-        <service android:name="fi.uba.ar.soldme.services.MyInstanceIDListenerService"
+            android:name=".services.RegistrationIntentService"
+            android:exported="false"></service>
+        <service
+            android:name=".services.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="fi.uba.ar.soldme.services.MyGcmListenerService"
-            android:exported="false" >
+            android:name=".services.MyGcmListenerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
@@ -144,7 +148,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.trackerman.activities.MainActivity" />
         </activity>
-        <activity android:name="ar.fi.uba.trackerman.activities.ScanActivity"></activity>
+        <activity
+            android:name="ar.fi.uba.trackerman.activities.RouteActivity"
+            android:label="@string/daily_route"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.trackerman.activities.MainActivity" />
+            </activity>
+        <activity android:name="ar.fi.uba.trackerman.activities.ScanActivity" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
     </application>
 
 </manifest>

@@ -91,6 +91,7 @@
     <string name="client_updated">Cliente Actualizado</string>
     <string name="product_stocked">Producto con Stock</string>
     <string name="fragment_main_report">No hay reporte diario</string>
+    <string name="daily_route">Ruta Diaria</string>
 
 
 </resources>
