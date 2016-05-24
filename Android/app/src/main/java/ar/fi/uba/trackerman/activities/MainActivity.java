@@ -108,15 +108,15 @@ public class MainActivity extends AppCompatActivity implements
 
         // -----
         //Tomo los ultimos datos, si no tengo nada tomo los hardcoded.
-        Double lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
-        Double lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
-        if (lat.compareTo(AppSettings.getGpsLat()) == 0 && lon.compareTo(AppSettings.getGpsLon()) == 0) {
+        String lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+        String lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+        if (lat.equals(AppSettings.getGpsLat()) && lon.equals(AppSettings.getGpsLon())) {
             debugCardMessage(null);
         } else {
             Location l = new Location("");
             l.reset();
-            l.setLatitude(lat);
-            l.setLongitude(lon);
+            l.setLatitude(Double.valueOf(lat));
+            l.setLongitude(Double.valueOf(lon));
             debugCardMessage(l);
         }
 
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void openLogoutActivity(View view) {
-        Toast.makeText(getApplicationContext(), "sin implementar", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Los Héroes no abandonan!", Toast.LENGTH_LONG).show();
         //Intent intent = new Intent(this, LoginActivity.class);
         //startActivity(intent);
     }

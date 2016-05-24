@@ -99,8 +99,8 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
     }
 
     public void solveTask(String date) {
-        String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), "");
-        String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), "");
+        String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+        String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
         String currentDate = pref.get(getContext().getString(R.string.shared_pref_current_schedule_date), "");
         MyPreferenceHelper helper = new MyPreferenceHelper(getContext());
         String seller = String.valueOf(helper.getSeller().getId());

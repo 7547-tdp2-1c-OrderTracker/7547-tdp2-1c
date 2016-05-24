@@ -98,8 +98,8 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
                 MyPreferences pref = new MyPreferences(getContext());
                 double[] points= new double[2+schedulesListAdapter.getCount()*2];
                 String[] clients= new String[schedulesListAdapter.getCount()];
-                points[0]=pref.get("lat", AppSettings.getGpsLat());
-                points[1]=pref.get("lon", AppSettings.getGpsLon());
+                points[0]=Double.valueOf(pref.get("lat", AppSettings.getGpsLat()));
+                points[1]=Double.valueOf(pref.get("lon", AppSettings.getGpsLon()));
                 for(int i=0;i<schedulesListAdapter.getCount();i++){
                     points[2+2*i]=schedulesListAdapter.getItem(i).getLat();
                     points[3+2*i]=schedulesListAdapter.getItem(i).getLon();

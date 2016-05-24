@@ -9,8 +9,8 @@ public class AppSettings {
     private static final String SERVER_HOST = "https://powerful-hollows-15939.herokuapp.com";
 
     private static final int SERVER_TIMEOUT = 15000; //15seg
-    private static final double GPS_LAT = -34.563424;
-    private static final double GPS_LON = -58.463874;
+    private static final Double GPS_LAT = -34.563424;
+    private static final Double GPS_LON = -58.463874;
 
 
     public static String getServerHost(){
@@ -19,11 +19,11 @@ public class AppSettings {
 
     public static int getServerTimeout() { return SERVER_TIMEOUT; }
 
-    public static double getGpsLat() {
-        return GPS_LAT;
+    public static String getGpsLat() {
+        return GPS_LAT.toString();
     }
 
-    public static double getGpsLon() {
-        return GPS_LON;
+    public static String getGpsLon() {
+        return GPS_LON.toString();
     }
 }
