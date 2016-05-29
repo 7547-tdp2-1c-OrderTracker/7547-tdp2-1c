@@ -1,5 +1,7 @@
 package ar.fi.uba.trackerman.tasks.schedule;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +22,7 @@ public class GetScheduleWeekTask  extends AbstractTask<String,Void,ScheduleWeekV
 
     @Override
     protected ScheduleWeekView doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String urlString = "/v1/schedule/week";
         if (params.length == 2) {
             String dateConsult = params[0];
@@ -32,14 +35,14 @@ public class GetScheduleWeekTask  extends AbstractTask<String,Void,ScheduleWeekV
             String lon = params[3];
             urlString += "?date=" + dateConsult + "&seller_id=" + seller + "&lat="+lat+"&lon="+lon;
         } else {
-            ShowMessage.toastMessage(weakReference.get().getApplicationContext(), "Parametros incorrectos");
+            ShowMessage.toastMessage(ctx, "Parametros incorrectos");
         }
 
         ScheduleWeekView week = null;
         try{
-            week = (ScheduleWeekView) restClient.get(urlString);
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(weakReference.get(), e.getMessage());
+            week = (ScheduleWeekView) restClient.get(urlString, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return week;
     }

@@ -1,7 +1,7 @@
 package ar.fi.uba.trackerman.tasks.seller;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import org.json.JSONException;
@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.domains.Seller;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -26,13 +25,14 @@ public class GetSellerDirectTask extends AbstractTask<String,Void,Seller,AppComp
     }
 
     public Seller getSeller(String sellerId) {
+        Context ctx = weakReference.get().getApplicationContext();
         Seller seller = null;
         try {
-            seller = (Seller) restClient.get("/v1/sellers/"+sellerId);
+            seller = (Seller) restClient.get("/v1/sellers/"+sellerId, withAuth(ctx));
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(view,e.getMessage());
-        } catch (ServerErrorException e) {
-            ShowMessage.showSnackbarSimpleMessage(view,e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return seller;
     }

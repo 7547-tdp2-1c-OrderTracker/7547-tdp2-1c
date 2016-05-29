@@ -1,7 +1,7 @@
 package ar.fi.uba.trackerman.tasks.qr;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,10 +11,7 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.domains.QRValidationWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.QRValidationException;
-import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
@@ -23,11 +20,12 @@ import ar.fi.uba.trackerman.utils.ShowMessage;
 
 public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWrapper,AppCompatActivity> {
 
-    public GetQRValidationTask(AppCompatActivity validation) {
-        super(validation);
+    public GetQRValidationTask(AppCompatActivity activity) {
+        super(activity);
     }
 
     public QRValidationWrapper getQRValidation(String idSeller, String idClient, String lat, String lon) {
+        Context ctx = weakReference.get().getApplicationContext();
         QRValidationWrapper qrValidationWrapper = null;
         String body = "{\"client_id\": "+ idClient +",\"seller_id\":"+ idSeller +",\"lat\": "+ lat +",\"lon\": "+ lon+"}";
         Map<String, String> headers = new HashMap<String, String>();
@@ -35,9 +33,11 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
         String url = "/v1/scanqr/validate";
 
         try {
-            qrValidationWrapper = (QRValidationWrapper) restClient.post(url, body, headers);
+            qrValidationWrapper = (QRValidationWrapper) restClient.post(url, body, withAuth(ctx,headers));
         } catch (BusinessException e) {
             ((QRValidationResponse) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return qrValidationWrapper;
     }
@@ -50,7 +50,6 @@ public class GetQRValidationTask extends AbstractTask<String,Void,QRValidationWr
 
     @Override
     protected QRValidationWrapper doInBackground(String... params) {
-        // AppSettings.getSellerId()
         if (params.length == 4) {
             String idClient = params[0];
             String idSeller = params[1];

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,7 +46,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     public static final String DIFF = "DailyRouteFragment.DIFF";
     ListView clientsList;
     private SchedulesListAdapter schedulesListAdapter;
-    private View emptyView;
+    private ImageView emptyView;
     private View routeIcon;
     private MyPreferences pref;
     private static Client selectedClient;
@@ -86,10 +87,10 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
         schedulesListAdapter = new SchedulesListAdapter( getContext(), R.layout.agenda_list_item, new ArrayList<Client>(),this);
         schedulesList.setAdapter(schedulesListAdapter);
-        Log.d("daily_route","Date queried = " + queriedDate);
+        Log.d("daily_route", "Date queried = " + queriedDate);
         schedulesListAdapter.solveTask(queriedDate);
         //schedulesList.setOnItemClickListener(this);
-        this.emptyView= fragmentView.findViewById(R.id.agenda_row_clients_empty);
+        this.emptyView= (ImageView) fragmentView.findViewById(R.id.agenda_row_clients_empty);
         this.routeIcon= fragmentView.findViewById(R.id.viewRoute);
         this.routeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +114,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
 
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
-        schedulesList.setEmptyView(bar);
+        //schedulesList.setEmptyView(bar);
 
         return fragmentView;
     }
@@ -188,6 +189,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     }
 
     public void showEmptyList(){
+        emptyView.setImageResource(R.drawable.calendars);
         emptyView.setVisibility(View.VISIBLE);
         routeIcon.setVisibility(View.GONE);
     }

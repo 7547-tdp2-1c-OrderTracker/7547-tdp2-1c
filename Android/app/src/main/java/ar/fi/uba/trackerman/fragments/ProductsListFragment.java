@@ -2,6 +2,7 @@ package ar.fi.uba.trackerman.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -74,6 +75,10 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
         return fragmentView;
     }
 
+    @Override
+    public Context getApplicationContext() {
+        return getApplicationContext();
+    }
 
     private boolean isLongPressValid() {
         if (getActivity()==null) return false;

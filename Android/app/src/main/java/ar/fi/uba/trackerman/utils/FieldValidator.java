@@ -57,15 +57,11 @@ public class FieldValidator {
         THREE_DECIMALS_LOCALIZED.setDecimalFormatSymbols(dfs);
         String expected = THREE_DECIMALS.format(dist);
 
-        Log.d("coolFormat - Original", Double.toString(dist));
-        Log.d("coolFormat - Expected", expected);
-
-
         if (expected=="0.000") return "";
 
         String unit = "km";
         if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(1D) < 0)) {
-            expected = expected.substring(expected.indexOf(".")+1);
+            expected = Integer.valueOf(expected.substring(expected.indexOf(".")+1)).toString();
             unit = "m";
         } else if (!expected.isEmpty() && (Double.valueOf(expected).compareTo(100D) >= 0)) {
             expected = NO_DECIMALS.format(dist);

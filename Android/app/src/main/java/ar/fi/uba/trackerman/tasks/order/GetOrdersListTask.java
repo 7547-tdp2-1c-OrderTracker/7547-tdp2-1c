@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
 
     @Override
     protected OrdersSearchResult doInBackground(Long... params) {
+        Context ctx = weakReference.get().getContext();
         String urlString = "/v1/orders?limit=1000";
         Long offset = params[0];
         if(offset != null){
@@ -42,9 +44,9 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
 
         OrdersSearchResult ordersSearchResult = null;
         try {
-            ordersSearchResult = (OrdersSearchResult) restClient.get(urlString);
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+            ordersSearchResult = (OrdersSearchResult) restClient.get(urlString, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx,e.getMessage());
         }
         return ordersSearchResult;
     }

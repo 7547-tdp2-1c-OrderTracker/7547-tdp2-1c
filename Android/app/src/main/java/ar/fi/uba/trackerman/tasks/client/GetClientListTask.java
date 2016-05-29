@@ -1,5 +1,7 @@
 package ar.fi.uba.trackerman.tasks.client;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,7 +13,6 @@ import ar.fi.uba.trackerman.domains.ClientSearchResult;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
-import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
@@ -30,6 +31,7 @@ public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResu
 
     @Override
     protected ClientSearchResult doInBackground(String... params) {
+        Context ctx = weakReference.get().getContext();
         String urlString = "";
         if (params.length == 0) {
             urlString = "/v1/clients?limit=1000";
@@ -45,9 +47,9 @@ public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResu
 
         ClientSearchResult clientSearchResult = null;
         try{
-            clientSearchResult = (ClientSearchResult) restClient.get(urlString);
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+            clientSearchResult = (ClientSearchResult) restClient.get(urlString, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return clientSearchResult;
     }

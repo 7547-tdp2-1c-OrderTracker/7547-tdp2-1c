@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         final MyPreferences pref = new MyPreferences(this);
-        pref.load();
+        pref.save(getString(R.string.shared_pref_current_order_id), -1L);
         pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
 

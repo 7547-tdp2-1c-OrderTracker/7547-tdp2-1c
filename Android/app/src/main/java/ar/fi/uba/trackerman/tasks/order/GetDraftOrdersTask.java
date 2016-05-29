@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -26,23 +27,23 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
     }
 
     public List<OrderWrapper> getDraftOrders(String vendorId) {
+        Context ctx = weakReference.get().getApplicationContext();
         List<OrderWrapper> ordersWrapper = null;
         try {
-            ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId);
-        } catch (BusinessException e) {
-            Log.e("business_error", e.getMessage(), e);
-        } catch (ServerErrorException e) {
-            Log.e("server_error", e.getMessage(), e);
+            ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return ordersWrapper;
     }
 
     public List<OrderWrapper> getDraftOrders(String vendorId, String clientId) {
+        Context ctx = weakReference.get().getApplicationContext();
         List<OrderWrapper> ordersWrapper = null;
         try {
-            ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId+"&client_id="+clientId);
-        } catch (BusinessException e) {
-            Log.e("business_error", e.getMessage(), e);
+            ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId+"&client_id="+clientId, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return ordersWrapper;
     }

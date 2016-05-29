@@ -90,6 +90,8 @@
     <string name="product_stocked">Producto con Stock</string>
     <string name="fragment_main_report">No hay reporte diario</string>
     <string name="daily_route">Ruta Diaria</string>
+    <string name="login_leyend">Sé un super TrackerMan!</string>
+    <string name="shared_pref_current_token">token</string>
 
 
 </resources>

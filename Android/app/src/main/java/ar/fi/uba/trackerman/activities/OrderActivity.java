@@ -92,7 +92,7 @@ public class OrderActivity extends AppCompatActivity implements GetOrderTask.Ord
 
     private boolean isClosedOrder() {
         String status = pref.get(getString(R.string.shared_pref_current_order_status), "");
-        return (!status.isEmpty() && status.equalsIgnoreCase(OrderStatus.CANCELLED.getStatus()) || status.equalsIgnoreCase(OrderStatus.CONFIRMED.getStatus()));
+        return (!status.isEmpty() && !OrderStatus.canModify(status));
     }
 
     @Override

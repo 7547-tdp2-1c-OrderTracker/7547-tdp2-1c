@@ -1,5 +1,7 @@
 package ar.fi.uba.trackerman.tasks.client;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +10,7 @@ import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by plucadei on 31/3/16.
@@ -20,12 +23,15 @@ public class GetClientTask extends AbstractTask<String,Void,Client,ClientActivit
 
     @Override
     protected Client doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String clientId = params[0];
         Client client = null;
         try {
-            client = (Client) restClient.get("/v1/clients/"+clientId);
+            client = (Client) restClient.get("/v1/clients/"+clientId, withAuth(ctx));
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return client;
     }

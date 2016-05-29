@@ -9,9 +9,8 @@ import org.json.JSONObject;
 import ar.fi.uba.trackerman.domains.Report;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
 import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
-import ar.fi.uba.trackerman.utils.MyPreferences;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
 /**
@@ -30,13 +29,16 @@ public class GetReportTask extends AbstractTask<String,Void,Report,AppCompatActi
 
     @Override
     protected Report doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String start = params[0];
         String end = params[1];
         Report report = null;
         try {
-            report = (Report) restClient.get("/v1/sellers/" + helper.getSeller().getId() +"/reports?start_date="+start);
+            report = (Report) restClient.get("/v1/sellers/" + helper.getSeller().getId() +"/reports?start_date="+start, withAuth(ctx));
         } catch (BusinessException e) {
             ((ReportReceiver) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx,e.getMessage());
         }
         return report;
     }

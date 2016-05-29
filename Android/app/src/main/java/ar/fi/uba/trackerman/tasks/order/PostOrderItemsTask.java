@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
 import android.view.View;
 
 import org.json.JSONException;
@@ -16,8 +17,8 @@ import ar.fi.uba.trackerman.utils.ShowMessage;
 
 public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostOrderItemsTask.OrderItemCreator> {
 
-    public PostOrderItemsTask(OrderItemCreator activity) {
-        super(activity);
+    public PostOrderItemsTask(OrderItemCreator orderItemCreator) {
+        super(orderItemCreator);
     }
 
     public OrderItem createOrderItem(String orderId, String productId, String quantity) {
@@ -25,7 +26,14 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/orders/"+orderId+"/order_items";
-        return (OrderItem) restClient.post(url, body, headers);
+        Context ctx = weakReference.get().getApplicationContext();
+        OrderItem orderItem = null;
+        try {
+            orderItem = (OrderItem) restClient.post(url, body, withAuth(ctx, headers));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx,e.getMessage());
+        }
+        return orderItem;
     }
 
     @Override
@@ -57,5 +65,6 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
     public interface OrderItemCreator {
         public void afterCreatingOrderItem(OrderItem orderItemCreated);
         public View getCurrentView();
+        public Context getApplicationContext();
     }
 }

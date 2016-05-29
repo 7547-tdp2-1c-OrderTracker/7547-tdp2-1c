@@ -79,11 +79,11 @@ public class RegistrationIntentService extends IntentService {
         String body = "{\"seller_id\": "+sellerId+", \"registration_id\":\""+token+"\"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
+        MyPreferences pref = new MyPreferences(this);
+        headers.put("authorization", pref.get(getString(R.string.shared_pref_current_token),""));
         try {
             restClient.put("/v1/devices/"+androidId, body, headers);
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(this, e.getMessage());
-        } catch (ServerErrorException e) {
+        } catch (Exception e) {
             ShowMessage.toastMessage(this, e.getMessage());
         }
     }

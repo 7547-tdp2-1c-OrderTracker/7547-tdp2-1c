@@ -45,11 +45,6 @@ public class MyPreferences {
         editor.commit();
     }
 
-    public void load() {
-        this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_client_id), (long) -1);
-        this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_order_id), (long) -1);
-    }
-
     public Long get(String key, Long defValue) {
         return this.getSharedPreferences().getLong(key, defValue);
     }
