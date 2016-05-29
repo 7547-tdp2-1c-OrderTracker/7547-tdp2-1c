@@ -61,6 +61,12 @@ public class MyPreferences {
         return Double.parseDouble(this.getSharedPreferences().getString(key, defValue.toString()));
     }
 
+    public void remove(String key) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.remove(key);
+        editor.commit();
+    }
+
     public void clear() {
         SharedPreferences.Editor editor = this.getSharedPreferences().edit();
         editor.clear();

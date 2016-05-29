@@ -31,11 +31,11 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        pref.remove(getString(R.string.shared_pref_current_token));
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loginButton = (Button) findViewById(R.id.activity_login_btn_login);
-        emailText = (EditText) findViewById(R.id.activity_login_input_email);
         emailText = (EditText) findViewById(R.id.activity_login_input_email);
         passwordText = (EditText) findViewById(R.id.activity_login_input_password);
 
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_NoActionBar); //FIXME change for dialog
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Autenticando...");
+        progressDialog.setMessage("Eres un trackerMan?...");
         progressDialog.show();
 
         loginButton.setEnabled(false);
@@ -70,9 +70,6 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
                 this.finish();
             }
         }
@@ -88,7 +85,8 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         findViewById(R.id.activity_login_btn_login).setEnabled(true);
         progressDialog.dismiss();
         if (token == null) {
-            ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), "Datos incorrectos");
+            emailText.setText("");
+            passwordText.setText("");
         } else {
             MyPreferenceHelper helper = new MyPreferenceHelper(this);
             helper.saveSeller(token.getSeller());
@@ -102,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
     public void onLoginFailed() {
         ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), "Datos incompletos");
         findViewById(R.id.activity_login_btn_login).setEnabled(true);
-        progressDialog.dismiss();
+        if (progressDialog!=null) progressDialog.dismiss();
     }
 
     public boolean validate() {

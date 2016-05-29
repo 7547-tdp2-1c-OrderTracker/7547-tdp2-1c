@@ -8,6 +8,7 @@ import java.util.Map;
 
 import ar.fi.uba.trackerman.activities.LoginActivity;
 import ar.fi.uba.trackerman.domains.Token;
+import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -27,8 +28,10 @@ public class PostAuthTask extends AbstractTask<String,Void,Token,LoginActivity> 
         Token token = null;
         try {
             token = (Token) restClient.post("/v1/auth/login", body, headers);
-        } catch (Exception e) {
+        } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
         }
         return token;
     }
