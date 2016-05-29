@@ -50,6 +50,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     private View routeIcon;
     private MyPreferences pref;
     private static Client selectedClient;
+    private ProgressBar bar;
 
     public DailyRouteFragment(){
         super();
@@ -112,9 +113,9 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
             }
         });
 
-        ProgressBar bar= new ProgressBar(getContext());
-        bar.setIndeterminate(true);
-        //schedulesList.setEmptyView(bar);
+        bar = (ProgressBar) fragmentView.findViewById(R.id.dayAgendaProgressBar);
+        //bar.setIndeterminate(true);
+        schedulesList.setEmptyView(bar);
 
         return fragmentView;
     }
@@ -189,6 +190,10 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     }
 
     public void showEmptyList(){
+        if (bar!=null && bar.getVisibility()==View.VISIBLE) {
+            bar.setVisibility(View.GONE);
+            Log.d("bla", "PROGRESS BAR Must be GONE");
+        }
         emptyView.setImageResource(R.drawable.calendars);
         emptyView.setVisibility(View.VISIBLE);
         routeIcon.setVisibility(View.GONE);
