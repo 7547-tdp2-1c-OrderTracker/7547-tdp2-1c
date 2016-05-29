@@ -54,12 +54,12 @@ public class MainActivity extends AppCompatActivity implements
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final MyPreferenceHelper helper = new MyPreferenceHelper(MainActivity.this);
-        if (helper.getSeller() == null) {
+        final MyPreferences pref = new MyPreferences(this);
+        if (helper.getSeller() == null || pref.get(getString(R.string.shared_pref_current_token),"").isEmpty()) {
             openLoginActivity(drawerLayout);
             return;
         }
 
-        final MyPreferences pref = new MyPreferences(this);
         pref.save(getString(R.string.shared_pref_current_order_id), -1L);
         pref.save(getString(R.string.shared_pref_current_order_status), "");
         pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
