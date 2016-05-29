@@ -50,6 +50,7 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     private View routeIcon;
     private MyPreferences pref;
     private static Client selectedClient;
+    private ProgressBar bar;
 
     public DailyRouteFragment(){
         super();
@@ -74,6 +75,9 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         cal.setTime(DateUtils.parseShortDate(currentDate));
         cal.set(Calendar.DATE, cal.get(Calendar.DATE) + diff);
         //pref.save(context.getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(cal.getTime()));
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            return null;
+        }
         String queriedDate = DateUtils.formatShortDate(cal.getTime());
 
 
@@ -112,9 +116,9 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
             }
         });
 
-        ProgressBar bar= new ProgressBar(getContext());
-        bar.setIndeterminate(true);
-        //schedulesList.setEmptyView(bar);
+        bar = (ProgressBar) fragmentView.findViewById(R.id.dayAgendaProgressBar);
+        //bar.setIndeterminate(true);
+        schedulesList.setEmptyView(bar);
 
         return fragmentView;
     }
@@ -189,6 +193,10 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
     }
 
     public void showEmptyList(){
+        if (bar!=null && bar.getVisibility()==View.VISIBLE) {
+            bar.setVisibility(View.GONE);
+            Log.d("bla", "PROGRESS BAR Must be GONE");
+        }
         emptyView.setImageResource(R.drawable.calendars);
         emptyView.setVisibility(View.VISIBLE);
         routeIcon.setVisibility(View.GONE);

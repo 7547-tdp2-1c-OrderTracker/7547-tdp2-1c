@@ -21,6 +21,13 @@
         android:layout_margin="4dp"
         android:background="@color/cardview_dark_background" />
 
+    <ProgressBar
+        android:id="@+id/dayAgendaProgressBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:layout_marginRight="5dp" />
+
     <ListView
         android:id="@+id/dayAgendaListView"
         android:layout_width="match_parent"
