@@ -44,7 +44,6 @@ public class SchedulesListAdapter extends ArrayAdapter<Client> {
         super(context, resource, clients);
         LocationHelper.updatePosition(getContext());
         this.reference = new WeakReference<DailyRouteFragment>(fragment);
-        solveTask(null);
     }
 
     @Override

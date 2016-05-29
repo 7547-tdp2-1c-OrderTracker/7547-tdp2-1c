@@ -75,6 +75,9 @@ public class DailyRouteFragment extends Fragment implements PostVisitTask.VisitC
         cal.setTime(DateUtils.parseShortDate(currentDate));
         cal.set(Calendar.DATE, cal.get(Calendar.DATE) + diff);
         //pref.save(context.getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(cal.getTime()));
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            return null;
+        }
         String queriedDate = DateUtils.formatShortDate(cal.getTime());
 
 
