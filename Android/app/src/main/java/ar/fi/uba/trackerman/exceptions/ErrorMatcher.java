@@ -12,7 +12,8 @@ public enum ErrorMatcher {
     DEFAULT_ERROR(BusinessException.class),
     NO_STOCK(NoStockException.class),
     UNKNOWN(UnknownException.class),
-    QR_ERROR(QRValidationException.class);
+    QR_ERROR(QRValidationException.class),
+    LOGFAILED(LoginException.class);
 
     private Class<? extends BusinessException> throwable;
 

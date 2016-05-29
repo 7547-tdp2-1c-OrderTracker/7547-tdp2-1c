@@ -1,5 +1,7 @@
 package ar.fi.uba.trackerman.tasks.visit;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,7 +33,14 @@ public class PostVisitTask extends AbstractTask<String,Void,Visit,DailyRouteFrag
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         String url = "/v1/visits";
-        return (Visit) restClient.post(url, body, headers);
+        Visit visit = null;
+        Context ctx = weakReference.get().getContext();
+        try {
+            visit = (Visit) restClient.post(url, body, withAuth(ctx,headers));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
+        }
+        return visit;
     }
 
     @Override

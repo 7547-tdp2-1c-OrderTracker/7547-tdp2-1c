@@ -1,6 +1,6 @@
 package ar.fi.uba.trackerman.tasks.schedule;
 
-import android.util.Log;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +10,6 @@ import java.util.List;
 import ar.fi.uba.trackerman.adapters.SchedulesListAdapter;
 import ar.fi.uba.trackerman.domains.Client;
 import ar.fi.uba.trackerman.domains.ScheduleDay;
-import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -28,6 +27,7 @@ public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay
     @Override
     protected ScheduleDay doInBackground(String... params) {
         String urlString = "/v1/schedule/day";
+        Context ctx = weakReference.get().getContext();
         if (params.length == 2) {
             String dateConsult = params[0];
             String seller = params[1];
@@ -39,14 +39,14 @@ public class GetScheduleDayListTask extends AbstractTask<String,Void,ScheduleDay
             String lon = params[3];
             urlString += "?date=" + dateConsult + "&seller_id=" + seller +"&lat="+ lat +"&lon="+ lon;
         } else {
-            ShowMessage.toastMessage(weakReference.get().getContext(), "Parmetros incorrectos");
+            ShowMessage.toastMessage(ctx, "Parmetros incorrectos");
         }
 
         ScheduleDay day = null;
         try{
-            day = (ScheduleDay) restClient.get(urlString);
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(weakReference.get().getContext(), e.getMessage());
+            day = (ScheduleDay) restClient.get(urlString, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return day;
     }

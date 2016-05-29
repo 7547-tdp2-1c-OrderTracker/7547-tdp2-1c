@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -11,6 +12,7 @@ import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.ServerErrorException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
 
@@ -20,6 +22,7 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected String doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String orderId = params[0];
         String itemId = params[1];
         Map<String, String> headers = new HashMap<String, String>();
@@ -27,12 +30,14 @@ public class RemoveOrderItemTask extends AbstractTask<String,Void,String,OrderAc
         String resp = null;
         String url = "/v1/orders/" + orderId + "/order_items/" + itemId;
         try {
-            resp = (String) restClient.delete(url, null, headers);
+            resp = (String) restClient.delete(url, null, withAuth(ctx,headers));
             if (resp == null) resp = "OK";
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         } catch (ServerErrorException e) {
             resp = "FAIL";
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return resp;
     }

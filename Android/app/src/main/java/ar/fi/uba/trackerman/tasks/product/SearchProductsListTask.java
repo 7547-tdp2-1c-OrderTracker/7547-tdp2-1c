@@ -1,14 +1,12 @@
 package ar.fi.uba.trackerman.tasks.product;
 
-import android.util.Log;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.adapters.ProductsListAdapter;
-import ar.fi.uba.trackerman.domains.Product;
 import ar.fi.uba.trackerman.domains.ProductsSearchResult;
-import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -23,6 +21,7 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
 
     @Override
     protected ProductsSearchResult doInBackground(Long... params) {
+        Context ctx = weakReference.get().getContext();
         String urlString = "/v1/products?limit=10";
         Long offset= params[0];
         if(offset != null){
@@ -34,9 +33,9 @@ public class SearchProductsListTask extends AbstractTask<Long,Void,ProductsSearc
 
         ProductsSearchResult productsSearchResult = null;
         try{
-            productsSearchResult = (ProductsSearchResult) restClient.get(urlString);
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(weakReference.get().getContext(),e.getMessage());
+            productsSearchResult = (ProductsSearchResult) restClient.get(urlString, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return productsSearchResult;
     }

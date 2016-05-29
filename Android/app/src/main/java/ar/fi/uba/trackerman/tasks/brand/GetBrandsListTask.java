@@ -1,5 +1,7 @@
 package ar.fi.uba.trackerman.tasks.brand;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +11,6 @@ import java.util.List;
 
 import ar.fi.uba.trackerman.adapters.BrandsListAdapter;
 import ar.fi.uba.trackerman.domains.Brand;
-import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -28,11 +29,12 @@ public class GetBrandsListTask extends AbstractTask<Long,Void,List<Brand>,Brands
 
     @Override
     protected List<Brand> doInBackground(Long... params) {
+        Context ctx = weakReference.get().getContext();
         List<Brand> brands = null;
         try{
-            brands = (List<Brand>) restClient.get("/v1/brands?limit=999");
-        } catch (BusinessException e) {
-            ShowMessage.toastMessage(weakReference.get().getContext(), e.getMessage());
+            brands = (List<Brand>) restClient.get("/v1/brands?limit=999", withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return brands;
     }

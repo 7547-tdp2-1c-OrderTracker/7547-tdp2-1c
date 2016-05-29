@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -14,6 +15,7 @@ import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by plucadei on 31/3/16.
@@ -26,6 +28,7 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivi
 
     @Override
     protected Order doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String orderId= params[0];
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
@@ -34,11 +37,13 @@ public class ConfirmOrderTask extends AbstractTask<String,Void,Order,OrderActivi
 
         Order order = null;
         try {
-            order = (Order) restClient.put(url,body,headers);
+            order = (Order) restClient.put(url,body,withAuth(ctx, headers));
         } catch (NoStockException e) {
             weakReference.get().showSnackbarSimpleMessage("Nos quedamos sin stock! Actualice sus items.");
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return order;
     }

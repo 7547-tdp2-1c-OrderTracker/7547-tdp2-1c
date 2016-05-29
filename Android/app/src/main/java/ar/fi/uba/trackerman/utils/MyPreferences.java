@@ -45,11 +45,6 @@ public class MyPreferences {
         editor.commit();
     }
 
-    public void load() {
-        this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_client_id), (long) -1);
-        this.getSharedPreferences().getLong(context.getString(R.string.shared_pref_current_order_id), (long) -1);
-    }
-
     public Long get(String key, Long defValue) {
         return this.getSharedPreferences().getLong(key, defValue);
     }
@@ -64,6 +59,12 @@ public class MyPreferences {
 
     public Double get(String key, Double defValue) {
         return Double.parseDouble(this.getSharedPreferences().getString(key, defValue.toString()));
+    }
+
+    public void remove(String key) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.remove(key);
+        editor.commit();
     }
 
     public void clear() {

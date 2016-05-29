@@ -1,6 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
-import android.util.Log;
+import android.content.Context;
 
 import org.json.JSONException;
 
@@ -11,6 +11,7 @@ import ar.fi.uba.trackerman.activities.OrderActivity;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
 import ar.fi.uba.trackerman.exceptions.NoStockException;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderActivity> {
 
@@ -20,6 +21,7 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderAc
 
     @Override
     protected String doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String orderId = params[0];
         String itemId = params[1];
         String quantity = params[2];
@@ -30,11 +32,13 @@ public class UpdateOrderItemTask extends AbstractTask<String,Void,String,OrderAc
         headers.put("Content-Type", "application/json");
         String resp = "FAIL";
         try {
-            resp = (String) restClient.put(url,body,headers);
+            resp = (String) restClient.put(url,body,withAuth(ctx,headers));
         } catch (NoStockException e) {
             weakReference.get().showSnackbarSimpleMessage("No tenemos stock del producto!");
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return resp;
     }

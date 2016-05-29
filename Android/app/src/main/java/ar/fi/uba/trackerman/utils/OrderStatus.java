@@ -34,4 +34,8 @@ public enum OrderStatus {
     public String getColor() {
         return color;
     }
+
+    public static boolean canModify(String status) {
+        return status.equalsIgnoreCase(DRAFT.getStatus());
+    }
 }

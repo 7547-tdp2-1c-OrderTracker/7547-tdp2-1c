@@ -1,16 +1,14 @@
 package ar.fi.uba.trackerman.tasks.client;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ar.fi.uba.trackerman.domains.Client;
-import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.ServerErrorException;
-import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
+import ar.fi.uba.trackerman.utils.ShowMessage;
 
 /**
  * Created by guido on 15/05/16.
@@ -23,13 +21,12 @@ public class GetClientDirectTask extends AbstractTask<String,Void,Client,AppComp
     }
 
     public Client getClient(String clientId) {
+        Context ctx = weakReference.get().getApplicationContext();
         Client client = null;
         try {
-            client = (Client) restClient.get("/v1/clients/"+clientId);
-        } catch (BusinessException e) {
-            Log.e("business_error", e.getMessage(), e);
-        } catch (ServerErrorException e) {
-            Log.e("server_error", e.getMessage(), e);
+            client = (Client) restClient.get("/v1/clients/"+clientId, withAuth(ctx));
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx, e.getMessage());
         }
         return client;
     }
@@ -51,13 +48,9 @@ public class GetClientDirectTask extends AbstractTask<String,Void,Client,AppComp
 
     @Override
     protected void onPostExecute(Client client) {
-//        super.onPostExecute(client);
         if(client != null){
             ((ClientDirectReceiver) weakReference.get()).updateClientDirect(client);
-        } else {
-            // weakReference.get().showSnackbarSimpleMessage("No se puede obtener info del cliente");
         }
-
     }
 
     public interface ClientDirectReceiver {

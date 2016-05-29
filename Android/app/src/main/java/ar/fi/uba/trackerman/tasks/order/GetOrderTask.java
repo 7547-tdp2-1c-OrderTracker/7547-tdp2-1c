@@ -1,5 +1,7 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,12 +22,15 @@ public class GetOrderTask extends AbstractTask<String,Void,OrderWrapper,OrderAct
 
     @Override
     protected OrderWrapper doInBackground(String... params) {
+        Context ctx = weakReference.get().getApplicationContext();
         String orderId= params[0];
         OrderWrapper orderWrapper = null;
         try {
-            orderWrapper = (OrderWrapper) restClient.get("/v1/orders/"+orderId);
+            orderWrapper = (OrderWrapper) restClient.get("/v1/orders/"+orderId, withAuth(ctx));
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        } catch (Exception e) {
+            ShowMessage.toastMessage(ctx,e.getMessage());
         }
         return orderWrapper;
     }

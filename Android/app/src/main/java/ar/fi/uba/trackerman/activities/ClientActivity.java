@@ -143,6 +143,7 @@ public class ClientActivity extends AppCompatActivity implements GetClientTask.C
         Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.client_detail_map)));
     }
 
+    @Deprecated
     public void afterCreatingOrder(Order orderCreated) {
 
         pref.save(getString(R.string.shared_pref_current_order_id), orderCreated.getId());

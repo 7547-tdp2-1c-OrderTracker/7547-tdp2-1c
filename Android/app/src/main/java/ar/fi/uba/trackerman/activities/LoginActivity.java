@@ -4,33 +4,26 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import ar.fi.uba.trackerman.domains.Seller;
+import ar.fi.uba.trackerman.domains.Token;
 import ar.fi.uba.trackerman.server.RestClient;
-import ar.fi.uba.trackerman.tasks.seller.GetSellerDirectTask;
-import ar.fi.uba.trackerman.utils.AppSettings;
+import ar.fi.uba.trackerman.tasks.auth.PostAuthTask;
 import ar.fi.uba.trackerman.utils.MyPreferenceHelper;
 import ar.fi.uba.trackerman.utils.MyPreferences;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 import fi.uba.ar.soldme.R;
 
-import static ar.fi.uba.trackerman.utils.FieldValidator.isValidQuantity;
 
-
-public class LoginActivity extends AppCompatActivity implements GetSellerDirectTask.SellerDirectReceiver {
+public class LoginActivity extends AppCompatActivity implements PostAuthTask.ResultLogin {
 
     private static final int REQUEST_SIGNUP = 0;
 
     private EditText emailText;
     private EditText passwordText;
     private Button loginButton;
-    private TextView signupLink;
     private MyPreferences pref = new MyPreferences(this);
     private ProgressDialog progressDialog;
 
@@ -38,10 +31,13 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        pref.remove(getString(R.string.shared_pref_current_token));
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loginButton = (Button) findViewById(R.id.activity_login_btn_login);
+        emailText = (EditText) findViewById(R.id.activity_login_input_email);
+        passwordText = (EditText) findViewById(R.id.activity_login_input_password);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -50,22 +46,9 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
                 login();
             }
         });
-
-        findViewById(R.id.activity_login_link_signup).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                ShowMessage.showSnackbarSimpleMessage(v, "No implementado!");
-                // Start the Signup activity
-
-                //Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                //startActivityForResult(intent, REQUEST_SIGNUP);
-            }
-        });
     }
 
     public void login() {
-        Log.d("login_activity", "Login");
 
         if (!validate()) {
             onLoginFailed();
@@ -75,17 +58,11 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_NoActionBar); //FIXME change for dialog
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Autenticando...");
+        progressDialog.setMessage("Eres un trackerMan?...");
         progressDialog.show();
 
-        String email = ((TextView)findViewById(R.id.activity_login_input_email)).getText().toString();
-        //String password = passwordText.getText().toString();
-
-        Log.d("Login email = ", email);
         loginButton.setEnabled(false);
-        // obtengo el seller, para guardarlo en la shared pref (ver metodo updateSellerDirect);
-        if (RestClient.isOnline(this)) new GetSellerDirectTask(this).execute(email);
-
+        if (RestClient.isOnline(this)) new PostAuthTask(this).execute(emailText.getText().toString(), passwordText.getText().toString());
     }
 
 
@@ -93,9 +70,6 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
                 this.finish();
             }
         }
@@ -107,54 +81,49 @@ public class LoginActivity extends AppCompatActivity implements GetSellerDirectT
         //moveTaskToBack(true);
     }
 
-    public void updateSellerDirect(Seller seller) {
-        if (seller == null) {
-            onLoginFailed();
+    public void onLoginSuccess(Token token) {
+        findViewById(R.id.activity_login_btn_login).setEnabled(true);
+        progressDialog.dismiss();
+        if (token == null) {
+            emailText.setText("");
+            passwordText.setText("");
         } else {
             MyPreferenceHelper helper = new MyPreferenceHelper(this);
-            helper.saveSeller(seller);
-            // On complete call either onLoginSuccess or onLoginFailed
-            onLoginSuccess();
+            helper.saveSeller(token.getSeller());
+            pref.save(getString(R.string.shared_pref_current_token),token.getToken());
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
-        // onLoginFailed();
-        progressDialog.dismiss();
-    }
-
-    public void onLoginSuccess() {
-        findViewById(R.id.activity_login_btn_login).setEnabled(true);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Ingreso fallido", Toast.LENGTH_LONG).show();
+        ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), "Datos incompletos");
         findViewById(R.id.activity_login_btn_login).setEnabled(true);
+        if (progressDialog!=null) progressDialog.dismiss();
     }
 
     public boolean validate() {
-        String seller = ((TextView)findViewById(R.id.activity_login_input_email)).getText().toString();
-        return isValidQuantity(seller) && seller.length()<=1;
-        //boolean valid = true;
+        boolean valid = true;
 
-        //String email = emailText.getText().toString();
-        //String password = passwordText.getText().toString();
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
 
-        //if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        //   emailText.setError("enter a valid email address");
-        //    valid = false;
-        //} else {
-        //    emailText.setError(null);
-        //}
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailText.setError("Ingrese un email válido!");
+            valid = false;
+        } else {
+            emailText.setError(null);
+        }
 
-        //if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-        //    passwordText.setError("between 4 and 10 alphanumeric characters");
-        //    valid = false;
-        //} else {
-        //    passwordText.setError(null);
-        //}
+        if (password.isEmpty()) {
+            passwordText.setError("Ingrese un password!");
+            valid = false;
+        } else {
+            passwordText.setError(null);
+        }
 
-        //return valid;
+        return valid;
     }
 
 }
