@@ -50,6 +50,8 @@ public class EmptyOrderTask extends AbstractTask<String,Void,OrderWrapper,OrderA
     protected void onPostExecute(OrderWrapper orderWrapper) {
         if(orderWrapper != null){
             weakReference.get().updateOrderInformation(orderWrapper);
+        }else{
+            weakReference.get().showSnackbarSimpleMessage("Error obteniendo el pedido, luego de vaciarlo!");
         }
     }
 }
