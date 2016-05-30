@@ -192,11 +192,9 @@ public class RestClient {
     private static String getHeaders(Map<String, String> headers) {
         String headersStr="";
         if (headers != null){
-            headersStr = "-H '";
             for(String k : headers.keySet()){
-                headersStr+=k+":"+headers.get(k);
+                headersStr+="-H '"+k+":"+headers.get(k)+"' ";
             }
-            headersStr += "' ";
         }
         return headersStr;
     }
