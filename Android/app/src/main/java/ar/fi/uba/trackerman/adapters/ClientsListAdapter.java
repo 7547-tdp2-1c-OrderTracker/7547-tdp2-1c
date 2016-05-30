@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
@@ -35,16 +36,22 @@ public class ClientsListAdapter extends ArrayAdapter<Client> implements GetClien
     private long total;
     private long offset;
     private boolean fetching;
+    private Activity activity;
     private MyPreferences pref = new MyPreferences(getContext());
 
-    public ClientsListAdapter(Context context, int resource,
+    public ClientsListAdapter(Activity activity, Context context, int resource,
                            List<Client> clients) {
         super(context, resource, clients);
+        this.activity = activity;
         total=1;
         offset=0;
         fetching=false;
         firstRefresed = false;
         LocationHelper.updatePosition(this.getContext());
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 
     public void refresh(){

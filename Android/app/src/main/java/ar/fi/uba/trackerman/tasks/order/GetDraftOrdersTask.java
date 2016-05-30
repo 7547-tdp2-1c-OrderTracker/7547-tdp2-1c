@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.fi.uba.trackerman.activities.MainActivity;
 import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
 import ar.fi.uba.trackerman.exceptions.BusinessException;
@@ -20,10 +21,10 @@ import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
 
-public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapper>,AppCompatActivity> {
+public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapper>,MainActivity> {
 
-    public GetDraftOrdersTask(AppCompatActivity validation) {
-        super(validation);
+    public GetDraftOrdersTask(MainActivity activity) {
+        super(activity);
     }
 
     public List<OrderWrapper> getDraftOrders(String vendorId) {
@@ -32,7 +33,7 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
         try {
             ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId, withAuth(ctx));
         } catch (Exception e) {
-            ShowMessage.toastMessage(ctx, e.getMessage());
+            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         }
         return ordersWrapper;
     }
