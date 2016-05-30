@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -219,5 +220,10 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
     @Override
     public View getCurrentView() {
         return this.getWindow().getDecorView();
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 }

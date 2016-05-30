@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -27,13 +28,7 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
         headers.put("Content-Type", "application/json");
         String url = "/v1/orders/"+orderId+"/order_items";
         Context ctx = weakReference.get().getApplicationContext();
-        OrderItem orderItem = null;
-        try {
-            orderItem = (OrderItem) restClient.post(url, body, withAuth(ctx, headers));
-        } catch (Exception e) {
-            ShowMessage.toastMessage(ctx,e.getMessage());
-        }
-        return orderItem;
+        return (OrderItem) restClient.post(url, body, withAuth(ctx, headers));
     }
 
     @Override
@@ -50,6 +45,12 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Nos quedamos sin stock!");
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(),e.getMessage());
+        } catch (final Exception e) {
+            weakReference.get().getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getActivity().getCurrentFocus(), e.getMessage());
+                }
+            });
         }
         return null;
     }
@@ -66,5 +67,6 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
         public void afterCreatingOrderItem(OrderItem orderItemCreated);
         public View getCurrentView();
         public Context getApplicationContext();
+        public Activity getActivity();
     }
 }
