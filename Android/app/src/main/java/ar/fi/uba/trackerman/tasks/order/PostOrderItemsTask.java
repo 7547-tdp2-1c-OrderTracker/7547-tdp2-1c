@@ -45,12 +45,8 @@ public class PostOrderItemsTask extends AbstractTask<String,Void,OrderItem,PostO
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), "Nos quedamos sin stock!");
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(),e.getMessage());
-        } catch (final Exception e) {
-            weakReference.get().getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getActivity().getCurrentFocus(), e.getMessage());
-                }
-            });
+        } catch (Exception e) {
+            ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentView(), e.getMessage());
         }
         return null;
     }
