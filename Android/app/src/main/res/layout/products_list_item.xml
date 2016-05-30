@@ -106,6 +106,7 @@
                 android:layout_gravity="right" />
 
             <ImageView
+                android:id="@+id/product_row_discount_image"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_column="0"

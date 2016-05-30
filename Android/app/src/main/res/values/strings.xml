@@ -47,6 +47,7 @@
     <string name="stock_del_producto">Stock del producto</string>
     <string name="precio_del_producto">Precio del producto</string>
     <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
+    <string name="nombre_del_descuento">Nombre del descuento</string>
     <string name="descuento_del_producto_porcentaje">Descuento del producto</string>
     <string name="descuento_del_producto_fecha">Fecha vigencia del descuento</string>
 

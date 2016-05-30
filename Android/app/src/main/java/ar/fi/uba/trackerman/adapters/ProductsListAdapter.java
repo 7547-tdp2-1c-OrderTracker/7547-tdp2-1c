@@ -93,6 +93,9 @@ public class ProductsListAdapter extends ArrayAdapter<Product> {
         holder.promotion.setText("");
         if (product.hasPromotion()) {
             holder.promotion.setText(isContentValid(Integer.toString(product.getBestPromotion().getPercent()) +" %"));
+            ((ImageView) convertView.findViewById(R.id.product_row_discount_image)).setVisibility(View.VISIBLE);
+        } else {
+            ((ImageView) convertView.findViewById(R.id.product_row_discount_image)).setVisibility(View.GONE);
         }
         //Picasso.with(this.getContext()).load(product.getThumbnail()).into(holder.image);
 

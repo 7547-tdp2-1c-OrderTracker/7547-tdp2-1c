@@ -21,6 +21,7 @@ public class Promotion {
     private int percent;
     private int brandId;
     private int productId;
+    private int minQuantity;
     private Date createdDate;
     private Date lastModified;
 
@@ -100,6 +101,13 @@ public class Promotion {
         this.lastModified = lastModified;
     }
 
+    public int getMinQuantity() {
+        return minQuantity;
+    }
+
+    public void setMinQuantity(int minQuantity) {
+        this.minQuantity = minQuantity;
+    }
 
     public static Promotion fromJson(JSONObject json) {
         Promotion promotion = null;
@@ -107,6 +115,7 @@ public class Promotion {
             promotion = new Promotion(json.getLong("id"));
             promotion.setName(json.getString("name"));
             promotion.setPercent(json.getInt("percent"));
+            promotion.setMinQuantity(json.getInt("min_quantity"));
 
             String promotionBeginDateStr = json.getString("begin_date");
             Date beginDate = null;

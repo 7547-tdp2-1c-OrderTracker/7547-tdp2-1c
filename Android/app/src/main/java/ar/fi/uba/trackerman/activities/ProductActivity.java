@@ -192,8 +192,10 @@ public class ProductActivity extends AppCompatActivity implements GetProductTask
             String promotionEndDateStr = DateUtils.formatShortDateArg(promotionEndDate);
 
             String promotionFullDateStr = promotionBeginDateStr + " / "+ promotionEndDateStr;
+            String promotionPercent = isContentValid(Integer.toString(promotion.getPercent()) +" %"+ ((promotion.getMinQuantity() != 0)?"  |  Cant. Mínima: "+ promotion.getMinQuantity():""));
 
-            ((TextView) findViewById(R.id.product_detail_product_promotion_percent)).setText(isContentValid(Integer.toString(promotion.getPercent()) +" %"));
+            ((TextView) findViewById(R.id.product_detail_product_promotion_name)).setText(promotion.getName());
+            ((TextView) findViewById(R.id.product_detail_product_promotion_percent)).setText(promotionPercent);
             ((TextView) findViewById(R.id.product_detail_product_promotion_dates)).setText(promotionFullDateStr);
 
             ((CardView)findViewById(R.id.product_detail_card_promotion)).setVisibility(View.VISIBLE);

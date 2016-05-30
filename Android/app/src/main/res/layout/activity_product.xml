@@ -149,15 +149,32 @@
                     <ImageView
                         android:layout_width="56dp"
                         android:layout_height="56dp"
-                        android:src="@drawable/ic_down_trend"
+                        android:src="@drawable/ic_info"
                         android:layout_row="0"
+                        android:layout_column="0" />
+
+                    <TextView
+                        android:id="@+id/product_detail_product_promotion_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:text="@string/nombre_del_descuento"
+                        android:textSize="18sp"
+                        android:layout_margin="16dp" />
+
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_down_trend"
+                        android:layout_row="1"
                         android:layout_column="0" />
 
                     <TextView
                         android:id="@+id/product_detail_product_promotion_percent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_row="0"
+                        android:layout_row="1"
                         android:layout_column="1"
                         android:text="@string/descuento_del_producto_porcentaje"
                         android:textSize="18sp"
@@ -167,14 +184,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:src="@drawable/ic_calendar"
-                        android:layout_row="1"
+                        android:layout_row="2"
                         android:layout_column="0" />
 
                     <TextView
                         android:id="@+id/product_detail_product_promotion_dates"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_row="1"
+                        android:layout_row="2"
                         android:layout_column="1"
                         android:text="@string/descuento_del_producto_fecha"
                         android:textSize="18sp"
