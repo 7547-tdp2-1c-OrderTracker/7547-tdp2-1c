@@ -1,5 +1,6 @@
 package ar.fi.uba.trackerman.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -28,13 +29,19 @@ public class OrdersListAdapter extends ArrayAdapter<OrderWrapper> {
     private long total;
     private long offset;
     private boolean fetching;
+    private Activity activity;
 
-    public OrdersListAdapter(Context context, int resource,
+    public OrdersListAdapter(Activity activity, Context context, int resource,
                              List<OrderWrapper> orders) {
         super(context, resource, orders);
+        this.activity = activity;
         total=1;
         offset=0;
         fetching=false;
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 
     public void refresh(){

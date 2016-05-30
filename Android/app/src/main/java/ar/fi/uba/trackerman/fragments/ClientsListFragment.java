@@ -33,7 +33,7 @@ public class ClientsListFragment extends Fragment implements AdapterView.OnItemC
         View fragmentView= inflater.inflate(R.layout.fragment_clients_list, container, false);
         ListView clientsList= (ListView)fragmentView.findViewById(R.id.clientListView);
 
-        ClientsListAdapter clientsAdapter = new ClientsListAdapter( getContext(), R.layout.list_client_item, new ArrayList<Client>());
+        ClientsListAdapter clientsAdapter = new ClientsListAdapter( getActivity(), getContext(), R.layout.list_client_item, new ArrayList<Client>());
         clientsList.setAdapter(clientsAdapter);
         clientsList.setOnItemClickListener(this);
 

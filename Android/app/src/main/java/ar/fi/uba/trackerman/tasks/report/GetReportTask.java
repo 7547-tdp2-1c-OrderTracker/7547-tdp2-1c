@@ -35,10 +35,8 @@ public class GetReportTask extends AbstractTask<String,Void,Report,AppCompatActi
         Report report = null;
         try {
             report = (Report) restClient.get("/v1/sellers/" + helper.getSeller().getId() +"/reports?start_date="+start, withAuth(ctx));
-        } catch (BusinessException e) {
-            ((ReportReceiver) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
         } catch (Exception e) {
-            ShowMessage.toastMessage(ctx,e.getMessage());
+            ((ReportReceiver) weakReference.get()).showSnackbarSimpleMessage(e.getMessage());
         }
         return report;
     }

@@ -1,6 +1,7 @@
 package ar.fi.uba.trackerman.tasks.client;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,8 +49,12 @@ public class GetClientListTask extends AbstractTask<String,Void,ClientSearchResu
         ClientSearchResult clientSearchResult = null;
         try{
             clientSearchResult = (ClientSearchResult) restClient.get(urlString, withAuth(ctx));
-        } catch (Exception e) {
-            ShowMessage.toastMessage(ctx, e.getMessage());
+        } catch (final Exception e) {
+            weakReference.get().getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getActivity().getCurrentFocus(), e.getMessage());
+                }
+            });
         }
         return clientSearchResult;
     }
