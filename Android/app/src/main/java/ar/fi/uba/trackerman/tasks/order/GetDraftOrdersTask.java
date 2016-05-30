@@ -1,8 +1,6 @@
 package ar.fi.uba.trackerman.tasks.order;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.fi.uba.trackerman.activities.MainActivity;
-import ar.fi.uba.trackerman.domains.Order;
 import ar.fi.uba.trackerman.domains.OrderWrapper;
-import ar.fi.uba.trackerman.exceptions.BusinessException;
-import ar.fi.uba.trackerman.exceptions.ServerErrorException;
-import ar.fi.uba.trackerman.server.RestClient;
 import ar.fi.uba.trackerman.tasks.AbstractTask;
 import ar.fi.uba.trackerman.utils.ShowMessage;
 
@@ -32,8 +26,12 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
         List<OrderWrapper> ordersWrapper = null;
         try {
             ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId, withAuth(ctx));
-        } catch (Exception e) {
-            weakReference.get().showSnackbarSimpleMessage(e.getMessage());
+        } catch (final Exception e) {
+            weakReference.get().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
+                }
+            });
         }
         return ordersWrapper;
     }
@@ -43,8 +41,12 @@ public class GetDraftOrdersTask extends AbstractTask<String,Void,List<OrderWrapp
         List<OrderWrapper> ordersWrapper = null;
         try {
             ordersWrapper = (List<OrderWrapper>) restClient.get("/v1/orders?status=draft&seller_id="+vendorId+"&client_id="+clientId, withAuth(ctx));
-        } catch (Exception e) {
-            ShowMessage.toastMessage(ctx, e.getMessage());
+        } catch (final Exception e) {
+            weakReference.get().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
+                }
+            });
         }
         return ordersWrapper;
     }

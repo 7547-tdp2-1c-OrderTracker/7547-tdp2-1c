@@ -45,8 +45,18 @@ public class GetOrdersListTask extends AbstractTask<Long,Void,OrdersSearchResult
         OrdersSearchResult ordersSearchResult = null;
         try {
             ordersSearchResult = (OrdersSearchResult) restClient.get(urlString, withAuth(ctx));
-        } catch (Exception e) {
-            ShowMessage.toastMessage(ctx,e.getMessage());
+        } catch (final BusinessException e) {
+            weakReference.get().getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getActivity().getCurrentFocus(), e.getMessage());
+                }
+            });
+        } catch (final Exception e) {
+            weakReference.get().getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.toastMessage(weakReference.get().getContext(), e.getMessage());
+                }
+            });
         }
         return ordersSearchResult;
     }

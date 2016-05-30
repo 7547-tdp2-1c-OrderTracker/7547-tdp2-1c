@@ -37,7 +37,7 @@ public class OrdersListFragment extends Fragment implements AdapterView.OnItemCl
         View fragmentView= inflater.inflate(R.layout.fragment_orders_list, container, false);
         ListView ordersList= (ListView)fragmentView.findViewById(R.id.orderListView);
 
-        OrdersListAdapter ordersAdapter = new OrdersListAdapter( getContext(), R.layout.list_order_item, new ArrayList<OrderWrapper>());
+        OrdersListAdapter ordersAdapter = new OrdersListAdapter(getActivity(),getContext(), R.layout.list_order_item, new ArrayList<OrderWrapper>());
         ordersList.setAdapter(ordersAdapter);
         ordersList.setOnItemClickListener(this);
 
