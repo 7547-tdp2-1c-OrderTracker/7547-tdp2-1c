@@ -40,8 +40,7 @@ public class MyGcmListenerService extends GcmListenerService {
         String type= data.getString("type");
         String message= data.getString("message");
         String picture= data.getString("picture");
-        Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Tipo: "+ type + " , Id: " +identifier );
+        Log.d(TAG, "From: " + from + " , Tipo: " + type + " , Id: " + identifier + " , Pic:" + picture);
         if(NEW_CLIENT.equals(type)){
             showNewClientNotification(message,identifier,picture);
         }else if(CLIENT_UPDATED.equals(type)){
@@ -58,9 +57,7 @@ public class MyGcmListenerService extends GcmListenerService {
         String product = data.getString("product");
         String brand = data.getString("brand");
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,0);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         String content = discount + "%" + ((product!=null)?" en "+product:(brand!=null)?" en "+brand:"");
@@ -86,9 +83,7 @@ public class MyGcmListenerService extends GcmListenerService {
     private void showNewClientNotification(String message, String clientId, String picture) {
         Intent intent = new Intent(this, ClientActivity.class);
         intent.putExtra(Intent.EXTRA_UID,Long.parseLong(clientId));
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 200+Integer.parseInt(clientId), intent, 0);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -96,7 +91,6 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentTitle(getString(R.string.new_client))
                 .setContentText(message)
                 .setAutoCancel(true)
-                .setGroup("NewClient")
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
@@ -113,9 +107,7 @@ public class MyGcmListenerService extends GcmListenerService {
     private void showClientUpdatedNotification(String message, String clientId, String picture) {
         Intent intent = new Intent(this, ClientActivity.class);
         intent.putExtra(Intent.EXTRA_UID,Long.parseLong(clientId));
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(clientId), intent,0);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -140,9 +132,7 @@ public class MyGcmListenerService extends GcmListenerService {
     private void showProductStockedNotification(String message, String productId, String picture) {
         Intent intent = new Intent(this, ProductActivity.class);
         intent.putExtra(Intent.EXTRA_UID,Long.parseLong(productId));
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 500+Integer.parseInt(productId), intent,0);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -171,8 +161,7 @@ public class MyGcmListenerService extends GcmListenerService {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
