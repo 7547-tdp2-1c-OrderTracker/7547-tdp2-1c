@@ -77,7 +77,7 @@ public class ProductsListFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public Context getApplicationContext() {
-        return getApplicationContext();
+        return getActivity().getApplicationContext();
     }
 
     private boolean isLongPressValid() {
