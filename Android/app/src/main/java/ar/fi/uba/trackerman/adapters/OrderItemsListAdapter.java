@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ar.fi.uba.trackerman.domains.OrderItem;
+import ar.fi.uba.trackerman.utils.CircleTransform;
 import ar.fi.uba.trackerman.utils.LocationHelper;
 import fi.uba.ar.soldme.R;
 
@@ -49,7 +50,8 @@ public class OrderItemsListAdapter extends ArrayAdapter<OrderItem> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(this.getContext()).load(orderItem.getThumbnail()).into(holder.image);
+        Picasso.with(this.getContext()).load(orderItem.getThumbnail()).transform(new CircleTransform()).into(holder.image);
+
         holder.name.setText(isContentValid(orderItem.getName()));
         holder.brand.setText(isContentValid(orderItem.getBrandName()));
         holder.quantity.setText(isContentValid(Integer.toString(orderItem.getQuantity())));
