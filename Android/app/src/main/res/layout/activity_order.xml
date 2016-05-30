@@ -141,8 +141,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/order_items_list"
-                android:layout_margin="10dp"
-                android:layout_weight="99">
+                android:layout_weight="99"
+                android:layout_marginBottom="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp">
             </ListView>
 
         </LinearLayout>
@@ -150,7 +153,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|right">
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/activity_order_add_product"
@@ -161,6 +164,7 @@
                 app:layout_anchorGravity="bottom|end"
                 android:layout_above="@+id/activity_order_confirm"
                 android:layout_gravity="right"
+                android:scaleType="center"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="32dp"
